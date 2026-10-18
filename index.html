@@ -174,28 +174,37 @@
 
       <!-- Global Grinder Status & Quick Actions -->
       <div class="flex flex-wrap items-center gap-2">
+        <div class="inline-flex p-1 rounded-xl bg-latte-200/80 border border-latte-300 shadow-inner">
+          <button type="button" id="btnModeBarista" onclick="switchAppMode('barista')" class="px-3 py-1.5 rounded-lg text-xs font-extrabold transition flex items-center gap-1.5 bg-amber-700 text-white shadow-sm">
+            <span>👨‍🔬 Barista Mode</span>
+          </button>
+          <button type="button" id="btnModeEasy" onclick="switchAppMode('easy')" class="px-3 py-1.5 rounded-lg text-xs font-extrabold transition flex items-center gap-1.5 text-latte-800 hover:bg-latte-100">
+            <span>🌸 Easy Mode</span>
+          </button>
+        </div>
+
         <div class="px-3 py-1.5 rounded-xl bg-latte-100 border border-latte-300 flex items-center gap-2 text-xs">
           <span class="text-latte-700 font-medium">Mühlen-Stand:</span>
           <span id="headerLastGrind" class="mono font-bold text-amber-700 text-sm">35,0</span>
         </div>
 
-        <button onclick="openNewProfileModal()" class="px-3 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold transition flex items-center gap-1.5 shadow-sm">
+        <button id="headerBtnNewBean" onclick="openNewProfileModal()" class="px-3 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold transition flex items-center gap-1.5 shadow-sm">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 4v16m8-8H4"/></svg>
           Neue Bohne
         </button>
 
-        <button onclick="exportDatabaseJSON()" title="Datenbank als JSON exportieren" class="px-3 py-1.5 rounded-xl bg-white hover:bg-latte-100 text-latte-800 border border-latte-300 text-xs font-semibold transition flex items-center gap-1">
+        <button id="headerBtnBackup" onclick="exportDatabaseJSON()" title="Datenbank als JSON exportieren" class="px-3 py-1.5 rounded-xl bg-white hover:bg-latte-100 text-latte-800 border border-latte-300 text-xs font-semibold transition flex items-center gap-1">
           <svg class="w-3.5 h-3.5 text-amber-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
           Backup
         </button>
 
-        <button onclick="triggerImportJSON()" title="Datenbank aus JSON-Datei wiederherstellen" class="px-3 py-1.5 rounded-xl bg-white hover:bg-latte-100 text-latte-800 border border-latte-300 text-xs font-semibold transition flex items-center gap-1">
+        <button id="headerBtnImport" onclick="triggerImportJSON()" title="Datenbank aus JSON-Datei wiederherstellen" class="px-3 py-1.5 rounded-xl bg-white hover:bg-latte-100 text-latte-800 border border-latte-300 text-xs font-semibold transition flex items-center gap-1">
           <svg class="w-3.5 h-3.5 text-emerald-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
           Import
         </button>
         <input type="file" id="importJsonInput" accept=".json" class="hidden" onchange="handleImportJSON(event)" />
 
-        <button onclick="resetDatabaseToDefaults()" class="px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-800 border border-rose-200 text-xs font-semibold transition flex items-center gap-1.5">
+        <button id="headerBtnReset" onclick="resetDatabaseToDefaults()" class="px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-800 border border-rose-200 text-xs font-semibold transition flex items-center gap-1.5">
           <svg class="w-3.5 h-3.5 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
           Reset
         </button>
@@ -205,6 +214,195 @@
 
   <main class="max-w-7xl mx-auto px-4 sm:px-6 pt-6 space-y-6">
 
+    <!-- EASY MODE CONTAINER (Hidden by default, shown when Easy Mode is selected) -->
+    <div id="easyModeWrapper" class="hidden space-y-6">
+      <!-- Greeting & Overview Banner -->
+      <div class="cafe-card-highlight rounded-3xl p-6 sm:p-8 border-2 border-amber-400 shadow-lg">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="space-y-1.5">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider bg-amber-100 text-amber-900 border border-amber-300">
+              🌸 Easy Mode • Schnell-Anleitung ohne Waage beim Bezug
+            </span>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-latte-900">Hallo! Welchen Kaffee möchtest du dir machen?</h2>
+            <p class="text-sm text-latte-700">
+              Alle Einstellungen sind bereits fertig vorbereitet. Wähle einfach deine Bohne und dein Lieblingsgetränk!
+            </p>
+          </div>
+          <div class="shrink-0 flex items-center gap-3 bg-white/90 px-4 py-3 rounded-2xl border border-latte-200 shadow-sm">
+            <span class="text-2xl">🤖</span>
+            <div class="text-xs">
+              <span class="text-latte-500 font-bold uppercase block">Mengen-Automatik</span>
+              <span class="font-extrabold text-emerald-800">1-Tassen-Taste (~42 g Auto-Stopp)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP A: Bean Selection & Drink Selection -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- 1. Kaffeebohne auswählen (5 cols) -->
+        <div class="lg:col-span-5 cafe-card rounded-3xl p-5 sm:p-6 space-y-4">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-extrabold uppercase tracking-wider text-amber-800">Auswahl 1: Welche Bohne ist in der Mühle?</span>
+            <span class="text-[11px] font-semibold text-latte-600">Aktuell aktiv</span>
+          </div>
+          <div>
+            <select id="easyBeanSelect" onchange="handleEasyBeanChange(this.value)" class="w-full px-4 py-3.5 rounded-2xl bg-white border-2 border-amber-400 text-latte-900 font-extrabold text-sm sm:text-base shadow-sm focus:border-amber-600 outline-none cursor-pointer">
+              <!-- Populated dynamically -->
+            </select>
+          </div>
+          <div class="p-4 rounded-2xl bg-amber-50/80 border border-amber-200 space-y-1.5">
+            <div class="flex items-center justify-between text-xs">
+              <span id="easyBeanBlend" class="font-bold text-amber-900">100% Bio Highland Arabica</span>
+              <span id="easyBeanRoastBadge" class="px-2 py-0.5 rounded-full bg-amber-200 text-amber-900 font-bold text-[10px] uppercase">Hell-Mittel</span>
+            </div>
+            <p id="easyBeanNotes" class="text-xs text-latte-700 leading-relaxed">
+              Schokoladig, nussig und rund im Geschmack.
+            </p>
+          </div>
+        </div>
+
+        <!-- 2. Getränk wählen (7 cols) -->
+        <div class="lg:col-span-7 cafe-card rounded-3xl p-5 sm:p-6 space-y-4">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-extrabold uppercase tracking-wider text-amber-800">Auswahl 2: Dein Wunsch-Getränk</span>
+            <span class="text-[11px] font-semibold text-latte-600">Antippen zum Auswählen</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+            <!-- Cappuccino Tile -->
+            <button type="button" onclick="selectEasyDrink('cappuccino')" id="easyDrinkBtn-cappuccino" class="p-4 rounded-2xl border-2 text-left transition-all flex flex-col justify-between gap-3">
+              <div class="flex items-center justify-between">
+                <span class="text-3xl">🥛</span>
+                <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-amber-100 text-amber-900">Klassiker</span>
+              </div>
+              <div>
+                <div class="font-extrabold text-base text-latte-900">Cappuccino</div>
+                <div class="text-xs text-latte-600 mt-0.5">Kräftiger Espresso + cremiger, feinporiger Milchschaum</div>
+              </div>
+            </button>
+
+            <!-- Latte Macchiato Tile -->
+            <button type="button" onclick="selectEasyDrink('latte')" id="easyDrinkBtn-latte" class="p-4 rounded-2xl border-2 text-left transition-all flex flex-col justify-between gap-3">
+              <div class="flex items-center justify-between">
+                <span class="text-3xl">🧋</span>
+                <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-amber-100 text-amber-900">Sanft & Mild</span>
+              </div>
+              <div>
+                <div class="font-extrabold text-base text-latte-900">Latte Macchiato</div>
+                <div class="text-xs text-latte-600 mt-0.5">Viel warme Milch im hohen Glas + sanfter Espresso-Schicht</div>
+              </div>
+            </button>
+
+            <!-- Espresso Tile -->
+            <button type="button" onclick="selectEasyDrink('espresso')" id="easyDrinkBtn-espresso" class="p-4 rounded-2xl border-2 text-left transition-all flex flex-col justify-between gap-3">
+              <div class="flex items-center justify-between">
+                <span class="text-3xl">☕</span>
+                <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-amber-100 text-amber-900">Pur</span>
+              </div>
+              <div>
+                <div class="font-extrabold text-base text-latte-900">Doppel-Espresso</div>
+                <div class="text-xs text-latte-600 mt-0.5">Pur & aromatisch mit dichter Haselnuss-Crema</div>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP-BY-STEP PREPARATION CARDS -->
+      <div class="space-y-3">
+        <h3 class="text-sm font-extrabold uppercase tracking-wider text-latte-700 flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-600"></span>
+          Deine Schritt-für-Schritt Anleitung an der Sage Barista Pro
+        </h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Schritt 1: Mühle & Abwiegen -->
+          <div class="cafe-card rounded-3xl p-5 sm:p-6 border-2 border-latte-200 flex flex-col justify-between gap-4">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="px-3 py-1 rounded-full bg-amber-600 text-white text-xs font-extrabold uppercase">Schritt 1 • Mühle & Abwiegen</span>
+                <span class="text-2xl">⚖️</span>
+              </div>
+              <p class="text-sm text-latte-800 leading-relaxed">
+                Prüfe kurz das Einstellrad links an der Maschine und wiege das Kaffeemehl im großen <strong>Doppelsieb (2-Cup-Sieb)</strong> ab:
+              </p>
+              <div class="grid grid-cols-2 gap-3 pt-1">
+                <div class="p-4 rounded-2xl bg-amber-50 border-2 border-amber-300 text-center">
+                  <span class="text-[11px] font-extrabold uppercase text-amber-900 block">Mahlgrad am Rad</span>
+                  <span id="easyStepGrindValue" class="mono text-3xl font-extrabold text-amber-800 mt-1 block">35,0</span>
+                </div>
+                <div class="p-4 rounded-2xl bg-emerald-50 border-2 border-emerald-300 text-center">
+                  <span class="text-[11px] font-extrabold uppercase text-emerald-900 block">Kaffeemenge</span>
+                  <span id="easyStepDoseValue" class="mono text-3xl font-extrabold text-emerald-800 mt-1 block">18,0 g</span>
+                </div>
+              </div>
+            </div>
+            <div id="easyStepPurgeHint" class="p-3 rounded-xl bg-latte-100 border border-latte-300 text-xs text-latte-800">
+              ✓ Die Mühle steht bereits auf dem richtigen Wert. Du kannst direkt loslegen!
+            </div>
+          </div>
+
+          <!-- Schritt 2: Vorbereiten & Tampen -->
+          <div class="cafe-card rounded-3xl p-5 sm:p-6 border-2 border-latte-200 flex flex-col justify-between gap-4">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="px-3 py-1 rounded-full bg-amber-600 text-white text-xs font-extrabold uppercase">Schritt 2 • Verteilen & Festdrücken</span>
+                <span class="text-2xl">🪄</span>
+              </div>
+              <ol class="text-sm text-latte-800 space-y-2.5 leading-relaxed list-decimal list-inside font-medium">
+                <li>Mit dem <strong>Nadel-Tool (WDT)</strong> locker <strong>3–4 Runden in eine Richtung</strong> rühren, damit keine Klümpchen bleiben.</li>
+                <li>Den Siebträger <strong>1x kurz gerade</strong> auf die Matte klopfen.</li>
+                <li>Mit dem <strong>Tamper gerade und kräftig festdrücken</strong>, bis das Kaffeemehl schön glatt und eben ist.</li>
+              </ol>
+            </div>
+            <div class="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-900 font-semibold">
+              💡 Tipp: Die Temperatur an der Maschine bleibt einfach so eingestellt, wie sie ist!
+            </div>
+          </div>
+
+          <!-- Schritt 3: Bezug starten (1-Tassen-Taste) -->
+          <div class="cafe-card rounded-3xl p-5 sm:p-6 border-2 border-amber-400 bg-gradient-to-br from-[#fffdf9] to-[#f7efe4] flex flex-col justify-between gap-4">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span id="easyStep3Badge" class="px-3 py-1 rounded-full bg-amber-700 text-white text-xs font-extrabold uppercase">Schritt 3 • Espresso starten</span>
+                <span class="text-2xl">🔘</span>
+              </div>
+              <div id="easyStep3Content" class="text-sm text-latte-900 space-y-2.5 leading-relaxed">
+                <!-- Dynamically updated depending on drink -->
+              </div>
+            </div>
+            <div class="p-3.5 rounded-2xl bg-white border border-amber-300 flex items-center gap-3 shadow-sm">
+              <div class="w-10 h-10 rounded-xl bg-amber-600 text-white font-extrabold flex items-center justify-center shrink-0 text-sm mono">
+                1 CUP
+              </div>
+              <div class="text-xs text-latte-800">
+                <strong>Keine Waage unter der Tasse nötig!</strong> Drücke einfach einmal auf die <strong>1-Tassen-Taste</strong> – die Maschine stoppt bei <strong>~42 g</strong> von selbst.
+              </div>
+            </div>
+          </div>
+
+          <!-- Schritt 4: Milchschaum / Servieren -->
+          <div class="cafe-card rounded-3xl p-5 sm:p-6 border-2 border-latte-200 flex flex-col justify-between gap-4">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span id="easyStep4Badge" class="px-3 py-1 rounded-full bg-emerald-700 text-white text-xs font-extrabold uppercase">Schritt 4 • Milchschaum & Genuss</span>
+                <span id="easyStep4Icon" class="text-2xl">🥛</span>
+              </div>
+              <div id="easyStep4Content" class="text-sm text-latte-800 space-y-2.5 leading-relaxed">
+                <!-- Dynamically updated depending on drink -->
+              </div>
+            </div>
+            <div id="easyStep4Footer" class="p-3 rounded-xl bg-latte-100 border border-latte-300 text-xs text-latte-700">
+              ✨ Nach dem Schäumen die Dampflanze kurz mit einem feuchten Tuch abwischen und 1 Sekunde Dampf ablassen.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BARISTA MODE CONTAINER (Default Active) -->
+    <div id="baristaModeWrapper" class="space-y-6">
     <!-- 1. COMPACT ACTIVE BEAN HERO CARD & COLLAPSIBLE SELECTOR -->
     <section class="relative">
       <div class="flex items-center justify-between mb-2">
@@ -726,6 +924,43 @@
           </button>
         </div>
 
+        <!-- Graphical Learning Curve (Statistik-Dashboard für die aktive Bohne) -->
+        <div id="learningCurveCard" class="cafe-card rounded-2xl p-5 space-y-3.5 border border-latte-300">
+          <div class="flex items-center justify-between gap-2">
+            <div>
+              <h3 class="text-sm font-extrabold text-latte-900 flex items-center gap-2">
+                <span>📈 Grafische Lernkurve & Bezugs-Verlauf</span>
+              </h3>
+              <p id="learningCurveSubtitle" class="text-[11px] text-latte-600">Reale Bezüge & Mahlgrad-Entwicklung der aktuellen Bohne</p>
+            </div>
+            <span id="learningCurveHitRateBadge" class="px-2.5 py-0.5 text-[10px] font-bold bg-emerald-100 text-emerald-900 rounded-full border border-emerald-300 mono">
+              Sweet Spot: --%
+            </span>
+          </div>
+
+          <!-- Interactive SVG Dual-Trend Chart -->
+          <div id="learningCurveChartBox" class="p-3 rounded-xl bg-white border border-latte-200 shadow-inner space-y-2">
+            <svg id="learningCurveSvg" viewBox="0 0 360 135" class="w-full h-32 overflow-visible">
+              <!-- Populated dynamically via renderLearningCurveChart() -->
+            </svg>
+            <div class="flex flex-wrap items-center justify-between gap-2 text-[10px] text-latte-600 mono border-t border-latte-100 pt-1.5">
+              <span class="flex items-center gap-1 font-semibold text-amber-800">
+                <span class="w-2.5 h-1 rounded bg-amber-600 inline-block"></span> Mahlgrad-Verlauf
+              </span>
+              <span class="flex items-center gap-1 font-semibold text-emerald-800">
+                <span class="w-2 h-2 rounded-full bg-emerald-600 inline-block"></span> Bezugszeit (s) im Ziel
+              </span>
+              <span class="flex items-center gap-1 text-latte-500">
+                <span class="w-2.5 h-2 rounded-sm bg-emerald-100 border border-emerald-300 inline-block"></span> Zielkorridor
+              </span>
+            </div>
+          </div>
+
+          <div id="learningCurveSummaryText" class="text-[11px] text-latte-700 leading-relaxed bg-latte-50 px-3 py-2 rounded-xl border border-latte-200">
+            <!-- Dynamic insight text -->
+          </div>
+        </div>
+
       </div>
     </section>
 
@@ -825,6 +1060,7 @@
       </div>
 
     </section>
+    </div> <!-- End of #baristaModeWrapper -->
 
   </main>
 
@@ -1265,6 +1501,8 @@
       activeProfileId: 'speicherstadt_bio_guatemala',
       lastGrind: 35.0,
       fineStep: false,
+      appMode: 'barista',
+      easyDrink: 'cappuccino',
       profiles: [],
       shotLogs: []
     };
@@ -1440,6 +1678,8 @@
               activeProfileId: parsed.activeProfileId || parsed.profiles[0].id,
               lastGrind: typeof parsed.lastGrind === 'number' ? parsed.lastGrind : 35.0,
               fineStep: !!parsed.fineStep,
+              appMode: 'barista', // Standardmäßig immer im Barista Mode starten
+              easyDrink: parsed.easyDrink || 'cappuccino',
               profiles: parsed.profiles,
               shotLogs: Array.isArray(parsed.shotLogs) ? parsed.shotLogs : []
             };
@@ -1599,6 +1839,286 @@
       renderProfileCards();
       renderDatabaseTable();
       updateSimulation();
+      renderLearningCurveChart();
+      renderEasyModeView();
+    }
+
+    function switchAppMode(mode) {
+      appState.appMode = mode === 'easy' ? 'easy' : 'barista';
+      const baristaWrapper = document.getElementById('baristaModeWrapper');
+      const easyWrapper = document.getElementById('easyModeWrapper');
+      const btnBarista = document.getElementById('btnModeBarista');
+      const btnEasy = document.getElementById('btnModeEasy');
+
+      const proHeaderBtns = ['headerBtnNewBean', 'headerBtnBackup', 'headerBtnImport', 'headerBtnReset'];
+
+      if (appState.appMode === 'easy') {
+        baristaWrapper.classList.add('hidden');
+        easyWrapper.classList.remove('hidden');
+        btnEasy.className = 'px-3 py-1.5 rounded-lg text-xs font-extrabold transition flex items-center gap-1.5 bg-amber-600 text-white shadow-sm';
+        btnBarista.className = 'px-3 py-1.5 rounded-lg text-xs font-extrabold transition flex items-center gap-1.5 text-latte-800 hover:bg-latte-100';
+        proHeaderBtns.forEach(id => document.getElementById(id)?.classList.add('hidden'));
+        renderEasyModeView();
+      } else {
+        easyWrapper.classList.add('hidden');
+        baristaWrapper.classList.remove('hidden');
+        btnBarista.className = 'px-3 py-1.5 rounded-lg text-xs font-extrabold transition flex items-center gap-1.5 bg-amber-700 text-white shadow-sm';
+        btnEasy.className = 'px-3 py-1.5 rounded-lg text-xs font-extrabold transition flex items-center gap-1.5 text-latte-800 hover:bg-latte-100';
+        proHeaderBtns.forEach(id => document.getElementById(id)?.classList.remove('hidden'));
+        updateSimulation();
+        renderLearningCurveChart();
+      }
+    }
+
+    function handleEasyBeanChange(profileId) {
+      selectProfile(profileId);
+    }
+
+    function selectEasyDrink(drinkKey) {
+      appState.easyDrink = drinkKey;
+      saveDatabase();
+      renderEasyModeView();
+    }
+
+    function renderEasyModeView() {
+      const active = getActiveProfile();
+      const recGrind = computeRecommendedGrindToday(active, active.daysOpen);
+
+      // Populate Bean Select Dropdown
+      const sel = document.getElementById('easyBeanSelect');
+      if (sel) {
+        sel.innerHTML = appState.profiles.map(p =>
+          `<option value="${p.id}" ${p.id === active.id ? 'selected' : ''}>🫘 ${p.name}</option>`
+        ).join('');
+      }
+
+      const roastBadgeMap = {
+        'dark': 'Dunkle Röstung',
+        'medium-dark': 'Mittel-Dunkel',
+        'medium': 'Medium Röstung',
+        'light': 'Hell-Mittel'
+      };
+      document.getElementById('easyBeanBlend').textContent = active.blend;
+      document.getElementById('easyBeanRoastBadge').textContent = roastBadgeMap[active.roast] || 'Medium';
+      document.getElementById('easyBeanNotes').textContent = active.notes;
+
+      // Update Step 1 values
+      document.getElementById('easyStepGrindValue').textContent = fmtNum(recGrind);
+      document.getElementById('easyStepDoseValue').textContent = `${fmtNum(active.doseIn)} g`;
+
+      const purgeDelta = Math.abs(recGrind - appState.lastGrind);
+      const purgeHintEl = document.getElementById('easyStepPurgeHint');
+      if (purgeDelta >= 0.1) {
+        purgeHintEl.className = 'p-3 rounded-xl bg-amber-100 border border-amber-400 text-xs text-amber-950 font-medium';
+        purgeHintEl.innerHTML = `⚠️ <strong>Kleiner Hinweis:</strong> Die Mühle stand zuletzt auf <strong>${fmtNum(appState.lastGrind)}</strong>. Wenn du sie auf <strong>${fmtNum(recGrind)}</strong> drehst, mahle vorher kurz <strong>2 Sekunden</strong> Kaffee in den Ausklopfbehälter!`;
+      } else {
+        purgeHintEl.className = 'p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-900 font-medium';
+        purgeHintEl.innerHTML = `✓ Die Mühle steht bereits genau auf <strong>${fmtNum(recGrind)}</strong>. Du kannst direkt abwiegen!`;
+      }
+
+      // Highlight selected drink button
+      const drinks = ['cappuccino', 'latte', 'espresso'];
+      drinks.forEach(d => {
+        const btn = document.getElementById(`easyDrinkBtn-${d}`);
+        if (!btn) return;
+        if (d === appState.easyDrink) {
+          btn.className = 'p-4 rounded-2xl border-2 border-amber-600 bg-amber-50/90 text-left transition-all flex flex-col justify-between gap-3 shadow-md ring-2 ring-amber-500/30';
+        } else {
+          btn.className = 'p-4 rounded-2xl border-2 border-latte-200 bg-white hover:bg-latte-50 text-left transition-all flex flex-col justify-between gap-3';
+        }
+      });
+
+      // Update Step 3 & Step 4 instructions according to chosen drink
+      const step3Badge = document.getElementById('easyStep3Badge');
+      const step3Content = document.getElementById('easyStep3Content');
+      const step4Badge = document.getElementById('easyStep4Badge');
+      const step4Icon = document.getElementById('easyStep4Icon');
+      const step4Content = document.getElementById('easyStep4Content');
+
+      if (appState.easyDrink === 'espresso') {
+        step3Badge.textContent = 'Schritt 3 • Espresso beziehen';
+        step3Content.innerHTML = `
+          <p class="font-bold text-latte-900">So startest du deinen Doppel-Espresso:</p>
+          <ol class="list-decimal list-inside space-y-1.5">
+            <li>Siebträger fest in die Maschine einspannen.</li>
+            <li>Deine Tasse direkt darunterstellen (ohne Waage).</li>
+            <li>Einmal auf die <strong>1-Tassen-Taste</strong> drücken – die Maschine stoppt bei <strong>ca. 42 g</strong> automatisch!</li>
+          </ol>
+        `;
+        step4Badge.textContent = 'Schritt 4 • Direkt genießen';
+        step4Icon.textContent = '☕';
+        step4Content.innerHTML = `
+          <p class="font-bold text-emerald-900">Dein Doppel-Espresso ist fertig!</p>
+          <p>Kurz mit einem kleinen Löffel umrühren (damit sich die süßen und kräftigen Schichten verbinden) und direkt warm genießen.</p>
+        `;
+      } else if (appState.easyDrink === 'latte') {
+        step3Badge.textContent = 'Schritt 3 • Zuerst Milch, dann Espresso';
+        step3Content.innerHTML = `
+          <p class="font-bold text-latte-900">Für die schönen Schichten im hohen Glas:</p>
+          <ol class="list-decimal list-inside space-y-1.5">
+            <li>Schäume zuerst die Milch (siehe Schritt 4) und gieße sie in dein hohes Latte-Glas.</li>
+            <li>Warte kurz <strong>20–30 Sekunden</strong>, bis sich Milch und Schaum leicht absetzen.</li>
+            <li>Stelle das Glas unter den Auslauf und drücke die <strong>1-Tassen-Taste</strong> (~42 g Auto-Stopp).</li>
+          </ol>
+        `;
+        step4Badge.textContent = 'Schritt 4 • Milchschaum für Latte Macchiato';
+        step4Icon.textContent = '🧋';
+        step4Content.innerHTML = `
+          <ol class="list-decimal list-inside space-y-1.5 font-medium">
+            <li>Kaltes Milchkännchen bis knapp <strong>unter die Ausguss-Tülle</strong> mit kalter Milch füllen.</li>
+            <li>Dampflanze eintauchen & Dampf starten. Kännchen anfangs leicht senken, sodass es <strong>4–5 Sekunden leise zischt</strong> (für eine schöne Schaumkrone).</li>
+            <li>Danach Lanze etwas tiefer halten (Milch wirbelt), bis das Kännchen <strong>gut handwarm (~60–65 °C)</strong> ist.</li>
+          </ol>
+        `;
+      } else {
+        // Default: Cappuccino
+        step3Badge.textContent = 'Schritt 3 • Espresso in die Tasse';
+        step3Content.innerHTML = `
+          <p class="font-bold text-latte-900">Basis für deinen Cappuccino:</p>
+          <ol class="list-decimal list-inside space-y-1.5">
+            <li>Siebträger fest einspannen und deine Cappuccino-Tasse darunterstellen.</li>
+            <li>Drücke einmal auf die <strong>1-Tassen-Taste</strong>.</li>
+            <li>Die Maschine stoppt bei <strong>ca. 42 g</strong> vollautomatisch (keine Waage nötig!).</li>
+          </ol>
+        `;
+        step4Badge.textContent = 'Schritt 4 • Cremiger Cappuccino-Schaum';
+        step4Icon.textContent = '🥛';
+        step4Content.innerHTML = `
+          <ol class="list-decimal list-inside space-y-1.5 font-medium">
+            <li>Milchkännchen bis kurz <strong>unter den Ausguss-Knick</strong> mit kalter Milch füllen.</li>
+            <li>Dampflanze starten und das Kännchen <strong>2–3 Sekunden leicht absenken</strong> (feines Zischen zieht cremigen Mikroschaum).</li>
+            <li>Lanze leicht eintauchen und die Milch rollen lassen, bis das Kännchen <strong>gut handwarm (~60–65 °C)</strong> ist, dann zügig über den Espresso gießen.</li>
+          </ol>
+        `;
+      }
+    }
+
+    function renderLearningCurveChart() {
+      const profile = getActiveProfile();
+      const svg = document.getElementById('learningCurveSvg');
+      const subtitle = document.getElementById('learningCurveSubtitle');
+      const hitBadge = document.getElementById('learningCurveHitRateBadge');
+      const summaryBox = document.getElementById('learningCurveSummaryText');
+      if (!svg || !profile) return;
+
+      // Filter logs for the currently active bean (chronological order: oldest left, newest right)
+      const beanLogs = appState.shotLogs
+        .filter(l => l.beanName === profile.name)
+        .slice(0, 10)
+        .reverse();
+
+      subtitle.textContent = `Verlauf für „${profile.name}“ (${beanLogs.length} geloggte Bezüge)`;
+
+      if (beanLogs.length === 0) {
+        hitBadge.textContent = 'Neu (0 Bezüge)';
+        hitBadge.className = 'px-2.5 py-0.5 text-[10px] font-bold bg-latte-200 text-latte-800 rounded-full border border-latte-300 mono';
+        svg.innerHTML = `
+          <rect x="10" y="15" width="340" height="100" rx="10" fill="#fdfbf7" stroke="#e6d7c3" stroke-dasharray="4 3"/>
+          <text x="180" y="62" text-anchor="middle" fill="#6e5036" font-size="11" font-weight="700">Noch keine echten Bezüge für diese Bohne geloggt</text>
+          <text x="180" y="80" text-anchor="middle" fill="#8f6b49" font-size="10">Trage oben deinen ersten Shot ein, um die Lernkurve zu starten!</text>
+        `;
+        summaryBox.innerHTML = `Start-Empfehlung heute: Mahlgrad <strong class="mono text-amber-800">${fmtNum(computeRecommendedGrindToday(profile))}</strong> für Zielzeit <strong>${profile.timeMin}–${profile.timeMax} s</strong>.`;
+        return;
+      }
+
+      // Compute Sweet Spot Hit Rate
+      const hits = beanLogs.filter(l => l.taste === 'perfect' || (l.actualTime >= profile.timeMin && l.actualTime <= profile.timeMax)).length;
+      const hitPct = Math.round((hits / beanLogs.length) * 100);
+      hitBadge.textContent = `Sweet Spot: ${hitPct}% (${hits}/${beanLogs.length})`;
+      hitBadge.className = hitPct >= 65
+        ? 'px-2.5 py-0.5 text-[10px] font-bold bg-emerald-100 text-emerald-900 rounded-full border border-emerald-300 mono'
+        : 'px-2.5 py-0.5 text-[10px] font-bold bg-amber-100 text-amber-900 rounded-full border border-amber-300 mono';
+
+      // Chart dimensions
+      const padL = 32;
+      const padR = 28;
+      const padT = 18;
+      const padB = 24;
+      const W = 360 - padL - padR;
+      const H = 135 - padT - padB;
+
+      // Time scale (Y-axis for shot time: 18s to 36s)
+      const minTimeAxis = Math.min(18, profile.timeMin - 4, ...beanLogs.map(l => l.actualTime - 1));
+      const maxTimeAxis = Math.max(35, profile.timeMax + 4, ...beanLogs.map(l => l.actualTime + 1));
+      const timeToY = t => padT + H - ((t - minTimeAxis) / (maxTimeAxis - minTimeAxis)) * H;
+
+      // Grind scale (Y-axis for grind curve)
+      const grinds = beanLogs.map(l => l.grindUsed);
+      const minGrind = Math.min(...grinds, profile.baseGrind) - 0.8;
+      const maxGrind = Math.max(...grinds, profile.baseGrind) + 0.8;
+      const grindToY = g => padT + H - ((g - minGrind) / Math.max(0.5, maxGrind - minGrind)) * H;
+
+      const stepX = beanLogs.length === 1 ? 0 : W / (beanLogs.length - 1);
+      const idxToX = i => beanLogs.length === 1 ? padL + W / 2 : padL + i * stepX;
+
+      // Target time corridor band
+      const yTargetTop = timeToY(profile.timeMax);
+      const yTargetBot = timeToY(profile.timeMin);
+      const bandH = Math.max(6, yTargetBot - yTargetTop);
+
+      let grindPoints = [];
+      let timePoints = [];
+      let circlesMarkup = '';
+
+      beanLogs.forEach((log, i) => {
+        const cx = idxToX(i);
+        const gy = grindToY(log.grindUsed);
+        const ty = timeToY(log.actualTime);
+        grindPoints.push(`${cx.toFixed(1)},${gy.toFixed(1)}`);
+        timePoints.push(`${cx.toFixed(1)},${ty.toFixed(1)}`);
+
+        const isSweet = log.taste === 'perfect' || (log.actualTime >= profile.timeMin && log.actualTime <= profile.timeMax);
+        const dotColor = isSweet ? '#059669' : (log.actualTime < profile.timeMin ? '#0284c7' : '#e11d48');
+
+        circlesMarkup += `
+          <!-- Grind Point & Label -->
+          <circle cx="${cx.toFixed(1)}" cy="${gy.toFixed(1)}" r="3.5" fill="#d97706" stroke="#fffdf9" stroke-width="1.5" />
+          <text x="${cx.toFixed(1)}" y="${Math.max(11, gy - 6).toFixed(1)}" text-anchor="middle" fill="#92400e" font-size="8.5" font-weight="700" font-family="JetBrains Mono">${fmtNum(log.grindUsed)}</text>
+
+          <!-- Shot Time Point & Label -->
+          <circle cx="${cx.toFixed(1)}" cy="${ty.toFixed(1)}" r="4" fill="${dotColor}" stroke="#fffdf9" stroke-width="1.5" />
+          <text x="${cx.toFixed(1)}" y="${Math.min(126, ty + 12).toFixed(1)}" text-anchor="middle" fill="${dotColor}" font-size="8.5" font-weight="700" font-family="JetBrains Mono">${fmtNum(log.actualTime, 0)}s</text>
+
+          <!-- X-Axis Shot Number -->
+          <text x="${cx.toFixed(1)}" y="131" text-anchor="middle" fill="#8f6b49" font-size="8" font-family="JetBrains Mono">#${i + 1}</text>
+        `;
+      });
+
+      const grindPolyline = beanLogs.length > 1
+        ? `<polyline fill="none" stroke="#d97706" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" points="${grindPoints.join(' ')}" />`
+        : '';
+
+      const timePolyline = beanLogs.length > 1
+        ? `<polyline fill="none" stroke="#059669" stroke-width="1.6" stroke-dasharray="3 2" stroke-linecap="round" stroke-linejoin="round" points="${timePoints.join(' ')}" />`
+        : '';
+
+      svg.innerHTML = `
+        <!-- Target Time Sweet Spot Corridor -->
+        <rect x="${padL}" y="${yTargetTop.toFixed(1)}" width="${W}" height="${bandH.toFixed(1)}" rx="4" fill="#d1fae5" opacity="0.65" />
+        <line x1="${padL}" y1="${yTargetTop.toFixed(1)}" x2="${padL + W}" y2="${yTargetTop.toFixed(1)}" stroke="#6ee7b7" stroke-dasharray="2 2" stroke-width="1" />
+        <line x1="${padL}" y1="${yTargetBot.toFixed(1)}" x2="${padL + W}" y2="${yTargetBot.toFixed(1)}" stroke="#6ee7b7" stroke-dasharray="2 2" stroke-width="1" />
+
+        <!-- Left Axis Target Labels -->
+        <text x="${padL - 4}" y="${(yTargetTop + 3).toFixed(1)}" text-anchor="end" fill="#047857" font-size="8" font-family="JetBrains Mono">${profile.timeMax}s</text>
+        <text x="${padL - 4}" y="${(yTargetBot + 3).toFixed(1)}" text-anchor="end" fill="#047857" font-size="8" font-family="JetBrains Mono">${profile.timeMin}s</text>
+
+        ${grindPolyline}
+        ${timePolyline}
+        ${circlesMarkup}
+      `;
+
+      const latest = beanLogs[beanLogs.length - 1];
+      const first = beanLogs[0];
+      const grindDiff = Number((latest.grindUsed - first.grindUsed).toFixed(1));
+      const trendHint = beanLogs.length > 1
+        ? (grindDiff < 0
+            ? `Über ${beanLogs.length} Bezüge um <strong>${fmtNum(Math.abs(grindDiff))} Stufen feiner</strong> nachgestellt (Reifung kompensiert).`
+            : grindDiff > 0
+              ? `Über ${beanLogs.length} Bezüge um <strong>+${fmtNum(grindDiff)} Stufen gröber</strong> eingependelt.`
+              : `Mahlgrad über ${beanLogs.length} Bezüge konstant stabil bei <strong>${fmtNum(latest.grindUsed)}</strong>.`)
+        : `Erster Referenzbezug bei Mahlgrad <strong>${fmtNum(latest.grindUsed)}</strong> (${fmtNum(latest.actualTime)} s).`;
+
+      summaryBox.innerHTML = `<strong>Letzter Bezug:</strong> Mahlgrad <span class="mono font-bold text-amber-800">${fmtNum(latest.grindUsed)}</span> ➔ <span class="mono font-bold">${fmtNum(latest.actualTime)} s</span>. ${trendHint}`;
     }
 
     function toggleGrindStepResolution() {
@@ -1910,6 +2430,8 @@
       renderDatabaseTable();
       renderShotHistory();
       updateSimulation();
+      renderLearningCurveChart();
+      renderEasyModeView();
 
       const deltaText = appliedDelta === 0 ? 'unverändert bestätigt' : `um ${appliedDelta > 0 ? '+' : ''}${fmtNum(appliedDelta)} auf ${fmtNum(newBaseGrind)} adaptiert`;
       showToast(`Bezug gespeichert! KI-Basis-Mahlgrad für "${profile.name}" wurde ${deltaText}.`, 'emerald');
@@ -1925,6 +2447,7 @@
           appState.shotLogs = appState.shotLogs.filter(l => l.id !== logId);
           saveDatabase();
           renderShotHistory();
+          renderLearningCurveChart();
           showToast('Eintrag wurde aus dem Shot-Logbuch gelöscht.', 'amber');
         }
       );
@@ -2149,6 +2672,7 @@
           appState.shotLogs = [];
           saveDatabase();
           renderShotHistory();
+          renderLearningCurveChart();
           showToast('Gesamtes Shot-Logbuch wurde geleert.', 'amber');
         }
       );
@@ -2220,6 +2744,7 @@
       selectProfile(appState.activeProfileId);
       renderShotHistory();
       updateLockUI();
+      switchAppMode('barista');
     });
   </script>
 </body>
