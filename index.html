@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -269,40 +270,103 @@
             <span class="text-[11px] font-semibold text-latte-600">Antippen zum Auswählen</span>
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+          <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3.5">
             <!-- Cappuccino Tile -->
             <button type="button" onclick="selectEasyDrink('cappuccino')" id="easyDrinkBtn-cappuccino" class="p-4 rounded-2xl border-2 text-left transition-all flex flex-col justify-between gap-3">
               <div class="flex items-center justify-between">
-                <span class="text-3xl">🥛</span>
+                <div class="w-11 h-11 rounded-xl bg-amber-100/80 border border-amber-200 flex items-center justify-center shrink-0">
+                  <!-- Custom Cappuccino Cup SVG -->
+                  <svg class="w-8 h-8" viewBox="0 0 48 48" fill="none">
+                    <path d="M10 20C10 15.5 16 13 23 13C30 13 36 15.5 36 20H10Z" fill="#FFFDF9" stroke="#8F6B49" stroke-width="2"/>
+                    <path d="M10 20H36V26C36 33.1797 30.1797 39 23 39C15.8203 39 10 33.1797 10 26V20Z" fill="#D97706" fill-opacity="0.2" stroke="#6E5036" stroke-width="2.2"/>
+                    <path d="M12 25H34C33.5 31.5 28.8 36.5 23 36.5C17.2 36.5 12.5 31.5 12 25Z" fill="#92400E"/>
+                    <path d="M36 22H39.5C41.433 22 43 23.567 43 25.5C43 27.433 41.433 29 39.5 29H35.5" stroke="#6E5036" stroke-width="2.2" stroke-linecap="round"/>
+                    <line x1="7" y1="39" x2="39" y2="39" stroke="#6E5036" stroke-width="2.5" stroke-linecap="round"/>
+                  </svg>
+                </div>
                 <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-amber-100 text-amber-900">Klassiker</span>
               </div>
               <div>
                 <div class="font-extrabold text-base text-latte-900">Cappuccino</div>
-                <div class="text-xs text-latte-600 mt-0.5">Kräftiger Espresso + cremiger, feinporiger Milchschaum</div>
+                <div class="text-xs text-latte-600 mt-0.5">Espresso + cremiger, feinporiger Milchschaum</div>
               </div>
             </button>
 
             <!-- Latte Macchiato Tile -->
             <button type="button" onclick="selectEasyDrink('latte')" id="easyDrinkBtn-latte" class="p-4 rounded-2xl border-2 text-left transition-all flex flex-col justify-between gap-3">
               <div class="flex items-center justify-between">
-                <span class="text-3xl">🧋</span>
+                <div class="w-11 h-11 rounded-xl bg-amber-100/80 border border-amber-200 flex items-center justify-center shrink-0">
+                  <!-- Custom Layered Latte Macchiato Glass SVG -->
+                  <svg class="w-8 h-8" viewBox="0 0 48 48" fill="none">
+                    <!-- Top Foam Layer -->
+                    <path d="M15 9C15 7.5 18.5 6.5 24 6.5C29.5 6.5 33 7.5 33 9L32.4 15H15.6L15 9Z" fill="#FFFDF9"/>
+                    <!-- Espresso Layer -->
+                    <path d="M15.6 15H32.4L31.7 22H16.3L15.6 15Z" fill="#92400E"/>
+                    <!-- Warm Milk Layer -->
+                    <path d="M16.3 22H31.7L30 40H18L16.3 22Z" fill="#FDE68A" fill-opacity="0.55"/>
+                    <!-- Tall Glass Outline -->
+                    <path d="M15 9H33L30 40H18L15 9Z" stroke="#6E5036" stroke-width="2.2" stroke-linejoin="round"/>
+                    <line x1="15.6" y1="15" x2="32.4" y2="15" stroke="#8F6B49" stroke-width="1.4" stroke-dasharray="2 1"/>
+                    <line x1="16.3" y1="22" x2="31.7" y2="22" stroke="#8F6B49" stroke-width="1.4" stroke-dasharray="2 1"/>
+                    <line x1="15" y1="42" x2="33" y2="42" stroke="#6E5036" stroke-width="2.4" stroke-linecap="round"/>
+                  </svg>
+                </div>
                 <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-amber-100 text-amber-900">Sanft & Mild</span>
               </div>
               <div>
                 <div class="font-extrabold text-base text-latte-900">Latte Macchiato</div>
-                <div class="text-xs text-latte-600 mt-0.5">Viel warme Milch im hohen Glas + sanfter Espresso-Schicht</div>
+                <div class="text-xs text-latte-600 mt-0.5">Hohes Glas mit 3 Schichten aus Milch, Espresso & Schaum</div>
+              </div>
+            </button>
+
+            <!-- Americano Tile -->
+            <button type="button" onclick="selectEasyDrink('americano')" id="easyDrinkBtn-americano" class="p-4 rounded-2xl border-2 text-left transition-all flex flex-col justify-between gap-3">
+              <div class="flex items-center justify-between">
+                <div class="w-11 h-11 rounded-xl bg-amber-100/80 border border-amber-200 flex items-center justify-center shrink-0">
+                  <!-- Custom Americano Mug with Water Drops & Crema SVG -->
+                  <svg class="w-8 h-8" viewBox="0 0 48 48" fill="none">
+                    <!-- Hot Water & Coffee Body -->
+                    <rect x="11" y="14" width="22" height="25" rx="4" fill="#FFFDF9" stroke="#6E5036" stroke-width="2.2"/>
+                    <path d="M13 21H31V35C31 36.1046 30.1046 37 29 37H15C13.8954 37 13 36.1046 13 35V21Z" fill="#78350F"/>
+                    <!-- Golden Crema Ring on Top -->
+                    <rect x="13" y="18" width="18" height="3.5" fill="#D97706"/>
+                    <!-- Mug Handle -->
+                    <path d="M33 18H36.5C38.433 18 40 19.567 40 21.5V27.5C40 29.433 38.433 31 36.5 31H33" stroke="#6E5036" stroke-width="2.2" stroke-linecap="round"/>
+                    <!-- Water Droplet Accent -->
+                    <path d="M22 7C22 7 25 10.5 25 12.2C25 13.85 23.65 15 22 15C20.35 15 19 13.85 19 12.2C19 10.5 22 7 22 7Z" fill="#0284C7"/>
+                  </svg>
+                </div>
+                <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-sky-100 text-sky-900">Lang & Schwarz</span>
+              </div>
+              <div>
+                <div class="font-extrabold text-base text-latte-900">Americano</div>
+                <div class="text-xs text-latte-600 mt-0.5">Aromatischer langer Kaffee mit heißem Wasser & Crema</div>
               </div>
             </button>
 
             <!-- Espresso Tile -->
             <button type="button" onclick="selectEasyDrink('espresso')" id="easyDrinkBtn-espresso" class="p-4 rounded-2xl border-2 text-left transition-all flex flex-col justify-between gap-3">
               <div class="flex items-center justify-between">
-                <span class="text-3xl">☕</span>
+                <div class="w-11 h-11 rounded-xl bg-amber-100/80 border border-amber-200 flex items-center justify-center shrink-0">
+                  <!-- Custom Espresso Demitasse Cup SVG -->
+                  <svg class="w-8 h-8" viewBox="0 0 48 48" fill="none">
+                    <path d="M13 21H33L31 33C30.4 36.5 27.5 39 23 39C18.5 39 15.6 36.5 15 33L13 21Z" fill="#FFFDF9" stroke="#6E5036" stroke-width="2.2" stroke-linejoin="round"/>
+                    <!-- Rich Dark Espresso & Hazelnut Crema -->
+                    <path d="M14.8 26H31.2L30 32.5C29.5 35.2 27 37 23 37C19 37 16.5 35.2 16 32.5L14.8 26Z" fill="#451A03"/>
+                    <rect x="14.3" y="23" width="17.4" height="3.2" rx="1" fill="#D97706"/>
+                    <!-- Handle & Saucer -->
+                    <path d="M32.5 23.5H35.5C37.2 23.5 38.5 24.8 38.5 26.5C38.5 28.2 37.2 29.5 35.5 29.5H31.8" stroke="#6E5036" stroke-width="2.2" stroke-linecap="round"/>
+                    <line x1="10" y1="39.5" x2="36" y2="39.5" stroke="#6E5036" stroke-width="2.5" stroke-linecap="round"/>
+                    <!-- Warm Steam Waves -->
+                    <path d="M19 16C19 14 20.5 13 20.5 11" stroke="#D97706" stroke-width="1.8" stroke-linecap="round"/>
+                    <path d="M26 16C26 14 27.5 13 27.5 11" stroke="#D97706" stroke-width="1.8" stroke-linecap="round"/>
+                  </svg>
+                </div>
                 <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-amber-100 text-amber-900">Pur</span>
               </div>
               <div>
                 <div class="font-extrabold text-base text-latte-900">Doppel-Espresso</div>
-                <div class="text-xs text-latte-600 mt-0.5">Pur & aromatisch mit dichter Haselnuss-Crema</div>
+                <div class="text-xs text-latte-600 mt-0.5">Pur, intensiv & aromatisch mit dichter Haselnuss-Crema</div>
               </div>
             </button>
           </div>
@@ -924,40 +988,55 @@
           </button>
         </div>
 
-        <!-- Graphical Learning Curve (Statistik-Dashboard für die aktive Bohne) -->
-        <div id="learningCurveCard" class="cafe-card rounded-2xl p-5 space-y-3.5 border border-latte-300">
-          <div class="flex items-center justify-between gap-2">
-            <div>
-              <h3 class="text-sm font-extrabold text-latte-900 flex items-center gap-2">
-                <span>📈 Grafische Lernkurve & Bezugs-Verlauf</span>
-              </h3>
-              <p id="learningCurveSubtitle" class="text-[11px] text-latte-600">Reale Bezüge & Mahlgrad-Entwicklung der aktuellen Bohne</p>
+        <!-- Collapsible Graphical Learning Curve (Default Collapsed, opens on click) -->
+        <div id="learningCurveCard" class="cafe-card rounded-2xl border border-latte-300 overflow-hidden transition-all">
+          <button type="button" onclick="toggleSectionAccordion('learningCurveAccordionBody', 'learningCurveChevron', 'learningCurveToggleLabel')" class="w-full p-4 sm:p-5 flex items-center justify-between gap-3 text-left hover:bg-latte-100/60 transition">
+            <div class="flex items-start gap-3">
+              <div class="w-10 h-10 rounded-xl bg-amber-100 border border-amber-300 flex items-center justify-center shrink-0 mt-0.5 text-base">
+                📈
+              </div>
+              <div>
+                <div class="flex flex-wrap items-center gap-2">
+                  <h3 class="text-sm font-extrabold text-latte-900">Grafische Lernkurve & Bezugs-Verlauf</h3>
+                  <span id="learningCurveHitRateBadge" class="px-2 py-0.5 text-[10px] font-bold bg-emerald-100 text-emerald-900 rounded-full border border-emerald-300 mono">
+                    Sweet Spot: --%
+                  </span>
+                </div>
+                <p id="learningCurveSubtitle" class="text-[11px] text-latte-600 mt-0.5">
+                  Tippen zum Anzeigen des Mahlgrad- & Zeit-Verlaufs dieser Bohne
+                </p>
+              </div>
             </div>
-            <span id="learningCurveHitRateBadge" class="px-2.5 py-0.5 text-[10px] font-bold bg-emerald-100 text-emerald-900 rounded-full border border-emerald-300 mono">
-              Sweet Spot: --%
-            </span>
-          </div>
-
-          <!-- Interactive SVG Dual-Trend Chart -->
-          <div id="learningCurveChartBox" class="p-3 rounded-xl bg-white border border-latte-200 shadow-inner space-y-2">
-            <svg id="learningCurveSvg" viewBox="0 0 360 135" class="w-full h-32 overflow-visible">
-              <!-- Populated dynamically via renderLearningCurveChart() -->
-            </svg>
-            <div class="flex flex-wrap items-center justify-between gap-2 text-[10px] text-latte-600 mono border-t border-latte-100 pt-1.5">
-              <span class="flex items-center gap-1 font-semibold text-amber-800">
-                <span class="w-2.5 h-1 rounded bg-amber-600 inline-block"></span> Mahlgrad-Verlauf
-              </span>
-              <span class="flex items-center gap-1 font-semibold text-emerald-800">
-                <span class="w-2 h-2 rounded-full bg-emerald-600 inline-block"></span> Bezugszeit (s) im Ziel
-              </span>
-              <span class="flex items-center gap-1 text-latte-500">
-                <span class="w-2.5 h-2 rounded-sm bg-emerald-100 border border-emerald-300 inline-block"></span> Zielkorridor
-              </span>
+            <div class="flex items-center gap-1.5 shrink-0">
+              <span id="learningCurveToggleLabel" class="text-[11px] font-bold text-amber-800 hidden sm:inline">Aufklappen</span>
+              <svg id="learningCurveChevron" class="w-4 h-4 text-amber-800 transition-transform duration-200" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
             </div>
-          </div>
+          </button>
 
-          <div id="learningCurveSummaryText" class="text-[11px] text-latte-700 leading-relaxed bg-latte-50 px-3 py-2 rounded-xl border border-latte-200">
-            <!-- Dynamic insight text -->
+          <div id="learningCurveAccordionBody" class="hidden border-t border-latte-200 p-4 sm:p-5 space-y-3.5 bg-latte-50/60">
+            <!-- Interactive SVG Dual-Trend Chart -->
+            <div id="learningCurveChartBox" class="p-3 rounded-xl bg-white border border-latte-200 shadow-inner space-y-2">
+              <svg id="learningCurveSvg" viewBox="0 0 360 135" class="w-full h-32 overflow-visible">
+                <!-- Populated dynamically via renderLearningCurveChart() -->
+              </svg>
+              <div class="flex flex-wrap items-center justify-between gap-2 text-[10px] text-latte-600 mono border-t border-latte-100 pt-1.5">
+                <span class="flex items-center gap-1 font-semibold text-amber-800">
+                  <span class="w-2.5 h-1 rounded bg-amber-600 inline-block"></span> Mahlgrad-Verlauf
+                </span>
+                <span class="flex items-center gap-1 font-semibold text-emerald-800">
+                  <span class="w-2 h-2 rounded-full bg-emerald-600 inline-block"></span> Bezugszeit (s) im Ziel
+                </span>
+                <span class="flex items-center gap-1 text-latte-500">
+                  <span class="w-2.5 h-2 rounded-sm bg-emerald-100 border border-emerald-300 inline-block"></span> Zielkorridor
+                </span>
+              </div>
+            </div>
+
+            <div id="learningCurveSummaryText" class="text-[11px] text-latte-700 leading-relaxed bg-white px-3 py-2 rounded-xl border border-latte-200">
+              <!-- Dynamic insight text -->
+            </div>
           </div>
         </div>
 
@@ -1917,7 +1996,7 @@
       }
 
       // Highlight selected drink button
-      const drinks = ['cappuccino', 'latte', 'espresso'];
+      const drinks = ['cappuccino', 'latte', 'americano', 'espresso'];
       drinks.forEach(d => {
         const btn = document.getElementById(`easyDrinkBtn-${d}`);
         if (!btn) return;
@@ -1934,6 +2013,7 @@
       const step4Badge = document.getElementById('easyStep4Badge');
       const step4Icon = document.getElementById('easyStep4Icon');
       const step4Content = document.getElementById('easyStep4Content');
+      const step4Footer = document.getElementById('easyStep4Footer');
 
       if (appState.easyDrink === 'espresso') {
         step3Badge.textContent = 'Schritt 3 • Espresso beziehen';
@@ -1949,27 +2029,55 @@
         step4Icon.textContent = '☕';
         step4Content.innerHTML = `
           <p class="font-bold text-emerald-900">Dein Doppel-Espresso ist fertig!</p>
-          <p>Kurz mit einem kleinen Löffel umrühren (damit sich die süßen und kräftigen Schichten verbinden) und direkt warm genießen.</p>
+          <p>Kurz mit einem kleinen Löffel umrühren (damit sich die süßen und kräftigen Schichten optimal verbinden) und direkt warm genießen.</p>
         `;
+        if (step4Footer) {
+          step4Footer.innerHTML = '✨ Tipp: Wärmst du die kleine Tasse vorher kurz mit heißem Wasser vor, bleibt die Crema noch länger dicht!';
+        }
+      } else if (appState.easyDrink === 'americano') {
+        step3Badge.textContent = 'Schritt 3 • Zuerst heißes Wasser in die Tasse';
+        step3Content.innerHTML = `
+          <p class="font-bold text-latte-900">Der Barista-Trick für eine wunderschöne Crema (Long Black Style):</p>
+          <ol class="list-decimal list-inside space-y-1.5">
+            <li>Stelle deine große Kaffeetasse unter den <strong>Heißwasserauslauf</strong> der Sage Barista Pro.</li>
+            <li>Drehe den Regler an der Seite auf <strong>„HOT WATER“</strong> und fülle die Tasse zu ca. <strong>zwei Dritteln (ca. 120–150 ml)</strong> mit heißem Wasser.</li>
+            <li>Drehe den Regler wieder zurück in die Mitte.</li>
+          </ol>
+        `;
+        step4Badge.textContent = 'Schritt 4 • Espresso auf das Wasser beziehen';
+        step4Icon.textContent = '💧';
+        step4Content.innerHTML = `
+          <ol class="list-decimal list-inside space-y-1.5 font-medium">
+            <li>Spanne jetzt den vorbereiteten Siebträger fest ein und stelle deine Tasse mit dem heißen Wasser unter den Auslauf.</li>
+            <li>Drücke einmal auf die <strong>1-Tassen-Taste</strong> (~42 g Auto-Stopp).</li>
+            <li><strong>Vorteil:</strong> Weil der Espresso <em>auf</em> das heiße Wasser läuft, bleibt die komplette <strong>goldbraune Haselnuss-Crema</strong> oben erhalten!</li>
+          </ol>
+        `;
+        if (step4Footer) {
+          step4Footer.innerHTML = '✨ Natürlich auch perfekt mit einem Schuss kalter oder warmer Milch kombinierbar.';
+        }
       } else if (appState.easyDrink === 'latte') {
         step3Badge.textContent = 'Schritt 3 • Zuerst Milch, dann Espresso';
         step3Content.innerHTML = `
-          <p class="font-bold text-latte-900">Für die schönen Schichten im hohen Glas:</p>
+          <p class="font-bold text-latte-900">Für die schönen 3 Schichten im hohen Glas:</p>
           <ol class="list-decimal list-inside space-y-1.5">
-            <li>Schäume zuerst die Milch (siehe Schritt 4) und gieße sie in dein hohes Latte-Glas.</li>
-            <li>Warte kurz <strong>20–30 Sekunden</strong>, bis sich Milch und Schaum leicht absetzen.</li>
+            <li>Schäume zuerst die Milch (siehe Schritt 4) und gieße sie in dein hohes Latte-Macchiato-Glas.</li>
+            <li>Warte kurz <strong>20–30 Sekunden</strong>, bis sich warme Milch und Schaumkrone sauber trennen.</li>
             <li>Stelle das Glas unter den Auslauf und drücke die <strong>1-Tassen-Taste</strong> (~42 g Auto-Stopp).</li>
           </ol>
         `;
         step4Badge.textContent = 'Schritt 4 • Milchschaum für Latte Macchiato';
-        step4Icon.textContent = '🧋';
+        step4Icon.textContent = '🥛';
         step4Content.innerHTML = `
           <ol class="list-decimal list-inside space-y-1.5 font-medium">
             <li>Kaltes Milchkännchen bis knapp <strong>unter die Ausguss-Tülle</strong> mit kalter Milch füllen.</li>
-            <li>Dampflanze eintauchen & Dampf starten. Kännchen anfangs leicht senken, sodass es <strong>4–5 Sekunden leise zischt</strong> (für eine schöne Schaumkrone).</li>
+            <li>Dampflanze eintauchen & Dampf starten. Kännchen anfangs leicht senken, sodass es <strong>4–5 Sekunden leise zischt</strong> (für eine lockere Schaumkrone).</li>
             <li>Danach Lanze etwas tiefer halten (Milch wirbelt), bis das Kännchen <strong>gut handwarm (~60–65 °C)</strong> ist.</li>
           </ol>
         `;
+        if (step4Footer) {
+          step4Footer.innerHTML = '✨ Nach dem Schäumen die Dampflanze kurz mit einem feuchten Tuch abwischen und 1 Sekunde Dampf ablassen.';
+        }
       } else {
         // Default: Cappuccino
         step3Badge.textContent = 'Schritt 3 • Espresso in die Tasse';
@@ -1990,6 +2098,9 @@
             <li>Lanze leicht eintauchen und die Milch rollen lassen, bis das Kännchen <strong>gut handwarm (~60–65 °C)</strong> ist, dann zügig über den Espresso gießen.</li>
           </ol>
         `;
+        if (step4Footer) {
+          step4Footer.innerHTML = '✨ Nach dem Schäumen die Dampflanze kurz mit einem feuchten Tuch abwischen und 1 Sekunde Dampf ablassen.';
+        }
       }
     }
 
@@ -2749,3 +2860,4 @@
   </script>
 </body>
 </html>
+```
