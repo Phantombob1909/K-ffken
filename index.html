@@ -1,0 +1,2751 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Espresso Dial-in Lab & Café-Begleiter</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            latte: {
+              50: '#fdfbf7',
+              100: '#f7f1e8',
+              200: '#ede1d1',
+              300: '#dfcbb2',
+              400: '#c8ab89',
+              500: '#b08b65',
+              600: '#8f6b49',
+              700: '#6e5036',
+              800: '#4e3826',
+              900: '#332418',
+            },
+            caramel: {
+              DEFAULT: '#b45309',
+              light: '#d97706',
+              soft: '#fef3c7'
+            }
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap');
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f9f5ef;
+      color: #332418;
+      background-image: 
+        radial-gradient(at 10% 10%, rgba(217, 119, 6, 0.07) 0px, transparent 45%),
+        radial-gradient(at 90% 15%, rgba(176, 139, 101, 0.12) 0px, transparent 50%),
+        radial-gradient(at 50% 90%, rgba(217, 119, 6, 0.05) 0px, transparent 50%);
+      background-attachment: fixed;
+    }
+
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Custom Range Sliders - Warm Coffee Style */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 8px;
+      background: #e6d7c3;
+      border-radius: 999px;
+      outline: none;
+      border: 1px solid #d4be9f;
+      transition: opacity 0.2s ease, background 0.2s ease;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #d97706, #92400e);
+      cursor: pointer;
+      border: 3px solid #fffdf9;
+      box-shadow: 0 2px 6px rgba(146, 64, 14, 0.35);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.12);
+      box-shadow: 0 3px 10px rgba(180, 83, 9, 0.5);
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #d97706, #92400e);
+      cursor: pointer;
+      border: 3px solid #fffdf9;
+      box-shadow: 0 2px 6px rgba(146, 64, 14, 0.35);
+      transition: transform 0.15s ease;
+    }
+
+    .cafe-card {
+      background: rgba(255, 253, 249, 0.92);
+      backdrop-filter: blur(10px);
+      border: 1px solid #e6d7c3;
+      box-shadow: 0 4px 20px -4px rgba(78, 56, 38, 0.06);
+    }
+
+    .cafe-card-highlight {
+      background: linear-gradient(145deg, #fffdf9, #f7efe4);
+      border: 1px solid #d97706;
+      box-shadow: 0 8px 24px -6px rgba(180, 83, 9, 0.12);
+    }
+
+    /* Scroll-Guard Lock State for Simulator Controls */
+    .sim-control-card {
+      position: relative;
+      transition: all 0.2s ease;
+    }
+
+    .sim-control-card.is-locked {
+      border-color: #e6d7c3;
+      background-color: #f7f1e8;
+    }
+
+    .sim-control-card.is-unlocked {
+      border-color: #d97706;
+      background-color: #fffdf9;
+      box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.12);
+    }
+
+    .sim-control-card.is-locked .interactive-zone {
+      pointer-events: none;
+      opacity: 0.45;
+      filter: grayscale(0.25);
+    }
+
+    @keyframes pulse-border {
+      0%, 100% { border-color: #d97706; box-shadow: 0 0 0 0 rgba(217, 119, 6, 0.25); }
+      50% { border-color: #b45309; box-shadow: 0 0 0 5px rgba(217, 119, 6, 0.12); }
+    }
+
+    .purge-alert-active {
+      animation: pulse-border 2.2s infinite;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f3ece1;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #c8ab89;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #b08b65;
+    }
+  </style>
+</head>
+<body class="min-h-screen pb-16 selection:bg-amber-600 selection:text-white">
+
+  <!-- TOP HEADER -->
+  <header class="sticky top-0 z-40 border-b border-latte-200 bg-[#fdfbf7]/90 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-amber-600 to-amber-800 flex items-center justify-center shadow-md shadow-amber-900/20 text-white text-xl">
+          ☕
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-lg sm:text-xl font-extrabold tracking-tight text-latte-900">Espresso Dial-in Lab</h1>
+            <span class="px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider bg-amber-100 text-amber-800 border border-amber-300 rounded-full">Sage Barista Pro</span>
+          </div>
+          <p class="text-xs text-latte-600">Persönlicher Barista-Begleiter • Röstbar & Speicherstadt Edition</p>
+        </div>
+      </div>
+
+      <!-- Global Grinder Status & Quick Actions -->
+      <div class="flex flex-wrap items-center gap-2">
+        <div class="inline-flex p-1 rounded-xl bg-latte-200/80 border border-latte-300 shadow-inner">
+          <button type="button" id="btnModeBarista" onclick="switchAppMode('barista')" class="px-3 py-1.5 rounded-lg text-xs font-extrabold transition flex items-center gap-1.5 bg-amber-700 text-white shadow-sm">
+            <span>👨‍🔬 Barista Mode</span>
+          </button>
+          <button type="button" id="btnModeEasy" onclick="switchAppMode('easy')" class="px-3 py-1.5 rounded-lg text-xs font-extrabold transition flex items-center gap-1.5 text-latte-800 hover:bg-latte-100">
+            <span>🌸 Easy Mode</span>
+          </button>
+        </div>
+
+        <div class="px-3 py-1.5 rounded-xl bg-latte-100 border border-latte-300 flex items-center gap-2 text-xs">
+          <span class="text-latte-700 font-medium">Mühlen-Stand:</span>
+          <span id="headerLastGrind" class="mono font-bold text-amber-700 text-sm">35,0</span>
+        </div>
+
+        <button id="headerBtnNewBean" onclick="openNewProfileModal()" class="px-3 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold transition flex items-center gap-1.5 shadow-sm">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 4v16m8-8H4"/></svg>
+          Neue Bohne
+        </button>
+
+        <button id="headerBtnBackup" onclick="exportDatabaseJSON()" title="Datenbank als JSON exportieren" class="px-3 py-1.5 rounded-xl bg-white hover:bg-latte-100 text-latte-800 border border-latte-300 text-xs font-semibold transition flex items-center gap-1">
+          <svg class="w-3.5 h-3.5 text-amber-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+          Backup
+        </button>
+
+        <button id="headerBtnImport" onclick="triggerImportJSON()" title="Datenbank aus JSON-Datei wiederherstellen" class="px-3 py-1.5 rounded-xl bg-white hover:bg-latte-100 text-latte-800 border border-latte-300 text-xs font-semibold transition flex items-center gap-1">
+          <svg class="w-3.5 h-3.5 text-emerald-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+          Import
+        </button>
+        <input type="file" id="importJsonInput" accept=".json" class="hidden" onchange="handleImportJSON(event)" />
+
+        <button id="headerBtnReset" onclick="resetDatabaseToDefaults()" class="px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-800 border border-rose-200 text-xs font-semibold transition flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          Reset
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 pt-6 space-y-6">
+
+    <!-- EASY MODE CONTAINER (Hidden by default, shown when Easy Mode is selected) -->
+    <div id="easyModeWrapper" class="hidden space-y-6">
+      <!-- Greeting & Overview Banner -->
+      <div class="cafe-card-highlight rounded-3xl p-6 sm:p-8 border-2 border-amber-400 shadow-lg">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="space-y-1.5">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider bg-amber-100 text-amber-900 border border-amber-300">
+              🌸 Easy Mode • Schnell-Anleitung ohne Waage beim Bezug
+            </span>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-latte-900">Hallo! Welchen Kaffee möchtest du dir machen?</h2>
+            <p class="text-sm text-latte-700">
+              Alle Einstellungen sind bereits fertig vorbereitet. Wähle einfach deine Bohne und dein Lieblingsgetränk!
+            </p>
+          </div>
+          <div class="shrink-0 flex items-center gap-3 bg-white/90 px-4 py-3 rounded-2xl border border-latte-200 shadow-sm">
+            <span class="text-2xl">🤖</span>
+            <div class="text-xs">
+              <span class="text-latte-500 font-bold uppercase block">Mengen-Automatik</span>
+              <span class="font-extrabold text-emerald-800">1-Tassen-Taste (~42 g Auto-Stopp)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP A: Bean Selection & Drink Selection -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- 1. Kaffeebohne auswählen (5 cols) -->
+        <div class="lg:col-span-5 cafe-card rounded-3xl p-5 sm:p-6 space-y-4">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-extrabold uppercase tracking-wider text-amber-800">Auswahl 1: Welche Bohne ist in der Mühle?</span>
+            <span class="text-[11px] font-semibold text-latte-600">Aktuell aktiv</span>
+          </div>
+          <div>
+            <select id="easyBeanSelect" onchange="handleEasyBeanChange(this.value)" class="w-full px-4 py-3.5 rounded-2xl bg-white border-2 border-amber-400 text-latte-900 font-extrabold text-sm sm:text-base shadow-sm focus:border-amber-600 outline-none cursor-pointer">
+              <!-- Populated dynamically -->
+            </select>
+          </div>
+          <div class="p-4 rounded-2xl bg-amber-50/80 border border-amber-200 space-y-1.5">
+            <div class="flex items-center justify-between text-xs">
+              <span id="easyBeanBlend" class="font-bold text-amber-900">100% Bio Highland Arabica</span>
+              <span id="easyBeanRoastBadge" class="px-2 py-0.5 rounded-full bg-amber-200 text-amber-900 font-bold text-[10px] uppercase">Hell-Mittel</span>
+            </div>
+            <p id="easyBeanNotes" class="text-xs text-latte-700 leading-relaxed">
+              Schokoladig, nussig und rund im Geschmack.
+            </p>
+          </div>
+        </div>
+
+        <!-- 2. Getränk wählen (7 cols) -->
+        <div class="lg:col-span-7 cafe-card rounded-3xl p-5 sm:p-6 space-y-4">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-extrabold uppercase tracking-wider text-amber-800">Auswahl 2: Dein Wunsch-Getränk</span>
+            <span class="text-[11px] font-semibold text-latte-600">Antippen zum Auswählen</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+            <!-- Cappuccino Tile -->
+            <button type="button" onclick="selectEasyDrink('cappuccino')" id="easyDrinkBtn-cappuccino" class="p-4 rounded-2xl border-2 text-left transition-all flex flex-col justify-between gap-3">
+              <div class="flex items-center justify-between">
+                <span class="text-3xl">🥛</span>
+                <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-amber-100 text-amber-900">Klassiker</span>
+              </div>
+              <div>
+                <div class="font-extrabold text-base text-latte-900">Cappuccino</div>
+                <div class="text-xs text-latte-600 mt-0.5">Kräftiger Espresso + cremiger, feinporiger Milchschaum</div>
+              </div>
+            </button>
+
+            <!-- Latte Macchiato Tile -->
+            <button type="button" onclick="selectEasyDrink('latte')" id="easyDrinkBtn-latte" class="p-4 rounded-2xl border-2 text-left transition-all flex flex-col justify-between gap-3">
+              <div class="flex items-center justify-between">
+                <span class="text-3xl">🧋</span>
+                <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-amber-100 text-amber-900">Sanft & Mild</span>
+              </div>
+              <div>
+                <div class="font-extrabold text-base text-latte-900">Latte Macchiato</div>
+                <div class="text-xs text-latte-600 mt-0.5">Viel warme Milch im hohen Glas + sanfter Espresso-Schicht</div>
+              </div>
+            </button>
+
+            <!-- Espresso Tile -->
+            <button type="button" onclick="selectEasyDrink('espresso')" id="easyDrinkBtn-espresso" class="p-4 rounded-2xl border-2 text-left transition-all flex flex-col justify-between gap-3">
+              <div class="flex items-center justify-between">
+                <span class="text-3xl">☕</span>
+                <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-amber-100 text-amber-900">Pur</span>
+              </div>
+              <div>
+                <div class="font-extrabold text-base text-latte-900">Doppel-Espresso</div>
+                <div class="text-xs text-latte-600 mt-0.5">Pur & aromatisch mit dichter Haselnuss-Crema</div>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP-BY-STEP PREPARATION CARDS -->
+      <div class="space-y-3">
+        <h3 class="text-sm font-extrabold uppercase tracking-wider text-latte-700 flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-600"></span>
+          Deine Schritt-für-Schritt Anleitung an der Sage Barista Pro
+        </h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Schritt 1: Mühle & Abwiegen -->
+          <div class="cafe-card rounded-3xl p-5 sm:p-6 border-2 border-latte-200 flex flex-col justify-between gap-4">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="px-3 py-1 rounded-full bg-amber-600 text-white text-xs font-extrabold uppercase">Schritt 1 • Mühle & Abwiegen</span>
+                <span class="text-2xl">⚖️</span>
+              </div>
+              <p class="text-sm text-latte-800 leading-relaxed">
+                Prüfe kurz das Einstellrad links an der Maschine und wiege das Kaffeemehl im großen <strong>Doppelsieb (2-Cup-Sieb)</strong> ab:
+              </p>
+              <div class="grid grid-cols-2 gap-3 pt-1">
+                <div class="p-4 rounded-2xl bg-amber-50 border-2 border-amber-300 text-center">
+                  <span class="text-[11px] font-extrabold uppercase text-amber-900 block">Mahlgrad am Rad</span>
+                  <span id="easyStepGrindValue" class="mono text-3xl font-extrabold text-amber-800 mt-1 block">35,0</span>
+                </div>
+                <div class="p-4 rounded-2xl bg-emerald-50 border-2 border-emerald-300 text-center">
+                  <span class="text-[11px] font-extrabold uppercase text-emerald-900 block">Kaffeemenge</span>
+                  <span id="easyStepDoseValue" class="mono text-3xl font-extrabold text-emerald-800 mt-1 block">18,0 g</span>
+                </div>
+              </div>
+            </div>
+            <div id="easyStepPurgeHint" class="p-3 rounded-xl bg-latte-100 border border-latte-300 text-xs text-latte-800">
+              ✓ Die Mühle steht bereits auf dem richtigen Wert. Du kannst direkt loslegen!
+            </div>
+          </div>
+
+          <!-- Schritt 2: Vorbereiten & Tampen -->
+          <div class="cafe-card rounded-3xl p-5 sm:p-6 border-2 border-latte-200 flex flex-col justify-between gap-4">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="px-3 py-1 rounded-full bg-amber-600 text-white text-xs font-extrabold uppercase">Schritt 2 • Verteilen & Festdrücken</span>
+                <span class="text-2xl">🪄</span>
+              </div>
+              <ol class="text-sm text-latte-800 space-y-2.5 leading-relaxed list-decimal list-inside font-medium">
+                <li>Mit dem <strong>Nadel-Tool (WDT)</strong> locker <strong>3–4 Runden in eine Richtung</strong> rühren, damit keine Klümpchen bleiben.</li>
+                <li>Den Siebträger <strong>1x kurz gerade</strong> auf die Matte klopfen.</li>
+                <li>Mit dem <strong>Tamper gerade und kräftig festdrücken</strong>, bis das Kaffeemehl schön glatt und eben ist.</li>
+              </ol>
+            </div>
+            <div class="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-900 font-semibold">
+              💡 Tipp: Die Temperatur an der Maschine bleibt einfach so eingestellt, wie sie ist!
+            </div>
+          </div>
+
+          <!-- Schritt 3: Bezug starten (1-Tassen-Taste) -->
+          <div class="cafe-card rounded-3xl p-5 sm:p-6 border-2 border-amber-400 bg-gradient-to-br from-[#fffdf9] to-[#f7efe4] flex flex-col justify-between gap-4">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span id="easyStep3Badge" class="px-3 py-1 rounded-full bg-amber-700 text-white text-xs font-extrabold uppercase">Schritt 3 • Espresso starten</span>
+                <span class="text-2xl">🔘</span>
+              </div>
+              <div id="easyStep3Content" class="text-sm text-latte-900 space-y-2.5 leading-relaxed">
+                <!-- Dynamically updated depending on drink -->
+              </div>
+            </div>
+            <div class="p-3.5 rounded-2xl bg-white border border-amber-300 flex items-center gap-3 shadow-sm">
+              <div class="w-10 h-10 rounded-xl bg-amber-600 text-white font-extrabold flex items-center justify-center shrink-0 text-sm mono">
+                1 CUP
+              </div>
+              <div class="text-xs text-latte-800">
+                <strong>Keine Waage unter der Tasse nötig!</strong> Drücke einfach einmal auf die <strong>1-Tassen-Taste</strong> – die Maschine stoppt bei <strong>~42 g</strong> von selbst.
+              </div>
+            </div>
+          </div>
+
+          <!-- Schritt 4: Milchschaum / Servieren -->
+          <div class="cafe-card rounded-3xl p-5 sm:p-6 border-2 border-latte-200 flex flex-col justify-between gap-4">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span id="easyStep4Badge" class="px-3 py-1 rounded-full bg-emerald-700 text-white text-xs font-extrabold uppercase">Schritt 4 • Milchschaum & Genuss</span>
+                <span id="easyStep4Icon" class="text-2xl">🥛</span>
+              </div>
+              <div id="easyStep4Content" class="text-sm text-latte-800 space-y-2.5 leading-relaxed">
+                <!-- Dynamically updated depending on drink -->
+              </div>
+            </div>
+            <div id="easyStep4Footer" class="p-3 rounded-xl bg-latte-100 border border-latte-300 text-xs text-latte-700">
+              ✨ Nach dem Schäumen die Dampflanze kurz mit einem feuchten Tuch abwischen und 1 Sekunde Dampf ablassen.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BARISTA MODE CONTAINER (Default Active) -->
+    <div id="baristaModeWrapper" class="space-y-6">
+    <!-- 1. COMPACT ACTIVE BEAN HERO CARD & COLLAPSIBLE SELECTOR -->
+    <section class="relative">
+      <div class="flex items-center justify-between mb-2">
+        <h2 class="text-xs font-bold uppercase tracking-wider text-latte-600 flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-amber-600"></span>
+          Aktuelle Kaffeesorte & Rezept
+        </h2>
+        <span id="beanCountBadge" class="text-[11px] text-latte-600 font-medium mono">10 Sorten gespeichert</span>
+      </div>
+
+      <!-- Single Active Bean Card -->
+      <div class="cafe-card-highlight rounded-2xl p-4 sm:p-5 transition-all">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          
+          <!-- Left: Active Bean Info -->
+          <div class="flex items-start sm:items-center gap-3.5">
+            <div class="w-14 h-14 rounded-2xl bg-amber-100 border border-amber-300 flex flex-col items-center justify-center shrink-0 shadow-inner">
+              <span class="text-[9px] uppercase font-bold text-amber-900">Mahlgrad</span>
+              <span id="heroActiveGrind" class="mono text-lg font-extrabold text-amber-800">35,0</span>
+            </div>
+            <div>
+              <div class="flex flex-wrap items-center gap-2">
+                <span id="heroRoastBadge" class="text-[10px] px-2.5 py-0.5 rounded-full border font-bold uppercase bg-amber-100 text-amber-800 border-amber-300">Hell-Mittel</span>
+                <h3 id="heroBeanName" class="text-base sm:text-lg font-extrabold text-latte-900">Speicherstadt Bio Guatemala (18g)</h3>
+              </div>
+              <p id="heroBeanBlend" class="text-xs text-latte-600 mt-0.5 font-medium">100% Bio Highland Arabica (Washed)</p>
+            </div>
+          </div>
+
+          <!-- Middle: Quick Telemetry Pills -->
+          <div class="flex flex-wrap items-center gap-2 sm:gap-3 text-xs mono">
+            <div class="px-3.5 py-2 rounded-xl bg-white border border-latte-200 shadow-sm">
+              <span class="text-latte-500 block text-[10px] font-sans font-semibold">Rezept (In ➔ Out)</span>
+              <span id="heroRecipe" class="font-bold text-latte-900">18,0g ➔ 43,0g</span>
+            </div>
+            <div class="px-3.5 py-2 rounded-xl bg-white border border-latte-200 shadow-sm">
+              <span class="text-latte-500 block text-[10px] font-sans font-semibold">Zielzeit</span>
+              <span id="heroTargetTime" class="font-bold text-emerald-700">26–29 s</span>
+            </div>
+            <div class="px-3.5 py-2 rounded-xl bg-white border border-latte-200 shadow-sm">
+              <span class="text-latte-500 block text-[10px] font-sans font-semibold">Sage Temperatur</span>
+              <span id="heroTemp" class="font-bold text-amber-800">4/5 Balken (~94 °C)</span>
+            </div>
+          </div>
+
+          <!-- Right: Toggle Drawer Button -->
+          <div class="flex items-center gap-2 self-end md:self-center shrink-0">
+            <button onclick="toggleBeanSelectorDrawer()" id="beanDrawerToggleBtn" class="px-4 py-2.5 rounded-xl bg-amber-700 hover:bg-amber-800 text-white font-bold text-xs uppercase tracking-wider transition flex items-center gap-2 shadow-sm">
+              <span>🫘 Bohne wechseln</span>
+              <svg id="beanDrawerChevron" class="w-4 h-4 transition-transform duration-200" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Collapsible Bean Selection Drawer (Hidden by default) -->
+        <div id="beanSelectorDrawer" class="hidden mt-4 pt-4 border-t border-latte-200 space-y-3">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <span class="text-xs font-bold text-latte-800">Wähle eine gespeicherte Kaffeesorte aus deiner Sammlung:</span>
+            <div class="flex items-center gap-2">
+              <input type="text" id="beanSearchInput" oninput="renderProfileCards()" placeholder="Sorte suchen (z.B. Speicherstadt, Meyers)..." class="px-3 py-1.5 rounded-xl bg-white border border-latte-300 text-xs text-latte-900 focus:border-amber-600 outline-none w-full sm:w-64" />
+              <button onclick="openNewProfileModal()" class="px-3 py-1.5 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300 text-xs font-bold shrink-0">+ Neu</button>
+            </div>
+          </div>
+
+          <div id="profileCardsContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-2.5 max-h-[340px] overflow-y-auto pr-1">
+            <!-- Dynamically populated profile cards -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. WORKFLOW ASSISTANT BANNERS (DEAD SPACE + COLLAPSIBLE PUCK-PREP & HEADSPACE) -->
+    <section class="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
+      <!-- Totraum-Hinweis -->
+      <div id="deadSpaceBanner" class="cafe-card rounded-2xl p-4 border transition-all duration-300 flex items-start gap-3.5">
+        <div id="deadSpaceIconBox" class="w-10 h-10 rounded-xl bg-amber-100 border border-amber-300 flex items-center justify-center shrink-0 mt-0.5 text-lg">
+          ⚙️
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-xs font-extrabold uppercase tracking-wider text-amber-800">Mühlen-Totraum Assistent</span>
+            <span id="deadSpaceBadge" class="px-2 py-0.5 text-[10px] font-bold uppercase rounded-full bg-amber-200 text-amber-900 mono">Stand prüfen</span>
+          </div>
+          <p id="deadSpaceText" class="text-xs text-latte-700 mt-1 leading-relaxed">
+            Sobald du den Mahlgrad änderst: <strong>1–3 g Kaffeemehl freimahlen (Totraum leeren)!</strong>
+          </p>
+          <button onclick="confirmGrinderPurged()" id="confirmPurgeBtn" class="mt-2.5 px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-700 text-white text-[11px] font-bold transition hidden shadow-sm">
+            ✓ Totraum geleert (Mühlen-Stand synchronisieren)
+          </button>
+        </div>
+      </div>
+
+      <!-- Zusammengefasste & Einklappbare Box: Puck-Prep (WDT) + Sieb-Headspace -->
+      <div class="cafe-card rounded-2xl border border-latte-200 overflow-hidden transition-all">
+        <button type="button" onclick="toggleSectionAccordion('puckPrepAccordionBody', 'puckPrepChevron', 'puckPrepToggleLabel')" class="w-full p-4 flex items-center justify-between gap-3 text-left hover:bg-latte-100/60 transition">
+          <div class="flex items-start gap-3.5">
+            <div class="w-10 h-10 rounded-xl bg-emerald-100 border border-emerald-300 flex items-center justify-center shrink-0 mt-0.5 text-lg">
+              🪄
+            </div>
+            <div>
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="text-xs font-extrabold uppercase tracking-wider text-emerald-800">Puck-Prep (WDT) & Sieb-Headspace</span>
+                <span id="headspaceStatusBadge" class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-sky-100 text-sky-800 border border-sky-200 mono">Dosis: 18,0 g</span>
+              </div>
+              <p class="text-xs text-latte-600 mt-1">
+                Tippen zum Öffnen der WDT-Drehtechnik & Headspace-Infos zur aktuellen Dosis
+              </p>
+            </div>
+          </div>
+          <div class="flex items-center gap-1.5 shrink-0">
+            <span id="puckPrepToggleLabel" class="text-[11px] font-bold text-amber-800 hidden sm:inline">Infos öffnen</span>
+            <svg id="puckPrepChevron" class="w-4 h-4 text-amber-800 transition-transform duration-200" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </div>
+        </button>
+
+        <div id="puckPrepAccordionBody" class="hidden border-t border-latte-200 px-4 pb-4 pt-3 bg-latte-50/70 space-y-3 text-xs">
+          <div class="p-3 rounded-xl bg-white border border-emerald-200 space-y-1">
+            <div class="font-bold text-emerald-800 flex items-center justify-between">
+              <span>🌀 Planetary WDT Puck-Prep</span>
+              <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">Anti-Channeling</span>
+            </div>
+            <p class="text-latte-700 leading-relaxed">
+              Nur <strong>3–4 ruhige Umdrehungen in EINE Richtung</strong> drehen (verhindert Zentrifugal-Randbildung / Donut-Effekt). Nadeln <strong>1–2 mm über Siebboden</strong>; danach <strong>1x kurz vertikal aufklopfen</strong> vor dem Tampen.
+            </p>
+          </div>
+
+          <div class="p-3 rounded-xl bg-white border border-sky-200 space-y-1">
+            <div class="font-bold text-sky-800 flex items-center justify-between">
+              <span>💧 Sieb-Headspace & Puck-Feuchte</span>
+              <span id="headspaceInnerDoseLabel" class="mono text-[10px] text-sky-700">18,0 g</span>
+            </div>
+            <p id="headspaceText" class="text-latte-700 leading-relaxed">
+              Bei Dosen <strong>&le; 17,5 g</strong> ist ein kleiner Wasserfilm auf dem Puck nach dem Bezug durch den größeren Freiraum zum Duschsieb (3-Wege-Ventil) völlig normal.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. MAIN LAB GRID: EXTRACTION SIMULATOR + LIVE ANALYTICS -->
+    <section class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      
+      <!-- LEFT COLUMN: SLIDERS & CONTROLS (7 cols) -->
+      <div class="lg:col-span-7 cafe-card rounded-2xl p-5 sm:p-6 space-y-5">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-latte-200 pb-4">
+          <div>
+            <h2 class="text-base sm:text-lg font-extrabold text-latte-900 flex items-center gap-2">
+              <span>🎛️ Interaktiver Extraktions-Simulator</span>
+            </h2>
+            <p id="simActiveBeanSubtitle" class="text-xs text-latte-600 mt-0.5">Tippe ein Feld an, um es zum Verstellen freizugeben (Scroll-Schutz aktiv)</p>
+          </div>
+          <div class="flex flex-wrap items-center gap-2">
+            <button type="button" onclick="toggleAllLocks()" id="globalLockBtn" class="px-2.5 py-1.5 rounded-xl bg-latte-100 hover:bg-latte-200 text-latte-800 border border-latte-300 text-xs font-bold transition flex items-center gap-1">
+              <span>🔒 Alle gesperrt</span>
+            </button>
+            <label class="flex items-center gap-1.5 text-xs text-latte-800 font-medium cursor-pointer bg-latte-100 px-2.5 py-1.5 rounded-xl border border-latte-300">
+              <input type="checkbox" id="fineStepToggle" onchange="toggleGrindStepResolution()" class="accent-amber-600 rounded" />
+              <span>0,1er Schritt</span>
+            </label>
+            <button onclick="syncSimulatorToRecommended()" class="px-3 py-1.5 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300 text-xs font-bold transition">
+              ✨ KI-Idealwert
+            </button>
+          </div>
+        </div>
+
+        <!-- Profile Notes Callout -->
+        <div class="rounded-xl bg-amber-50/70 border border-amber-200 p-3.5 flex items-start gap-3">
+          <span class="text-lg">📋</span>
+          <div class="text-xs space-y-1 flex-1">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <span id="profileBlendLabel" class="font-bold text-amber-900"></span>
+              <span id="profileTargetWindowLabel" class="mono text-latte-800 bg-white px-2 py-0.5 rounded-lg border border-amber-200 font-semibold"></span>
+            </div>
+            <p id="profileNotesLabel" class="text-latte-700 leading-relaxed"></p>
+          </div>
+        </div>
+
+        <!-- Scroll-Protected Sliders Grid -->
+        <div class="space-y-3.5">
+
+          <!-- 1. Mahlgrad Slider -->
+          <div id="card-grind" onclick="activateControlCard('grind', event)" class="sim-control-card is-locked p-3.5 rounded-xl border space-y-2 cursor-pointer">
+            <div class="flex items-center justify-between gap-2">
+              <div class="flex flex-wrap items-center gap-1.5">
+                <span class="text-xs font-extrabold uppercase tracking-wider text-latte-900">1. Mahlgrad (28,0 – 42,0)</span>
+                <span id="simGrindDeltaInfo" class="text-[11px] font-semibold mono"></span>
+              </div>
+              <div class="flex items-center gap-2">
+                <button type="button" onclick="toggleCardLock('grind', event)" id="lock-badge-grind" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-latte-200 text-latte-700 hover:bg-amber-200 transition">
+                  🔒 Antippen zum Ändern
+                </button>
+              </div>
+            </div>
+            <div class="interactive-zone space-y-2 pt-1">
+              <div class="flex items-center justify-between">
+                <span id="grindScaleTargetMarker" class="text-xs text-amber-800 font-bold mono">KI-Ziel heute: 35,0</span>
+                <div class="flex items-center gap-1.5">
+                  <button type="button" onclick="nudgeGrind(-0.5)" class="px-2.5 py-0.5 rounded-lg bg-white hover:bg-latte-100 text-xs mono font-bold text-latte-800 border border-latte-300 shadow-sm">-0,5</button>
+                  <span id="valGrind" class="mono text-lg font-extrabold text-amber-700 min-w-[3.2rem] text-center">35,0</span>
+                  <button type="button" onclick="nudgeGrind(0.5)" class="px-2.5 py-0.5 rounded-lg bg-white hover:bg-latte-100 text-xs mono font-bold text-latte-800 border border-latte-300 shadow-sm">+0,5</button>
+                </div>
+              </div>
+              <input type="range" id="simGrind" min="28.0" max="42.0" step="0.5" value="35.0" oninput="updateSimulation()" />
+              <div class="flex justify-between text-[10px] text-latte-500 mono">
+                <span>28,0 (Sehr fein / langsam)</span>
+                <span>42,0 (Grob / schnell)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. Bohnen-Alterung Slider -->
+          <div id="card-days" onclick="activateControlCard('days', event)" class="sim-control-card is-locked p-3.5 rounded-xl border space-y-2 cursor-pointer">
+            <div class="flex items-center justify-between gap-2">
+              <div class="flex flex-wrap items-center gap-1.5">
+                <span class="text-xs font-extrabold uppercase tracking-wider text-latte-900">2. Bohnen-Alterung (Tage offen)</span>
+                <span id="simAgingFactorBadge" class="text-[11px] text-amber-800 font-semibold mono"></span>
+              </div>
+              <button type="button" onclick="toggleCardLock('days', event)" id="lock-badge-days" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-latte-200 text-latte-700 hover:bg-amber-200 transition">
+                🔒 Antippen zum Ändern
+              </button>
+            </div>
+            <div class="interactive-zone space-y-2 pt-1">
+              <div class="flex items-center justify-between">
+                <span class="text-[11px] text-latte-600">Wie lange ist die Packung geöffnet?</span>
+                <div class="flex items-center gap-1.5">
+                  <button type="button" onclick="nudgeDays(-1)" class="px-2 py-0.5 rounded-lg bg-white hover:bg-latte-100 text-xs mono font-bold text-latte-800 border border-latte-300 shadow-sm">-1d</button>
+                  <span id="valDaysOpen" class="mono text-base font-extrabold text-latte-900 min-w-[4.2rem] text-center">1 Tag</span>
+                  <button type="button" onclick="nudgeDays(1)" class="px-2 py-0.5 rounded-lg bg-white hover:bg-latte-100 text-xs mono font-bold text-latte-800 border border-latte-300 shadow-sm">+1d</button>
+                </div>
+              </div>
+              <input type="range" id="simDaysOpen" min="0" max="30" step="1" value="1" oninput="updateSimulation()" />
+              <div class="flex justify-between text-[10px] text-latte-500 mono">
+                <span>0 Tage (Frisch)</span>
+                <span>14 Tage (1–2 Wo.)</span>
+                <span>30 Tage (Reif)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Two-column row for Dose In & Yield Out -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <!-- 3. Dosis In -->
+            <div id="card-dose" onclick="activateControlCard('dose', event)" class="sim-control-card is-locked p-3.5 rounded-xl border space-y-2 cursor-pointer">
+              <div class="flex items-center justify-between gap-1">
+                <span class="text-xs font-extrabold uppercase tracking-wider text-latte-900">3. Dosis In (g)</span>
+                <button type="button" onclick="toggleCardLock('dose', event)" id="lock-badge-dose" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-latte-200 text-latte-700 hover:bg-amber-200 transition">
+                  🔒 Gesperrt
+                </button>
+              </div>
+              <div class="interactive-zone space-y-2 pt-1">
+                <div class="flex items-center justify-between">
+                  <span class="text-[11px] text-latte-600">Siebträger-Dosis</span>
+                  <span id="valDoseIn" class="mono text-base font-extrabold text-amber-800">18,0 g</span>
+                </div>
+                <input type="range" id="simDoseIn" min="15.0" max="20.0" step="0.5" value="18.0" oninput="updateSimulation()" />
+                <div class="flex justify-between text-[10px] text-latte-500 mono">
+                  <span>15,0 g</span>
+                  <span>17,5 g</span>
+                  <span>20,0 g</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 4. Zielmenge Out -->
+            <div id="card-yield" onclick="activateControlCard('yield', event)" class="sim-control-card is-locked p-3.5 rounded-xl border space-y-2 cursor-pointer">
+              <div class="flex items-center justify-between gap-1">
+                <span class="text-xs font-extrabold uppercase tracking-wider text-latte-900">4. Zielmenge Out (g)</span>
+                <button type="button" onclick="toggleCardLock('yield', event)" id="lock-badge-yield" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-latte-200 text-latte-700 hover:bg-amber-200 transition">
+                  🔒 Gesperrt
+                </button>
+              </div>
+              <div class="interactive-zone space-y-2 pt-1">
+                <div class="flex items-center justify-between">
+                  <span id="valBrewRatio" class="text-[11px] text-amber-800 font-bold mono">Ratio 1:2,39</span>
+                  <span id="valYieldOut" class="mono text-base font-extrabold text-amber-800">43,0 g</span>
+                </div>
+                <input type="range" id="simYieldOut" min="30.0" max="55.0" step="0.5" value="43.0" oninput="updateSimulation()" />
+                <div class="flex justify-between text-[10px] text-latte-500 mono">
+                  <span>30,0 g</span>
+                  <span>42,0 g</span>
+                  <span>55,0 g</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Two-column row for Temperature (5 Sage Bars) & Pressure -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <!-- 5. Wassertemperatur (Sage Barista Pro 5 Balken) -->
+            <div id="card-temp" onclick="activateControlCard('temp', event)" class="sim-control-card is-locked p-3.5 rounded-xl border space-y-2 cursor-pointer">
+              <div class="flex items-center justify-between gap-1">
+                <span class="text-xs font-extrabold uppercase tracking-wider text-latte-900">5. Sage Temperatur (5 Stufen)</span>
+                <button type="button" onclick="toggleCardLock('temp', event)" id="lock-badge-temp" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-latte-200 text-latte-700 hover:bg-amber-200 transition">
+                  🔒 Gesperrt
+                </button>
+              </div>
+              <div class="interactive-zone space-y-2.5 pt-1">
+                <div class="flex items-center justify-between">
+                  <span class="text-[11px] text-latte-600">LCD-Balken wählen:</span>
+                  <span id="valTemp" class="mono text-xs font-extrabold text-amber-800">4/5 Balken (~94 °C)</span>
+                </div>
+                <input type="hidden" id="simTemp" value="94.0" />
+                <!-- 5 Visual Bar Buttons matching Sage Barista Pro LCD -->
+                <div class="grid grid-cols-5 gap-1.5" id="sageTempBarButtons">
+                  <button type="button" onclick="setSageTempBar(1)" data-bar="1" class="sage-bar-btn py-2 px-1 rounded-lg border text-center transition flex flex-col items-center justify-center gap-0.5">
+                    <span class="text-[10px] font-bold">1 Balken</span>
+                    <span class="mono text-[11px] font-extrabold">90°C</span>
+                  </button>
+                  <button type="button" onclick="setSageTempBar(2)" data-bar="2" class="sage-bar-btn py-2 px-1 rounded-lg border text-center transition flex flex-col items-center justify-center gap-0.5">
+                    <span class="text-[10px] font-bold">2 Balken</span>
+                    <span class="mono text-[11px] font-extrabold">92°C</span>
+                  </button>
+                  <button type="button" onclick="setSageTempBar(3)" data-bar="3" class="sage-bar-btn py-2 px-1 rounded-lg border text-center transition flex flex-col items-center justify-center gap-0.5">
+                    <span class="text-[10px] font-bold">3 (Std)</span>
+                    <span class="mono text-[11px] font-extrabold">93°C</span>
+                  </button>
+                  <button type="button" onclick="setSageTempBar(4)" data-bar="4" class="sage-bar-btn py-2 px-1 rounded-lg border text-center transition flex flex-col items-center justify-center gap-0.5">
+                    <span class="text-[10px] font-bold">4 Balken</span>
+                    <span class="mono text-[11px] font-extrabold">94°C</span>
+                  </button>
+                  <button type="button" onclick="setSageTempBar(5)" data-bar="5" class="sage-bar-btn py-2 px-1 rounded-lg border text-center transition flex flex-col items-center justify-center gap-0.5">
+                    <span class="text-[10px] font-bold">5 (Max)</span>
+                    <span class="mono text-[11px] font-extrabold">96°C</span>
+                  </button>
+                </div>
+                <div class="text-[10px] text-latte-500 flex justify-between">
+                  <span>1–2: Dunkel / 40% Robusta</span>
+                  <span>3: Standard</span>
+                  <span>4–5: Hell / Arabica</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 6. Brühdruck (Sage Barista Pro OPV) -->
+            <div id="card-pressure" onclick="activateControlCard('pressure', event)" class="sim-control-card is-locked p-3.5 rounded-xl border space-y-2 cursor-pointer">
+              <div class="flex items-center justify-between gap-1">
+                <span class="text-xs font-extrabold uppercase tracking-wider text-latte-900">6. Brühdruck (OPV)</span>
+                <button type="button" onclick="toggleCardLock('pressure', event)" id="lock-badge-pressure" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-latte-200 text-latte-700 hover:bg-amber-200 transition">
+                  🔒 Gesperrt
+                </button>
+              </div>
+              <div class="interactive-zone space-y-2 pt-1">
+                <div class="flex items-center justify-between">
+                  <span class="text-[11px] text-latte-600">Sage Auto-OPV: 9,0 bar</span>
+                  <span id="valPressure" class="mono text-base font-extrabold text-latte-900">9,0 bar</span>
+                </div>
+                <input type="range" id="simPressure" min="6.0" max="11.0" step="0.5" value="9.0" oninput="updateSimulation()" />
+                <div class="flex justify-between text-[10px] text-latte-500 mono">
+                  <span>6,0 bar (Pre-Inf.)</span>
+                  <span>9,0 bar (Standard)</span>
+                  <span>11,0 bar</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN: LIVE EXTRACTION ANALYTICS & AI CALIBRATION (5 cols) -->
+      <div class="lg:col-span-5 space-y-5">
+
+        <!-- Telemetry & Extraction Panel -->
+        <div class="cafe-card-highlight rounded-2xl p-5 sm:p-6 space-y-5">
+          <div class="flex items-center justify-between border-b border-latte-200 pb-3.5">
+            <div>
+              <h2 class="text-base sm:text-lg font-extrabold text-latte-900 flex items-center gap-2">
+                <span>🔬 Live Extraktions-Analyse</span>
+              </h2>
+              <p class="text-xs text-latte-600">Simulierte Durchlaufzeit & Geschmacksbalance</p>
+            </div>
+            <span id="simStatusPill" class="px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider mono bg-emerald-100 text-emerald-800 border border-emerald-300">
+              Sweet Spot ✓
+            </span>
+          </div>
+
+          <!-- 4 Key Simulated Metrics Grid -->
+          <div class="grid grid-cols-2 gap-3">
+            <!-- Berechnete Bezugszeit -->
+            <div id="metricTimeCard" class="p-3.5 rounded-xl bg-white border border-latte-200 shadow-sm transition-all">
+              <div class="text-[11px] text-latte-600 uppercase font-bold">Berechnete Bezugszeit</div>
+              <div class="flex items-baseline justify-between mt-1">
+                <span id="simTimeOut" class="mono text-2xl font-extrabold text-emerald-700">27,5 s</span>
+                <span id="simTimeTargetHint" class="text-[10px] mono text-latte-500 font-semibold">Ziel: 26–29 s</span>
+              </div>
+            </div>
+
+            <!-- KI-Empfohlener Mahlgrad heute -->
+            <div class="p-3.5 rounded-xl bg-amber-50/90 border border-amber-300 shadow-sm">
+              <div class="text-[11px] text-amber-900 uppercase font-bold">KI-Mahlgrad Heute</div>
+              <div class="flex items-baseline justify-between mt-1">
+                <span id="simRecommendedGrindToday" class="mono text-2xl font-extrabold text-amber-800">35,0</span>
+                <span id="simAgingOffsetText" class="text-[10px] mono text-amber-700 font-semibold">Alterung: -0,1</span>
+              </div>
+            </div>
+
+            <!-- Extraktions-Ausbeute (EY %) -->
+            <div class="p-3.5 rounded-xl bg-white border border-latte-200 shadow-sm">
+              <div class="text-[11px] text-latte-600 uppercase font-bold">Extraktion (EY %)</div>
+              <div class="flex items-baseline justify-between mt-1">
+                <span id="simExtractionYield" class="mono text-xl font-extrabold text-latte-900">20,2 %</span>
+                <span id="simTdsBadge" class="text-[10px] mono px-1.5 py-0.5 rounded bg-latte-100 text-amber-900 font-semibold">TDS: 8,5%</span>
+              </div>
+            </div>
+
+            <!-- Durchflussrate (Flow Rate) -->
+            <div class="p-3.5 rounded-xl bg-white border border-latte-200 shadow-sm">
+              <div class="text-[11px] text-latte-600 uppercase font-bold">Ø Flow-Rate</div>
+              <div class="flex items-baseline justify-between mt-1">
+                <span id="simFlowRate" class="mono text-xl font-extrabold text-latte-900">1,56 g/s</span>
+                <span id="simChannelingRisk" class="text-[10px] mono text-emerald-700 font-semibold">Ruhiger Fluss</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Visual Sensory Balance Bar -->
+          <div class="space-y-1.5">
+            <div class="flex justify-between text-[11px] font-bold">
+              <span class="text-sky-700">🍋 Sauer / Frisch</span>
+              <span class="text-emerald-700">🍯 Sweet Spot</span>
+              <span class="text-rose-700">🪵 Bitter / Kräftig</span>
+            </div>
+            <div class="relative h-4 w-full rounded-full bg-gradient-to-r from-sky-400 via-emerald-500 to-rose-500 p-0.5 shadow-inner">
+              <!-- Ideal Zone Highlight -->
+              <div class="absolute inset-y-0 left-[36%] right-[36%] border-x-2 border-white/80 bg-white/20 pointer-events-none"></div>
+              <!-- Current Marker -->
+              <div id="extractionBalancePointer" class="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-4 h-5 rounded bg-white border-2 border-latte-900 shadow-md transition-all duration-200" style="left: 50%;"></div>
+            </div>
+            <div class="flex justify-between text-[10px] text-latte-500 mono">
+              <span>&lt; 18,0% EY</span>
+              <span id="sensoryProfileText" class="text-amber-800 font-sans font-bold">Ausgewogene Süße, dichter Körper</span>
+              <span>&gt; 22,0% EY</span>
+            </div>
+          </div>
+
+          <!-- Dynamic Extraction Flow Curve SVG -->
+          <div class="p-3.5 rounded-xl bg-white border border-latte-200 space-y-1.5 shadow-sm">
+            <div class="flex items-center justify-between text-[11px]">
+              <span class="text-latte-700 font-bold uppercase tracking-wider">Simulierte Druck- & Fluss-Kurve</span>
+              <span id="curvePhaseInfo" class="mono text-amber-800 font-semibold text-[10px]">Pre-Infusion 0–6s • Blonding ab 24s</span>
+            </div>
+            <svg id="flowCurveSvg" viewBox="0 0 320 75" class="w-full h-16 overflow-visible">
+              <defs>
+                <linearGradient id="flowGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#d97706" stop-opacity="0.35"/>
+                  <stop offset="100%" stop-color="#d97706" stop-opacity="0.0"/>
+                </linearGradient>
+              </defs>
+              <line x1="0" y1="18" x2="320" y2="18" stroke="#e6d7c3" stroke-dasharray="3 3" stroke-width="1"/>
+              <line x1="0" y1="45" x2="320" y2="45" stroke="#e6d7c3" stroke-dasharray="3 3" stroke-width="1"/>
+              <line x1="0" y1="70" x2="320" y2="70" stroke="#c8ab89" stroke-width="1"/>
+              <path id="svgFlowArea" d="M0,70 L40,65 L80,35 L200,30 L320,22 L320,70 Z" fill="url(#flowGrad)" />
+              <path id="svgFlowPath" d="M0,70 L40,65 L80,35 L200,30 L320,22" fill="none" stroke="#d97706" stroke-width="2.5" stroke-linecap="round"/>
+              <path id="svgPressurePath" d="M0,70 L35,55 L65,18 L260,20 L320,26" fill="none" stroke="#0284c7" stroke-width="1.8" stroke-dasharray="4 2"/>
+            </svg>
+            <div class="flex items-center justify-between text-[10px] text-latte-600 mono">
+              <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-600 inline-block"></span> Flow (g/s)</span>
+              <span class="flex items-center gap-1"><span class="w-2 h-0.5 bg-sky-600 inline-block"></span> Puck-Druck (bar)</span>
+              <span id="svgEndAxisLabel" class="font-bold">Ende: 27,5 s</span>
+            </div>
+          </div>
+
+          <!-- KI-Barista Live-Diagnose & Coaching Box -->
+          <div class="rounded-xl bg-amber-50/90 border border-amber-300 p-3.5 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-extrabold uppercase tracking-wider text-amber-900 flex items-center gap-1.5">
+                <span>☕</span>
+                KI-Barista Live-Diagnose & Coaching
+              </span>
+              <span id="aiConfidenceBadge" class="text-[10px] mono text-amber-800 font-semibold">Kalibrier-Basis: Aktiv</span>
+            </div>
+            <ul id="aiCoachingList" class="text-xs text-latte-800 space-y-1.5 leading-relaxed list-disc list-inside">
+              <!-- Populated dynamically -->
+            </ul>
+          </div>
+        </div>
+
+        <!-- Adaptive AI Calibration: Real Shot Logger -->
+        <div class="cafe-card rounded-2xl p-5 space-y-4 border border-amber-300">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-sm font-extrabold text-latte-900 flex items-center gap-2">
+                <span>🎯 Echten Bezug loggen & KI trainieren</span>
+              </h3>
+              <p class="text-[11px] text-latte-600">Speichert deinen Bezug im Logbuch und kalibriert den Mahlgrad</p>
+            </div>
+            <span class="px-2.5 py-0.5 text-[10px] font-bold bg-amber-100 text-amber-900 rounded-full border border-amber-300 mono">Auto-Learn</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label for="actualShotTime" class="block text-[11px] font-bold uppercase text-latte-700 mb-1">Gemessene Zeit (Sek.)</label>
+              <div class="flex items-center gap-1.5">
+                <input type="number" id="actualShotTime" step="0.5" min="8" max="90" value="28.0" class="w-full px-3 py-2 rounded-xl bg-white border border-latte-300 text-latte-900 mono font-bold text-sm focus:border-amber-600 outline-none" />
+                <button onclick="copySimTimeToActual()" title="Simulierte Zeit übernehmen" class="px-2.5 py-2 rounded-xl bg-latte-100 hover:bg-latte-200 text-xs font-bold text-amber-900 border border-latte-300 shrink-0">Sim ➔</button>
+              </div>
+            </div>
+
+            <div>
+              <label for="actualShotTaste" class="block text-[11px] font-bold uppercase text-latte-700 mb-1">Geschmacks-Feedback</label>
+              <select id="actualShotTaste" class="w-full px-3 py-2 rounded-xl bg-white border border-latte-300 text-latte-900 font-medium text-xs focus:border-amber-600 outline-none">
+                <option value="perfect">🍯 Sweet Spot / Perfekt balanciert</option>
+                <option value="sour">🍋 Zu sauer / wässrig (unterextrahiert)</option>
+                <option value="slightly_sour">🍏 Leicht frisch / könnte mehr Körper haben</option>
+                <option value="slightly_bitter">🍫 Kräftig / leicht herb im Nachgeschmack</option>
+                <option value="bitter">🪵 Zu bitter / trocken (überextrahiert)</option>
+                <option value="channeling">💦 Channeling / Spritzen am Siebträger</option>
+              </select>
+            </div>
+          </div>
+
+          <button onclick="logRealShot()" class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white font-bold text-xs uppercase tracking-wider shadow-md shadow-amber-900/15 transition flex items-center justify-center gap-2">
+            <svg class="w-4 h-4 fill-none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+            Bezug speichern & KI-Mahlgrad kalibrieren
+          </button>
+        </div>
+
+        <!-- Graphical Learning Curve (Statistik-Dashboard für die aktive Bohne) -->
+        <div id="learningCurveCard" class="cafe-card rounded-2xl p-5 space-y-3.5 border border-latte-300">
+          <div class="flex items-center justify-between gap-2">
+            <div>
+              <h3 class="text-sm font-extrabold text-latte-900 flex items-center gap-2">
+                <span>📈 Grafische Lernkurve & Bezugs-Verlauf</span>
+              </h3>
+              <p id="learningCurveSubtitle" class="text-[11px] text-latte-600">Reale Bezüge & Mahlgrad-Entwicklung der aktuellen Bohne</p>
+            </div>
+            <span id="learningCurveHitRateBadge" class="px-2.5 py-0.5 text-[10px] font-bold bg-emerald-100 text-emerald-900 rounded-full border border-emerald-300 mono">
+              Sweet Spot: --%
+            </span>
+          </div>
+
+          <!-- Interactive SVG Dual-Trend Chart -->
+          <div id="learningCurveChartBox" class="p-3 rounded-xl bg-white border border-latte-200 shadow-inner space-y-2">
+            <svg id="learningCurveSvg" viewBox="0 0 360 135" class="w-full h-32 overflow-visible">
+              <!-- Populated dynamically via renderLearningCurveChart() -->
+            </svg>
+            <div class="flex flex-wrap items-center justify-between gap-2 text-[10px] text-latte-600 mono border-t border-latte-100 pt-1.5">
+              <span class="flex items-center gap-1 font-semibold text-amber-800">
+                <span class="w-2.5 h-1 rounded bg-amber-600 inline-block"></span> Mahlgrad-Verlauf
+              </span>
+              <span class="flex items-center gap-1 font-semibold text-emerald-800">
+                <span class="w-2 h-2 rounded-full bg-emerald-600 inline-block"></span> Bezugszeit (s) im Ziel
+              </span>
+              <span class="flex items-center gap-1 text-latte-500">
+                <span class="w-2.5 h-2 rounded-sm bg-emerald-100 border border-emerald-300 inline-block"></span> Zielkorridor
+              </span>
+            </div>
+          </div>
+
+          <div id="learningCurveSummaryText" class="text-[11px] text-latte-700 leading-relaxed bg-latte-50 px-3 py-2 rounded-xl border border-latte-200">
+            <!-- Dynamic insight text -->
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 4. COLLAPSIBLE ACCORDIONS: ADAPTIVE BEAN DATABASE & SHOT LOGBOOK -->
+    <section class="space-y-4">
+      
+      <!-- ACCORDION 1: Adaptive Bohnen-Datenbank (Default Collapsed) -->
+      <div class="cafe-card rounded-2xl border border-latte-200 overflow-hidden">
+        <button type="button" onclick="toggleSectionAccordion('dbAccordionBody', 'dbAccordionChevron', 'dbToggleLabel')" class="w-full p-4 sm:p-5 flex items-center justify-between gap-4 text-left hover:bg-latte-100/50 transition">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-amber-100 border border-amber-300 flex items-center justify-center text-base shrink-0">
+              🗄️
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h2 class="text-sm sm:text-base font-extrabold text-latte-900">Adaptive Bohnen-Datenbank</h2>
+                <span id="dbCountPill" class="px-2.5 py-0.5 text-[10px] font-bold rounded-full bg-amber-100 text-amber-900 border border-amber-300 mono">10 Profile</span>
+              </div>
+              <p class="text-xs text-latte-600">Alle hinterlegten Kaffeesorten, Röstgrade & gelernten KI-Mahlgrade verwalten</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 shrink-0">
+            <span id="dbToggleLabel" class="text-xs font-bold text-amber-800 hidden sm:inline">Aufklappen</span>
+            <svg id="dbAccordionChevron" class="w-5 h-5 text-amber-800 transition-transform duration-200" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </div>
+        </button>
+
+        <div id="dbAccordionBody" class="hidden border-t border-latte-200 p-4 sm:p-6 space-y-4 bg-white/60">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <span class="text-xs text-latte-600">Klicke auf „Laden“, um eine Bohne in den Simulator zu holen, oder auf „✎“ zum Bearbeiten.</span>
+            <button onclick="openNewProfileModal()" class="px-3 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold transition shadow-sm">
+              + Neue Bohne anlegen
+            </button>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr class="border-b border-latte-200 text-latte-600 uppercase text-[10px] tracking-wider">
+                  <th class="py-2.5 px-2">Bohne / Blend</th>
+                  <th class="py-2.5 px-2">Basis-Mahlgrad</th>
+                  <th class="py-2.5 px-2">Rezept (In/Out)</th>
+                  <th class="py-2.5 px-2">Zielzeit & Sage Temp</th>
+                  <th class="py-2.5 px-2 text-right">Aktion</th>
+                </tr>
+              </thead>
+              <tbody id="databaseTableBody" class="divide-y divide-latte-200">
+                <!-- Populated dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACCORDION 2: Shot-Logbuch & KI-Lernkurve (Default Collapsed, with Individual Shot Deletion) -->
+      <div class="cafe-card rounded-2xl border border-latte-200 overflow-hidden">
+        <button type="button" onclick="toggleSectionAccordion('logAccordionBody', 'logAccordionChevron', 'logToggleLabel')" class="w-full p-4 sm:p-5 flex items-center justify-between gap-4 text-left hover:bg-latte-100/50 transition">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-emerald-100 border border-emerald-300 flex items-center justify-center text-base shrink-0">
+              📓
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h2 class="text-sm sm:text-base font-extrabold text-latte-900">Shot-Logbuch & KI-Lernkurve</h2>
+                <span id="logCountPill" class="px-2.5 py-0.5 text-[10px] font-bold rounded-full bg-emerald-100 text-emerald-900 border border-emerald-300 mono">11 Bezüge</span>
+              </div>
+              <p class="text-xs text-latte-600">Chronik deiner Bezüge, Filter & Möglichkeit einzelne Einträge zu löschen</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 shrink-0">
+            <span id="logToggleLabel" class="text-xs font-bold text-amber-800 hidden sm:inline">Aufklappen</span>
+            <svg id="logAccordionChevron" class="w-5 h-5 text-amber-800 transition-transform duration-200" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </div>
+        </button>
+
+        <div id="logAccordionBody" class="hidden border-t border-latte-200 p-4 sm:p-6 space-y-4 bg-white/60">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div class="flex flex-wrap items-center gap-2">
+              <label for="logFilterBean" class="text-xs font-bold text-latte-700">Filtern nach Bohne:</label>
+              <select id="logFilterBean" onchange="renderShotHistory()" class="px-3 py-1.5 rounded-xl bg-white border border-latte-300 text-xs text-latte-900 font-semibold focus:border-amber-600 outline-none">
+                <option value="ALL">Alle Kaffeesorten</option>
+              </select>
+            </div>
+            <button onclick="clearShotHistory()" class="px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-800 border border-rose-200 text-xs font-semibold transition">
+              Gesamtes Logbuch leeren
+            </button>
+          </div>
+
+          <div id="shotHistoryContainer" class="grid grid-cols-1 md:grid-cols-2 gap-2.5 max-h-[420px] overflow-y-auto pr-1">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+      </div>
+
+    </section>
+    </div> <!-- End of #baristaModeWrapper -->
+
+  </main>
+
+  <!-- MODAL: NEW / EDIT BEAN PROFILE -->
+  <div id="profileModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-latte-900/50 backdrop-blur-sm p-4">
+    <div class="cafe-card-highlight rounded-2xl max-w-lg w-full p-6 space-y-4 border border-amber-400 shadow-2xl max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-latte-200 pb-3">
+        <h3 id="modalTitle" class="text-base font-extrabold text-latte-900">Neue Bohne anlegen</h3>
+        <button onclick="closeNewProfileModal()" class="text-latte-600 hover:text-latte-900 text-sm px-2 py-1 rounded">✕</button>
+      </div>
+
+      <input type="hidden" id="editProfileId" value="" />
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+        <div class="sm:col-span-2">
+          <label class="block text-latte-800 font-bold mb-1">Name der Bohne / Röstung *</label>
+          <input type="text" id="inpName" placeholder="z.B. Speicherstadt Orang-Utan (18g)" class="w-full px-3 py-2 rounded-xl bg-white border border-latte-300 text-latte-900 focus:border-amber-600 outline-none" />
+        </div>
+
+        <div>
+          <label class="block text-latte-800 font-bold mb-1">Blend / Herkunft</label>
+          <input type="text" id="inpBlend" placeholder="z.B. 100% Sumatra Arabica" class="w-full px-3 py-2 rounded-xl bg-white border border-latte-300 text-latte-900 focus:border-amber-600 outline-none" />
+        </div>
+
+        <div>
+          <label class="block text-latte-800 font-bold mb-1">Röstgrad</label>
+          <select id="inpRoast" class="w-full px-3 py-2 rounded-xl bg-white border border-latte-300 text-latte-900 focus:border-amber-600 outline-none">
+            <option value="dark">Dunkel (Dark / Kräftig)</option>
+            <option value="medium-dark">Mittel-Dunkel (Schokoladig / Nussig)</option>
+            <option value="medium">Medium (Modern / Allrounder)</option>
+            <option value="light" selected>Hell-Mittel (Light-Medium / Fruchtig)</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-latte-800 font-bold mb-1">Start-Mahlgrad Frisch (28,0–42,0)</label>
+          <input type="number" id="inpBaseGrind" step="0.1" min="28.0" max="42.0" value="35.0" class="w-full px-3 py-2 rounded-xl bg-white border border-latte-300 text-latte-900 mono focus:border-amber-600 outline-none" />
+        </div>
+
+        <div>
+          <label class="block text-latte-800 font-bold mb-1">Alterung / Woche (Stufen)</label>
+          <input type="number" id="inpAgingRate" step="0.05" min="0.1" max="1.5" value="0.40" class="w-full px-3 py-2 rounded-xl bg-white border border-latte-300 text-latte-900 mono focus:border-amber-600 outline-none" />
+        </div>
+
+        <div>
+          <label class="block text-latte-800 font-bold mb-1">Dosis In (g)</label>
+          <input type="number" id="inpDoseIn" step="0.5" min="14.0" max="22.0" value="18.0" class="w-full px-3 py-2 rounded-xl bg-white border border-latte-300 text-latte-900 mono focus:border-amber-600 outline-none" />
+        </div>
+
+        <div>
+          <label class="block text-latte-800 font-bold mb-1">Zielmenge Out (g)</label>
+          <input type="number" id="inpYieldOut" step="0.5" min="25.0" max="60.0" value="43.0" class="w-full px-3 py-2 rounded-xl bg-white border border-latte-300 text-latte-900 mono focus:border-amber-600 outline-none" />
+        </div>
+
+        <div>
+          <label class="block text-latte-800 font-bold mb-1">Zielzeit Min (s)</label>
+          <input type="number" id="inpTimeMin" step="1" min="18" max="40" value="26" class="w-full px-3 py-2 rounded-xl bg-white border border-latte-300 text-latte-900 mono focus:border-amber-600 outline-none" />
+        </div>
+
+        <div>
+          <label class="block text-latte-800 font-bold mb-1">Zielzeit Max (s)</label>
+          <input type="number" id="inpTimeMax" step="1" min="20" max="50" value="29" class="w-full px-3 py-2 rounded-xl bg-white border border-latte-300 text-latte-900 mono focus:border-amber-600 outline-none" />
+        </div>
+
+        <div>
+          <label class="block text-latte-800 font-bold mb-1">Sage Temperatur (5 Stufen)</label>
+          <select id="inpTemp" class="w-full px-3 py-2 rounded-xl bg-white border border-latte-300 text-latte-900 font-semibold focus:border-amber-600 outline-none">
+            <option value="90.0">1/5 Balken (~90 °C • -2)</option>
+            <option value="92.0">2/5 Balken (~92 °C • -1)</option>
+            <option value="93.0">3/5 Balken (93 °C • Standard)</option>
+            <option value="94.0" selected>4/5 Balken (~94 °C • +1)</option>
+            <option value="96.0">5/5 Balken (~96 °C • +2)</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-latte-800 font-bold mb-1">Tage geöffnet</label>
+          <input type="number" id="inpDaysOpen" step="1" min="0" max="30" value="1" class="w-full px-3 py-2 rounded-xl bg-white border border-latte-300 text-latte-900 mono focus:border-amber-600 outline-none" />
+        </div>
+
+        <div class="sm:col-span-2">
+          <label class="block text-latte-800 font-bold mb-1">Geschmacksnotizen & Besonderheiten</label>
+          <textarea id="inpNotes" rows="2" placeholder="z.B. Dunkle Schokolade, Haselnuss, wenig Säure..." class="w-full px-3 py-2 rounded-xl bg-white border border-latte-300 text-latte-900 focus:border-amber-600 outline-none"></textarea>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-2 pt-2 border-t border-latte-200">
+        <button onclick="closeNewProfileModal()" class="px-4 py-2 rounded-xl bg-latte-100 hover:bg-latte-200 text-latte-800 text-xs font-bold">Abbrechen</button>
+        <button onclick="saveNewProfile()" class="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold shadow-sm">Profil speichern</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CUSTOM CONFIRMATION MODAL -->
+  <div id="confirmModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-latte-900/50 backdrop-blur-sm p-4">
+    <div class="cafe-card rounded-2xl max-w-md w-full p-5 space-y-4 border border-rose-300 shadow-2xl">
+      <h3 id="confirmModalTitle" class="text-sm font-extrabold text-latte-900">Bestätigung erforderlich</h3>
+      <p id="confirmModalMessage" class="text-xs text-latte-700 leading-relaxed"></p>
+      <div class="flex justify-end gap-2 pt-2">
+        <button onclick="closeConfirmModal()" class="px-3.5 py-1.5 rounded-xl bg-latte-100 hover:bg-latte-200 text-latte-800 text-xs font-bold">Abbrechen</button>
+        <button id="confirmModalActionBtn" class="px-3.5 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold">Bestätigen</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none"></div>
+
+  <script>
+    const STORAGE_KEY_DB = 'espresso_dialin_lab_db_v26';
+
+    // Sage Barista Pro 5-Bar Temperature Mapping
+    // According to Sage/Breville Barista Pro specs: 5 discrete LCD bar levels around 93°C default (~90°C to ~96°C)
+    const SAGE_TEMP_BARS = [
+      { bar: 1, temp: 90.0, offsetLabel: '-2', shortLabel: '1/5 Balken (~90 °C)' },
+      { bar: 2, temp: 92.0, offsetLabel: '-1', shortLabel: '2/5 Balken (~92 °C)' },
+      { bar: 3, temp: 93.0, offsetLabel: 'Std', shortLabel: '3/5 Balken (93 °C Std)' },
+      { bar: 4, temp: 94.0, offsetLabel: '+1', shortLabel: '4/5 Balken (~94 °C)' },
+      { bar: 5, temp: 96.0, offsetLabel: '+2', shortLabel: '5/5 Balken (~96 °C)' }
+    ];
+
+    function tempToNearestSageBar(tempC) {
+      let best = SAGE_TEMP_BARS[2];
+      let minDiff = Infinity;
+      SAGE_TEMP_BARS.forEach(item => {
+        const diff = Math.abs(Number(tempC) - item.temp);
+        if (diff < minDiff) {
+          minDiff = diff;
+          best = item;
+        }
+      });
+      return best;
+    }
+
+    function getSageBarHint(tempC) {
+      return tempToNearestSageBar(tempC).shortLabel;
+    }
+
+    // Alle 10 persönlichen Profile (6 Stamm-Profile + 4 Speicherstadt-Sorten)
+    const DEFAULT_PROFILES = [
+      {
+        id: 'speicherstadt_bio_guatemala',
+        name: 'Speicherstadt Bio Guatemala (18g)',
+        blend: '100% Bio Highland Arabica (Washed)',
+        roast: 'light',
+        baseGrind: 35.0,
+        doseIn: 18.0,
+        yieldOut: 43.0,
+        timeMin: 26,
+        timeMax: 29,
+        temp: 94.0,
+        pressure: 9.0,
+        daysOpen: 1,
+        agingRatePerWeek: 0.40,
+        calibratedCount: 3,
+        notes: 'Helle bis mittlere Röstung: Butterkeks & Haselnuss treffen auf Cranberry & Sanddorn. Bei 4/5 Balken (~94 °C) und 43g Out optimal balanciert (Sweet Spot bei 35,0–35,5).'
+      },
+      {
+        id: 'frau_meyers_17g',
+        name: 'Frau Meyers Mischung (17g Mild)',
+        blend: '60% Arabica / 40% Robusta',
+        roast: 'medium-dark',
+        baseGrind: 37.5,
+        doseIn: 17.0,
+        yieldOut: 45.0,
+        timeMin: 24,
+        timeMax: 28,
+        temp: 92.0,
+        pressure: 9.0,
+        daysOpen: 12,
+        agingRatePerWeek: 0.60,
+        calibratedCount: 3,
+        notes: 'Längeres Café-Rezept (17g auf 45g). Frisch bei 37,0–37,5 optimal (28s), nach 1–2 Wochen Standzeit auf 36,5 perfektioniert (27s).'
+      },
+      {
+        id: 'frau_meyers_18g',
+        name: 'Frau Meyers Mischung (18g Kräftig)',
+        blend: '60% Arabica / 40% Robusta',
+        roast: 'medium-dark',
+        baseGrind: 37.5,
+        doseIn: 18.0,
+        yieldOut: 37.0,
+        timeMin: 25,
+        timeMax: 27,
+        temp: 90.0,
+        pressure: 9.0,
+        daysOpen: 5,
+        agingRatePerWeek: 0.60,
+        calibratedCount: 2,
+        notes: 'Hoher Robusta-Anteil (40%)! Kühler brühen (1–2 Balken / 90–92°C), um holzige Bitterstoffe zu vermeiden und Schoko/Nuss zu betonen.'
+      },
+      {
+        id: 'roestbar_bio_70_30',
+        name: 'Röstbar Bio Espresso',
+        blend: '70% Arabica / 30% Robusta',
+        roast: 'medium-dark',
+        baseGrind: 37.5,
+        doseIn: 18.0,
+        yieldOut: 42.0,
+        timeMin: 25,
+        timeMax: 30,
+        temp: 93.0,
+        pressure: 9.0,
+        daysOpen: 1,
+        agingRatePerWeek: 0.50,
+        calibratedCount: 2,
+        notes: 'Offizielles Rezept: 18g in / 42g out bei 93°C (3 Balken) in 25–30s. Auf 37,5 direkter Volltreffer (42,8g in 28s). Für spritzigeren Fluss auch 38,0 möglich.'
+      },
+      {
+        id: 'roestbar_80_20',
+        name: 'Röstbar Mischung (80/20)',
+        blend: '80% Arabica / 20% Robusta',
+        roast: 'medium',
+        baseGrind: 38.0,
+        doseIn: 18.0,
+        yieldOut: 42.0,
+        timeMin: 25,
+        timeMax: 28,
+        temp: 93.0,
+        pressure: 9.0,
+        daysOpen: 2,
+        agingRatePerWeek: 0.50,
+        calibratedCount: 1,
+        notes: 'Klassischer Röstbar Standard-Blend, sehr stabil bei Stufe 38,0 und Standard-Temperatur (3 Balken / 93°C).'
+      },
+      {
+        id: 'drago_brasilia',
+        name: 'Drago Mocambo Brasilia',
+        blend: 'Traditioneller Blend (60/40)',
+        roast: 'dark',
+        baseGrind: 34.5,
+        doseIn: 18.0,
+        yieldOut: 43.0,
+        timeMin: 26,
+        timeMax: 28,
+        temp: 92.0,
+        pressure: 9.0,
+        daysOpen: 18,
+        agingRatePerWeek: 1.00,
+        calibratedCount: 4,
+        notes: 'Braucht deutlich feineren Mahlgrad und baut offen schnell Widerstand ab. Bei Tag 10 auf 33,5 perfekt (26s), bei Tag 18 auf 31,5–32,0 stellen.'
+      },
+      {
+        id: 'decaf_huila',
+        name: 'Kolumbien Huila Asomujer (Decaf)',
+        blend: '100% Arabica Entkoffeiniert',
+        roast: 'medium',
+        baseGrind: 34.5,
+        doseIn: 17.5,
+        yieldOut: 44.5,
+        timeMin: 25,
+        timeMax: 28,
+        temp: 93.0,
+        pressure: 9.0,
+        daysOpen: 10,
+        agingRatePerWeek: 0.40,
+        calibratedCount: 2,
+        notes: 'Feiner mahlen wegen Decaf-Struktur. Frisch bei 34,5; nach ~10 Tagen Standzeit auf 34,0 exakt 44g in 26s.'
+      },
+      {
+        id: 'speicherstadt_orang_utan',
+        name: 'Speicherstadt Orang-Utan (18g)',
+        blend: '100% Sumatra Arabica (Giling Basah)',
+        roast: 'medium-dark',
+        baseGrind: 35.5,
+        doseIn: 18.0,
+        yieldOut: 40.0,
+        timeMin: 25,
+        timeMax: 28,
+        temp: 92.0,
+        pressure: 9.0,
+        daysOpen: 1,
+        agingRatePerWeek: 0.50,
+        calibratedCount: 1,
+        notes: 'Top-Empfehlung als Doppel-Espresso! Kakaonibs, Milchschokolade, Walnuss & Schattenmorelle bei üppigem Körper (2/5 Balken • ~92 °C).'
+      },
+      {
+        id: 'speicherstadt_forte',
+        name: 'Speicherstadt Forte (18g)',
+        blend: '60% Arabica / 40% Monsooned Robusta',
+        roast: 'medium-dark',
+        baseGrind: 37.0,
+        doseIn: 18.0,
+        yieldOut: 38.0,
+        timeMin: 25,
+        timeMax: 28,
+        temp: 90.0,
+        pressure: 9.0,
+        daysOpen: 1,
+        agingRatePerWeek: 0.70,
+        calibratedCount: 1,
+        notes: 'Monsooned Robusta (extrem säurearm 1/4, riesige Crema). Kühl auf 1–2 Balken (~90–92 °C) brühen für Haselnuss, Bitterschokolade & Süßholz.'
+      },
+      {
+        id: 'speicherstadt_kenia_magena',
+        name: 'Speicherstadt Kenia Magena (18g)',
+        blend: '100% Arabica Microlot (Natural)',
+        roast: 'light',
+        baseGrind: 34.0,
+        doseIn: 18.0,
+        yieldOut: 45.0,
+        timeMin: 26,
+        timeMax: 30,
+        temp: 94.0,
+        pressure: 9.0,
+        daysOpen: 1,
+        agingRatePerWeek: 0.40,
+        calibratedCount: 1,
+        notes: 'Exklusives Frucht-Microlot (Portwein, Papaya, Pflaume, Blaubeere). Heiß brühen (4/5 Balken • ~94 °C) & 1:2,5 Ratio (45g out). Deutlich feiner mahlen!'
+      }
+    ];
+
+    const DEFAULT_SHOT_LOGS = [
+      {
+        id: 'log-11',
+        timestamp: 'Tag 1 (10:37)',
+        beanName: 'Speicherstadt Bio Guatemala (18g)',
+        grindUsed: 35.0,
+        doseIn: 18.0,
+        yieldOut: 43.0,
+        actualTime: 28.0,
+        taste: 'perfect',
+        aiAdjustment: 0.3
+      },
+      {
+        id: 'log-10',
+        timestamp: 'Tag 0 (17:17)',
+        beanName: 'Speicherstadt Bio Guatemala (18g)',
+        grindUsed: 35.5,
+        doseIn: 18.0,
+        yieldOut: 43.0,
+        actualTime: 29.0,
+        taste: 'perfect',
+        aiAdjustment: 0.5
+      },
+      {
+        id: 'log-9',
+        timestamp: 'Tag 18 (Gealtert)',
+        beanName: 'Drago Mocambo Brasilia',
+        grindUsed: 33.0,
+        doseIn: 18.0,
+        yieldOut: 44.0,
+        actualTime: 23.0,
+        taste: 'sour',
+        aiAdjustment: -1.0
+      },
+      {
+        id: 'log-8',
+        timestamp: 'Tag 12 (1–2 Wo.)',
+        beanName: 'Frau Meyers Mischung (17g Mild)',
+        grindUsed: 36.5,
+        doseIn: 17.0,
+        yieldOut: 45.0,
+        actualTime: 27.0,
+        taste: 'perfect',
+        aiAdjustment: 0.0
+      },
+      {
+        id: 'log-7',
+        timestamp: 'Tag 10 (Gereift)',
+        beanName: 'Kolumbien Huila Asomujer (Decaf)',
+        grindUsed: 34.0,
+        doseIn: 17.5,
+        yieldOut: 44.0,
+        actualTime: 26.0,
+        taste: 'perfect',
+        aiAdjustment: 0.0
+      },
+      {
+        id: 'log-6',
+        timestamp: 'Tag 2 (Frisch)',
+        beanName: 'Kolumbien Huila Asomujer (Decaf)',
+        grindUsed: 34.5,
+        doseIn: 17.5,
+        yieldOut: 44.5,
+        actualTime: 26.0,
+        taste: 'perfect',
+        aiAdjustment: 0.0
+      },
+      {
+        id: 'log-5',
+        timestamp: 'Tag 10 (Gereift)',
+        beanName: 'Drago Mocambo Brasilia',
+        grindUsed: 33.5,
+        doseIn: 18.0,
+        yieldOut: 43.0,
+        actualTime: 26.0,
+        taste: 'perfect',
+        aiAdjustment: 0.0
+      },
+      {
+        id: 'log-4',
+        timestamp: 'Tag 7',
+        beanName: 'Drago Mocambo Brasilia',
+        grindUsed: 35.0,
+        doseIn: 18.0,
+        yieldOut: 45.0,
+        actualTime: 22.0,
+        taste: 'sour',
+        aiAdjustment: -1.5
+      },
+      {
+        id: 'log-3',
+        timestamp: 'Tag 3 (Frisch)',
+        beanName: 'Frau Meyers Mischung (17g Mild)',
+        grindUsed: 37.0,
+        doseIn: 17.0,
+        yieldOut: 45.0,
+        actualTime: 28.0,
+        taste: 'perfect',
+        aiAdjustment: 0.0
+      },
+      {
+        id: 'log-2',
+        timestamp: 'Tag 2 (Frisch)',
+        beanName: 'Frau Meyers Mischung (17g Mild)',
+        grindUsed: 38.0,
+        doseIn: 17.0,
+        yieldOut: 45.0,
+        actualTime: 22.0,
+        taste: 'sour',
+        aiAdjustment: -1.0
+      },
+      {
+        id: 'log-1',
+        timestamp: 'Tag 1 (Frisch)',
+        beanName: 'Röstbar Bio Espresso',
+        grindUsed: 37.5,
+        doseIn: 18.0,
+        yieldOut: 42.8,
+        actualTime: 28.0,
+        taste: 'perfect',
+        aiAdjustment: 0.0
+      }
+    ];
+
+    let appState = {
+      activeProfileId: 'speicherstadt_bio_guatemala',
+      lastGrind: 35.0,
+      fineStep: false,
+      appMode: 'barista',
+      easyDrink: 'cappuccino',
+      profiles: [],
+      shotLogs: []
+    };
+
+    // Scroll-Protection State: All simulator controls start locked so accidental touches while scrolling don't change values
+    const CONTROL_KEYS = ['grind', 'days', 'dose', 'yield', 'temp', 'pressure'];
+    let unlockedControls = new Set();
+
+    function updateLockUI() {
+      CONTROL_KEYS.forEach(key => {
+        const card = document.getElementById(`card-${key}`);
+        const badge = document.getElementById(`lock-badge-${key}`);
+        if (!card || !badge) return;
+        const isUnlocked = unlockedControls.has(key);
+        if (isUnlocked) {
+          card.classList.remove('is-locked');
+          card.classList.add('is-unlocked');
+          badge.innerHTML = '🔓 Aktiv (Sperren)';
+          badge.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-600 text-white shadow-sm transition';
+        } else {
+          card.classList.add('is-locked');
+          card.classList.remove('is-unlocked');
+          badge.innerHTML = key === 'grind' || key === 'days' ? '🔒 Antippen zum Ändern' : '🔒 Gesperrt';
+          badge.className = 'px-2 py-0.5 rounded-full text-[10px] font-bold bg-latte-200 text-latte-700 hover:bg-amber-200 transition';
+        }
+      });
+
+      const globalBtn = document.getElementById('globalLockBtn');
+      if (globalBtn) {
+        if (unlockedControls.size === CONTROL_KEYS.length) {
+          globalBtn.innerHTML = '🔓 Alle freigegeben';
+          globalBtn.className = 'px-2.5 py-1.5 rounded-xl bg-amber-600 text-white border border-amber-700 text-xs font-bold transition flex items-center gap-1';
+        } else if (unlockedControls.size > 0) {
+          globalBtn.innerHTML = '🔒 Alle sperren';
+          globalBtn.className = 'px-2.5 py-1.5 rounded-xl bg-amber-100 text-amber-900 border border-amber-300 text-xs font-bold transition flex items-center gap-1';
+        } else {
+          globalBtn.innerHTML = '🔒 Alle gesperrt';
+          globalBtn.className = 'px-2.5 py-1.5 rounded-xl bg-latte-100 hover:bg-latte-200 text-latte-800 border border-latte-300 text-xs font-bold transition flex items-center gap-1';
+        }
+      }
+    }
+
+    function activateControlCard(key, event) {
+      if (!unlockedControls.has(key)) {
+        unlockedControls.add(key);
+        updateLockUI();
+      }
+    }
+
+    function toggleCardLock(key, event) {
+      if (event) event.stopPropagation();
+      if (unlockedControls.has(key)) {
+        unlockedControls.delete(key);
+      } else {
+        unlockedControls.add(key);
+      }
+      updateLockUI();
+    }
+
+    function toggleAllLocks() {
+      if (unlockedControls.size > 0) {
+        unlockedControls.clear();
+        showToast('Scroll-Schutz aktiviert: Alle Regler sind wieder gesperrt.', 'amber');
+      } else {
+        CONTROL_KEYS.forEach(k => unlockedControls.add(k));
+        showToast('Alle Regler im Simulator zum Verstellen freigegeben.', 'emerald');
+      }
+      updateLockUI();
+    }
+
+    function setSageTempBar(barIndex) {
+      const found = SAGE_TEMP_BARS.find(b => b.bar === barIndex) || SAGE_TEMP_BARS[2];
+      document.getElementById('simTemp').value = found.temp;
+      renderSageTempBarButtons(found.temp);
+      updateSimulation();
+    }
+
+    function renderSageTempBarButtons(tempC) {
+      const activeBar = tempToNearestSageBar(tempC).bar;
+      const buttons = document.querySelectorAll('.sage-bar-btn');
+      buttons.forEach(btn => {
+        const b = parseInt(btn.getAttribute('data-bar'), 10);
+        if (b === activeBar) {
+          btn.className = 'sage-bar-btn py-2 px-1 rounded-lg border text-center transition flex flex-col items-center justify-center gap-0.5 bg-amber-600 text-white border-amber-700 shadow-sm';
+        } else if (b < activeBar) {
+          btn.className = 'sage-bar-btn py-2 px-1 rounded-lg border text-center transition flex flex-col items-center justify-center gap-0.5 bg-amber-100 text-amber-900 border-amber-300 hover:bg-amber-200';
+        } else {
+          btn.className = 'sage-bar-btn py-2 px-1 rounded-lg border text-center transition flex flex-col items-center justify-center gap-0.5 bg-white text-latte-700 border-latte-300 hover:bg-latte-100';
+        }
+      });
+    }
+
+    function fmtNum(num, decimals = 1) {
+      return Number(num).toFixed(decimals).replace('.', ',');
+    }
+
+    function toggleBeanSelectorDrawer() {
+      const drawer = document.getElementById('beanSelectorDrawer');
+      const chevron = document.getElementById('beanDrawerChevron');
+      const isHidden = drawer.classList.contains('hidden');
+      if (isHidden) {
+        drawer.classList.remove('hidden');
+        chevron.classList.add('rotate-180');
+      } else {
+        drawer.classList.add('hidden');
+        chevron.classList.remove('rotate-180');
+      }
+    }
+
+    function toggleSectionAccordion(bodyId, chevronId, labelId) {
+      const body = document.getElementById(bodyId);
+      const chevron = document.getElementById(chevronId);
+      const label = document.getElementById(labelId);
+      const isHidden = body.classList.contains('hidden');
+      if (isHidden) {
+        body.classList.remove('hidden');
+        chevron.classList.add('rotate-180');
+        if (label) label.textContent = labelId === 'puckPrepToggleLabel' ? 'Infos schließen' : 'Einklappen';
+      } else {
+        body.classList.add('hidden');
+        chevron.classList.remove('rotate-180');
+        if (label) label.textContent = labelId === 'puckPrepToggleLabel' ? 'Infos öffnen' : 'Aufklappen';
+      }
+    }
+
+    function showToast(message, type = 'amber') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      const colorMap = {
+        amber: 'border-amber-400 bg-[#fffdf9] text-amber-900',
+        emerald: 'border-emerald-400 bg-[#fffdf9] text-emerald-900',
+        red: 'border-rose-400 bg-[#fffdf9] text-rose-900'
+      };
+      toast.className = `pointer-events-auto px-4 py-3 rounded-xl border-2 shadow-xl text-xs font-bold flex items-center justify-between gap-3 transition-all duration-300 ${colorMap[type] || colorMap.amber}`;
+      toast.innerHTML = `<span>${message}</span><button onclick="this.parentElement.remove()" class="text-latte-500 hover:text-latte-900">✕</button>`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        if (toast.parentElement) toast.remove();
+      }, 4200);
+    }
+
+    let pendingConfirmCallback = null;
+    function openConfirmModal(title, message, onConfirm) {
+      document.getElementById('confirmModalTitle').textContent = title;
+      document.getElementById('confirmModalMessage').textContent = message;
+      pendingConfirmCallback = onConfirm;
+      const modal = document.getElementById('confirmModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeConfirmModal() {
+      const modal = document.getElementById('confirmModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      pendingConfirmCallback = null;
+    }
+
+    document.getElementById('confirmModalActionBtn').addEventListener('click', () => {
+      if (typeof pendingConfirmCallback === 'function') {
+        pendingConfirmCallback();
+      }
+      closeConfirmModal();
+    });
+
+    function loadDatabase() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY_DB) || localStorage.getItem('espresso_dialin_lab_db_v25');
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (parsed && Array.isArray(parsed.profiles) && parsed.profiles.length > 0) {
+            appState = {
+              activeProfileId: parsed.activeProfileId || parsed.profiles[0].id,
+              lastGrind: typeof parsed.lastGrind === 'number' ? parsed.lastGrind : 35.0,
+              fineStep: !!parsed.fineStep,
+              appMode: 'barista', // Standardmäßig immer im Barista Mode starten
+              easyDrink: parsed.easyDrink || 'cappuccino',
+              profiles: parsed.profiles,
+              shotLogs: Array.isArray(parsed.shotLogs) ? parsed.shotLogs : []
+            };
+            DEFAULT_PROFILES.forEach(defP => {
+              if (!appState.profiles.some(existing => existing.id === defP.id)) {
+                appState.profiles.push(JSON.parse(JSON.stringify(defP)));
+              }
+            });
+            // Normalize profile temperatures to the 5 discrete Sage Barista Pro steps
+            appState.profiles.forEach(p => {
+              p.temp = tempToNearestSageBar(p.temp).temp;
+            });
+            saveDatabase();
+            return;
+          }
+        }
+      } catch (e) {
+        console.warn('LocalStorage konnte nicht geladen werden, nutze Standardwerte.', e);
+      }
+      appState.profiles = JSON.parse(JSON.stringify(DEFAULT_PROFILES));
+      appState.shotLogs = JSON.parse(JSON.stringify(DEFAULT_SHOT_LOGS));
+      appState.activeProfileId = 'speicherstadt_bio_guatemala';
+      appState.lastGrind = 35.0;
+      saveDatabase();
+    }
+
+    function saveDatabase() {
+      try {
+        localStorage.setItem(STORAGE_KEY_DB, JSON.stringify(appState));
+      } catch (e) {
+        console.warn('Speichern im LocalStorage fehlgeschlagen.', e);
+      }
+    }
+
+    function getActiveProfile() {
+      return appState.profiles.find(p => p.id === appState.activeProfileId) || appState.profiles[0];
+    }
+
+    function computeRecommendedGrindToday(profile, daysOpenOverride) {
+      const days = typeof daysOpenOverride === 'number' ? daysOpenOverride : (profile.daysOpen || 0);
+      const agingRate = profile.agingRatePerWeek || 0.40;
+      const rawOffset = -(days / 7) * agingRate;
+      const step = appState.fineStep ? 0.1 : 0.5;
+      const recommended = Math.max(28.0, Math.min(42.0, profile.baseGrind + rawOffset));
+      return Math.round(recommended / step) * step;
+    }
+
+    function updateActiveBeanHeroCard() {
+      const active = getActiveProfile();
+      const days = parseInt(document.getElementById('simDaysOpen')?.value, 10);
+      const currentDays = !isNaN(days) ? days : (active.daysOpen || 0);
+      const recGrind = computeRecommendedGrindToday(active, currentDays);
+
+      const roastBadgeMap = {
+        'dark': { label: 'Dark Roast', cls: 'bg-stone-200 text-stone-900 border-stone-400' },
+        'medium-dark': { label: 'Mittel-Dunkel', cls: 'bg-amber-200/80 text-amber-950 border-amber-400' },
+        'medium': { label: 'Medium', cls: 'bg-amber-100 text-amber-900 border-amber-300' },
+        'light': { label: 'Hell-Mittel', cls: 'bg-yellow-100 text-yellow-900 border-yellow-400' }
+      };
+      const rBadge = roastBadgeMap[active.roast] || roastBadgeMap.medium;
+
+      document.getElementById('heroActiveGrind').textContent = fmtNum(recGrind);
+      const badgeEl = document.getElementById('heroRoastBadge');
+      badgeEl.textContent = rBadge.label;
+      badgeEl.className = `text-[10px] px-2.5 py-0.5 rounded-full border font-bold uppercase ${rBadge.cls}`;
+
+      document.getElementById('heroBeanName').textContent = active.name;
+      document.getElementById('heroBeanBlend').textContent = active.blend;
+      document.getElementById('heroRecipe').textContent = `${fmtNum(active.doseIn)}g ➔ ${fmtNum(active.yieldOut)}g`;
+      document.getElementById('heroTargetTime').textContent = `${active.timeMin}–${active.timeMax} s`;
+      document.getElementById('heroTemp').textContent = getSageBarHint(active.temp);
+      document.getElementById('beanCountBadge').textContent = `${appState.profiles.length} Sorten gespeichert`;
+      document.getElementById('dbCountPill').textContent = `${appState.profiles.length} Profile`;
+    }
+
+    function renderProfileCards() {
+      const container = document.getElementById('profileCardsContainer');
+      const searchVal = (document.getElementById('beanSearchInput')?.value || '').toLowerCase().trim();
+      const active = getActiveProfile();
+      container.innerHTML = '';
+
+      const filtered = appState.profiles.filter(p =>
+        !searchVal ||
+        p.name.toLowerCase().includes(searchVal) ||
+        p.blend.toLowerCase().includes(searchVal) ||
+        (p.notes && p.notes.toLowerCase().includes(searchVal))
+      );
+
+      filtered.forEach(profile => {
+        const isSelected = profile.id === active.id;
+        const recGrind = computeRecommendedGrindToday(profile);
+        const card = document.createElement('button');
+        card.type = 'button';
+        card.onclick = () => {
+          selectProfile(profile.id);
+          const drawer = document.getElementById('beanSelectorDrawer');
+          if (!drawer.classList.contains('hidden')) {
+            toggleBeanSelectorDrawer();
+          }
+        };
+        card.className = `text-left p-3 rounded-xl border transition-all flex flex-col justify-between gap-2 ${
+          isSelected
+            ? 'cafe-card-highlight ring-2 ring-amber-500/40'
+            : 'bg-white hover:bg-latte-50 border-latte-200 hover:border-amber-400'
+        }`;
+
+        const roastBadgeMap = {
+          'dark': { label: 'Dark', cls: 'bg-stone-200 text-stone-800 border-stone-300' },
+          'medium-dark': { label: 'Med-Dark', cls: 'bg-amber-200/70 text-amber-950 border-amber-300' },
+          'medium': { label: 'Medium', cls: 'bg-amber-100 text-amber-900 border-amber-300' },
+          'light': { label: 'Hell-Mittel', cls: 'bg-yellow-100 text-yellow-900 border-yellow-300' }
+        };
+        const rBadge = roastBadgeMap[profile.roast] || roastBadgeMap.medium;
+
+        card.innerHTML = `
+          <div>
+            <div class="flex items-center justify-between gap-1">
+              <span class="text-[10px] px-1.5 py-0.5 rounded-full border font-bold uppercase ${rBadge.cls}">${rBadge.label}</span>
+              <span class="mono text-xs font-extrabold ${isSelected ? 'text-amber-800' : 'text-latte-700'}">⚙ ${fmtNum(recGrind)}</span>
+            </div>
+            <div class="font-extrabold text-xs text-latte-900 mt-1.5 line-clamp-1">${profile.name}</div>
+            <div class="text-[10px] text-latte-600 line-clamp-1">${profile.blend}</div>
+          </div>
+          <div class="pt-1.5 border-t border-latte-200 flex items-center justify-between text-[10px] mono text-latte-600 font-semibold">
+            <span>${fmtNum(profile.doseIn)}g ➔ ${fmtNum(profile.yieldOut)}g</span>
+            <span>${profile.timeMin}–${profile.timeMax}s</span>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+
+      updateActiveBeanHeroCard();
+    }
+
+    function selectProfile(id) {
+      const found = appState.profiles.find(p => p.id === id);
+      if (!found) return;
+      appState.activeProfileId = found.id;
+      saveDatabase();
+
+      const recGrind = computeRecommendedGrindToday(found, found.daysOpen);
+      const snappedTemp = tempToNearestSageBar(found.temp).temp;
+      found.temp = snappedTemp;
+
+      document.getElementById('simGrind').value = recGrind;
+      document.getElementById('simDaysOpen').value = found.daysOpen ?? 1;
+      document.getElementById('simDoseIn').value = found.doseIn;
+      document.getElementById('simYieldOut').value = found.yieldOut;
+      document.getElementById('simTemp').value = snappedTemp;
+      document.getElementById('simPressure').value = found.pressure || 9.0;
+
+      // Re-lock controls when switching bean to prevent accidental scroll edits
+      unlockedControls.clear();
+      updateLockUI();
+      renderSageTempBarButtons(snappedTemp);
+
+      renderProfileCards();
+      renderDatabaseTable();
+      updateSimulation();
+      renderLearningCurveChart();
+      renderEasyModeView();
+    }
+
+    function switchAppMode(mode) {
+      appState.appMode = mode === 'easy' ? 'easy' : 'barista';
+      const baristaWrapper = document.getElementById('baristaModeWrapper');
+      const easyWrapper = document.getElementById('easyModeWrapper');
+      const btnBarista = document.getElementById('btnModeBarista');
+      const btnEasy = document.getElementById('btnModeEasy');
+
+      const proHeaderBtns = ['headerBtnNewBean', 'headerBtnBackup', 'headerBtnImport', 'headerBtnReset'];
+
+      if (appState.appMode === 'easy') {
+        baristaWrapper.classList.add('hidden');
+        easyWrapper.classList.remove('hidden');
+        btnEasy.className = 'px-3 py-1.5 rounded-lg text-xs font-extrabold transition flex items-center gap-1.5 bg-amber-600 text-white shadow-sm';
+        btnBarista.className = 'px-3 py-1.5 rounded-lg text-xs font-extrabold transition flex items-center gap-1.5 text-latte-800 hover:bg-latte-100';
+        proHeaderBtns.forEach(id => document.getElementById(id)?.classList.add('hidden'));
+        renderEasyModeView();
+      } else {
+        easyWrapper.classList.add('hidden');
+        baristaWrapper.classList.remove('hidden');
+        btnBarista.className = 'px-3 py-1.5 rounded-lg text-xs font-extrabold transition flex items-center gap-1.5 bg-amber-700 text-white shadow-sm';
+        btnEasy.className = 'px-3 py-1.5 rounded-lg text-xs font-extrabold transition flex items-center gap-1.5 text-latte-800 hover:bg-latte-100';
+        proHeaderBtns.forEach(id => document.getElementById(id)?.classList.remove('hidden'));
+        updateSimulation();
+        renderLearningCurveChart();
+      }
+    }
+
+    function handleEasyBeanChange(profileId) {
+      selectProfile(profileId);
+    }
+
+    function selectEasyDrink(drinkKey) {
+      appState.easyDrink = drinkKey;
+      saveDatabase();
+      renderEasyModeView();
+    }
+
+    function renderEasyModeView() {
+      const active = getActiveProfile();
+      const recGrind = computeRecommendedGrindToday(active, active.daysOpen);
+
+      // Populate Bean Select Dropdown
+      const sel = document.getElementById('easyBeanSelect');
+      if (sel) {
+        sel.innerHTML = appState.profiles.map(p =>
+          `<option value="${p.id}" ${p.id === active.id ? 'selected' : ''}>🫘 ${p.name}</option>`
+        ).join('');
+      }
+
+      const roastBadgeMap = {
+        'dark': 'Dunkle Röstung',
+        'medium-dark': 'Mittel-Dunkel',
+        'medium': 'Medium Röstung',
+        'light': 'Hell-Mittel'
+      };
+      document.getElementById('easyBeanBlend').textContent = active.blend;
+      document.getElementById('easyBeanRoastBadge').textContent = roastBadgeMap[active.roast] || 'Medium';
+      document.getElementById('easyBeanNotes').textContent = active.notes;
+
+      // Update Step 1 values
+      document.getElementById('easyStepGrindValue').textContent = fmtNum(recGrind);
+      document.getElementById('easyStepDoseValue').textContent = `${fmtNum(active.doseIn)} g`;
+
+      const purgeDelta = Math.abs(recGrind - appState.lastGrind);
+      const purgeHintEl = document.getElementById('easyStepPurgeHint');
+      if (purgeDelta >= 0.1) {
+        purgeHintEl.className = 'p-3 rounded-xl bg-amber-100 border border-amber-400 text-xs text-amber-950 font-medium';
+        purgeHintEl.innerHTML = `⚠️ <strong>Kleiner Hinweis:</strong> Die Mühle stand zuletzt auf <strong>${fmtNum(appState.lastGrind)}</strong>. Wenn du sie auf <strong>${fmtNum(recGrind)}</strong> drehst, mahle vorher kurz <strong>2 Sekunden</strong> Kaffee in den Ausklopfbehälter!`;
+      } else {
+        purgeHintEl.className = 'p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-900 font-medium';
+        purgeHintEl.innerHTML = `✓ Die Mühle steht bereits genau auf <strong>${fmtNum(recGrind)}</strong>. Du kannst direkt abwiegen!`;
+      }
+
+      // Highlight selected drink button
+      const drinks = ['cappuccino', 'latte', 'espresso'];
+      drinks.forEach(d => {
+        const btn = document.getElementById(`easyDrinkBtn-${d}`);
+        if (!btn) return;
+        if (d === appState.easyDrink) {
+          btn.className = 'p-4 rounded-2xl border-2 border-amber-600 bg-amber-50/90 text-left transition-all flex flex-col justify-between gap-3 shadow-md ring-2 ring-amber-500/30';
+        } else {
+          btn.className = 'p-4 rounded-2xl border-2 border-latte-200 bg-white hover:bg-latte-50 text-left transition-all flex flex-col justify-between gap-3';
+        }
+      });
+
+      // Update Step 3 & Step 4 instructions according to chosen drink
+      const step3Badge = document.getElementById('easyStep3Badge');
+      const step3Content = document.getElementById('easyStep3Content');
+      const step4Badge = document.getElementById('easyStep4Badge');
+      const step4Icon = document.getElementById('easyStep4Icon');
+      const step4Content = document.getElementById('easyStep4Content');
+
+      if (appState.easyDrink === 'espresso') {
+        step3Badge.textContent = 'Schritt 3 • Espresso beziehen';
+        step3Content.innerHTML = `
+          <p class="font-bold text-latte-900">So startest du deinen Doppel-Espresso:</p>
+          <ol class="list-decimal list-inside space-y-1.5">
+            <li>Siebträger fest in die Maschine einspannen.</li>
+            <li>Deine Tasse direkt darunterstellen (ohne Waage).</li>
+            <li>Einmal auf die <strong>1-Tassen-Taste</strong> drücken – die Maschine stoppt bei <strong>ca. 42 g</strong> automatisch!</li>
+          </ol>
+        `;
+        step4Badge.textContent = 'Schritt 4 • Direkt genießen';
+        step4Icon.textContent = '☕';
+        step4Content.innerHTML = `
+          <p class="font-bold text-emerald-900">Dein Doppel-Espresso ist fertig!</p>
+          <p>Kurz mit einem kleinen Löffel umrühren (damit sich die süßen und kräftigen Schichten verbinden) und direkt warm genießen.</p>
+        `;
+      } else if (appState.easyDrink === 'latte') {
+        step3Badge.textContent = 'Schritt 3 • Zuerst Milch, dann Espresso';
+        step3Content.innerHTML = `
+          <p class="font-bold text-latte-900">Für die schönen Schichten im hohen Glas:</p>
+          <ol class="list-decimal list-inside space-y-1.5">
+            <li>Schäume zuerst die Milch (siehe Schritt 4) und gieße sie in dein hohes Latte-Glas.</li>
+            <li>Warte kurz <strong>20–30 Sekunden</strong>, bis sich Milch und Schaum leicht absetzen.</li>
+            <li>Stelle das Glas unter den Auslauf und drücke die <strong>1-Tassen-Taste</strong> (~42 g Auto-Stopp).</li>
+          </ol>
+        `;
+        step4Badge.textContent = 'Schritt 4 • Milchschaum für Latte Macchiato';
+        step4Icon.textContent = '🧋';
+        step4Content.innerHTML = `
+          <ol class="list-decimal list-inside space-y-1.5 font-medium">
+            <li>Kaltes Milchkännchen bis knapp <strong>unter die Ausguss-Tülle</strong> mit kalter Milch füllen.</li>
+            <li>Dampflanze eintauchen & Dampf starten. Kännchen anfangs leicht senken, sodass es <strong>4–5 Sekunden leise zischt</strong> (für eine schöne Schaumkrone).</li>
+            <li>Danach Lanze etwas tiefer halten (Milch wirbelt), bis das Kännchen <strong>gut handwarm (~60–65 °C)</strong> ist.</li>
+          </ol>
+        `;
+      } else {
+        // Default: Cappuccino
+        step3Badge.textContent = 'Schritt 3 • Espresso in die Tasse';
+        step3Content.innerHTML = `
+          <p class="font-bold text-latte-900">Basis für deinen Cappuccino:</p>
+          <ol class="list-decimal list-inside space-y-1.5">
+            <li>Siebträger fest einspannen und deine Cappuccino-Tasse darunterstellen.</li>
+            <li>Drücke einmal auf die <strong>1-Tassen-Taste</strong>.</li>
+            <li>Die Maschine stoppt bei <strong>ca. 42 g</strong> vollautomatisch (keine Waage nötig!).</li>
+          </ol>
+        `;
+        step4Badge.textContent = 'Schritt 4 • Cremiger Cappuccino-Schaum';
+        step4Icon.textContent = '🥛';
+        step4Content.innerHTML = `
+          <ol class="list-decimal list-inside space-y-1.5 font-medium">
+            <li>Milchkännchen bis kurz <strong>unter den Ausguss-Knick</strong> mit kalter Milch füllen.</li>
+            <li>Dampflanze starten und das Kännchen <strong>2–3 Sekunden leicht absenken</strong> (feines Zischen zieht cremigen Mikroschaum).</li>
+            <li>Lanze leicht eintauchen und die Milch rollen lassen, bis das Kännchen <strong>gut handwarm (~60–65 °C)</strong> ist, dann zügig über den Espresso gießen.</li>
+          </ol>
+        `;
+      }
+    }
+
+    function renderLearningCurveChart() {
+      const profile = getActiveProfile();
+      const svg = document.getElementById('learningCurveSvg');
+      const subtitle = document.getElementById('learningCurveSubtitle');
+      const hitBadge = document.getElementById('learningCurveHitRateBadge');
+      const summaryBox = document.getElementById('learningCurveSummaryText');
+      if (!svg || !profile) return;
+
+      // Filter logs for the currently active bean (chronological order: oldest left, newest right)
+      const beanLogs = appState.shotLogs
+        .filter(l => l.beanName === profile.name)
+        .slice(0, 10)
+        .reverse();
+
+      subtitle.textContent = `Verlauf für „${profile.name}“ (${beanLogs.length} geloggte Bezüge)`;
+
+      if (beanLogs.length === 0) {
+        hitBadge.textContent = 'Neu (0 Bezüge)';
+        hitBadge.className = 'px-2.5 py-0.5 text-[10px] font-bold bg-latte-200 text-latte-800 rounded-full border border-latte-300 mono';
+        svg.innerHTML = `
+          <rect x="10" y="15" width="340" height="100" rx="10" fill="#fdfbf7" stroke="#e6d7c3" stroke-dasharray="4 3"/>
+          <text x="180" y="62" text-anchor="middle" fill="#6e5036" font-size="11" font-weight="700">Noch keine echten Bezüge für diese Bohne geloggt</text>
+          <text x="180" y="80" text-anchor="middle" fill="#8f6b49" font-size="10">Trage oben deinen ersten Shot ein, um die Lernkurve zu starten!</text>
+        `;
+        summaryBox.innerHTML = `Start-Empfehlung heute: Mahlgrad <strong class="mono text-amber-800">${fmtNum(computeRecommendedGrindToday(profile))}</strong> für Zielzeit <strong>${profile.timeMin}–${profile.timeMax} s</strong>.`;
+        return;
+      }
+
+      // Compute Sweet Spot Hit Rate
+      const hits = beanLogs.filter(l => l.taste === 'perfect' || (l.actualTime >= profile.timeMin && l.actualTime <= profile.timeMax)).length;
+      const hitPct = Math.round((hits / beanLogs.length) * 100);
+      hitBadge.textContent = `Sweet Spot: ${hitPct}% (${hits}/${beanLogs.length})`;
+      hitBadge.className = hitPct >= 65
+        ? 'px-2.5 py-0.5 text-[10px] font-bold bg-emerald-100 text-emerald-900 rounded-full border border-emerald-300 mono'
+        : 'px-2.5 py-0.5 text-[10px] font-bold bg-amber-100 text-amber-900 rounded-full border border-amber-300 mono';
+
+      // Chart dimensions
+      const padL = 32;
+      const padR = 28;
+      const padT = 18;
+      const padB = 24;
+      const W = 360 - padL - padR;
+      const H = 135 - padT - padB;
+
+      // Time scale (Y-axis for shot time: 18s to 36s)
+      const minTimeAxis = Math.min(18, profile.timeMin - 4, ...beanLogs.map(l => l.actualTime - 1));
+      const maxTimeAxis = Math.max(35, profile.timeMax + 4, ...beanLogs.map(l => l.actualTime + 1));
+      const timeToY = t => padT + H - ((t - minTimeAxis) / (maxTimeAxis - minTimeAxis)) * H;
+
+      // Grind scale (Y-axis for grind curve)
+      const grinds = beanLogs.map(l => l.grindUsed);
+      const minGrind = Math.min(...grinds, profile.baseGrind) - 0.8;
+      const maxGrind = Math.max(...grinds, profile.baseGrind) + 0.8;
+      const grindToY = g => padT + H - ((g - minGrind) / Math.max(0.5, maxGrind - minGrind)) * H;
+
+      const stepX = beanLogs.length === 1 ? 0 : W / (beanLogs.length - 1);
+      const idxToX = i => beanLogs.length === 1 ? padL + W / 2 : padL + i * stepX;
+
+      // Target time corridor band
+      const yTargetTop = timeToY(profile.timeMax);
+      const yTargetBot = timeToY(profile.timeMin);
+      const bandH = Math.max(6, yTargetBot - yTargetTop);
+
+      let grindPoints = [];
+      let timePoints = [];
+      let circlesMarkup = '';
+
+      beanLogs.forEach((log, i) => {
+        const cx = idxToX(i);
+        const gy = grindToY(log.grindUsed);
+        const ty = timeToY(log.actualTime);
+        grindPoints.push(`${cx.toFixed(1)},${gy.toFixed(1)}`);
+        timePoints.push(`${cx.toFixed(1)},${ty.toFixed(1)}`);
+
+        const isSweet = log.taste === 'perfect' || (log.actualTime >= profile.timeMin && log.actualTime <= profile.timeMax);
+        const dotColor = isSweet ? '#059669' : (log.actualTime < profile.timeMin ? '#0284c7' : '#e11d48');
+
+        circlesMarkup += `
+          <!-- Grind Point & Label -->
+          <circle cx="${cx.toFixed(1)}" cy="${gy.toFixed(1)}" r="3.5" fill="#d97706" stroke="#fffdf9" stroke-width="1.5" />
+          <text x="${cx.toFixed(1)}" y="${Math.max(11, gy - 6).toFixed(1)}" text-anchor="middle" fill="#92400e" font-size="8.5" font-weight="700" font-family="JetBrains Mono">${fmtNum(log.grindUsed)}</text>
+
+          <!-- Shot Time Point & Label -->
+          <circle cx="${cx.toFixed(1)}" cy="${ty.toFixed(1)}" r="4" fill="${dotColor}" stroke="#fffdf9" stroke-width="1.5" />
+          <text x="${cx.toFixed(1)}" y="${Math.min(126, ty + 12).toFixed(1)}" text-anchor="middle" fill="${dotColor}" font-size="8.5" font-weight="700" font-family="JetBrains Mono">${fmtNum(log.actualTime, 0)}s</text>
+
+          <!-- X-Axis Shot Number -->
+          <text x="${cx.toFixed(1)}" y="131" text-anchor="middle" fill="#8f6b49" font-size="8" font-family="JetBrains Mono">#${i + 1}</text>
+        `;
+      });
+
+      const grindPolyline = beanLogs.length > 1
+        ? `<polyline fill="none" stroke="#d97706" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" points="${grindPoints.join(' ')}" />`
+        : '';
+
+      const timePolyline = beanLogs.length > 1
+        ? `<polyline fill="none" stroke="#059669" stroke-width="1.6" stroke-dasharray="3 2" stroke-linecap="round" stroke-linejoin="round" points="${timePoints.join(' ')}" />`
+        : '';
+
+      svg.innerHTML = `
+        <!-- Target Time Sweet Spot Corridor -->
+        <rect x="${padL}" y="${yTargetTop.toFixed(1)}" width="${W}" height="${bandH.toFixed(1)}" rx="4" fill="#d1fae5" opacity="0.65" />
+        <line x1="${padL}" y1="${yTargetTop.toFixed(1)}" x2="${padL + W}" y2="${yTargetTop.toFixed(1)}" stroke="#6ee7b7" stroke-dasharray="2 2" stroke-width="1" />
+        <line x1="${padL}" y1="${yTargetBot.toFixed(1)}" x2="${padL + W}" y2="${yTargetBot.toFixed(1)}" stroke="#6ee7b7" stroke-dasharray="2 2" stroke-width="1" />
+
+        <!-- Left Axis Target Labels -->
+        <text x="${padL - 4}" y="${(yTargetTop + 3).toFixed(1)}" text-anchor="end" fill="#047857" font-size="8" font-family="JetBrains Mono">${profile.timeMax}s</text>
+        <text x="${padL - 4}" y="${(yTargetBot + 3).toFixed(1)}" text-anchor="end" fill="#047857" font-size="8" font-family="JetBrains Mono">${profile.timeMin}s</text>
+
+        ${grindPolyline}
+        ${timePolyline}
+        ${circlesMarkup}
+      `;
+
+      const latest = beanLogs[beanLogs.length - 1];
+      const first = beanLogs[0];
+      const grindDiff = Number((latest.grindUsed - first.grindUsed).toFixed(1));
+      const trendHint = beanLogs.length > 1
+        ? (grindDiff < 0
+            ? `Über ${beanLogs.length} Bezüge um <strong>${fmtNum(Math.abs(grindDiff))} Stufen feiner</strong> nachgestellt (Reifung kompensiert).`
+            : grindDiff > 0
+              ? `Über ${beanLogs.length} Bezüge um <strong>+${fmtNum(grindDiff)} Stufen gröber</strong> eingependelt.`
+              : `Mahlgrad über ${beanLogs.length} Bezüge konstant stabil bei <strong>${fmtNum(latest.grindUsed)}</strong>.`)
+        : `Erster Referenzbezug bei Mahlgrad <strong>${fmtNum(latest.grindUsed)}</strong> (${fmtNum(latest.actualTime)} s).`;
+
+      summaryBox.innerHTML = `<strong>Letzter Bezug:</strong> Mahlgrad <span class="mono font-bold text-amber-800">${fmtNum(latest.grindUsed)}</span> ➔ <span class="mono font-bold">${fmtNum(latest.actualTime)} s</span>. ${trendHint}`;
+    }
+
+    function toggleGrindStepResolution() {
+      const fine = document.getElementById('fineStepToggle').checked;
+      appState.fineStep = fine;
+      const grindSlider = document.getElementById('simGrind');
+      grindSlider.step = fine ? '0.1' : '0.5';
+      saveDatabase();
+      updateSimulation();
+    }
+
+    function nudgeGrind(delta) {
+      const slider = document.getElementById('simGrind');
+      const step = appState.fineStep ? 0.1 : Math.abs(delta);
+      const dir = delta < 0 ? -step : step;
+      const next = Math.max(28.0, Math.min(42.0, parseFloat(slider.value) + dir));
+      slider.value = next.toFixed(1);
+      updateSimulation();
+    }
+
+    function nudgeDays(delta) {
+      const slider = document.getElementById('simDaysOpen');
+      const next = Math.max(0, Math.min(30, parseInt(slider.value, 10) + delta));
+      slider.value = next;
+      updateSimulation();
+    }
+
+    function syncSimulatorToRecommended() {
+      const profile = getActiveProfile();
+      const days = parseInt(document.getElementById('simDaysOpen').value, 10) || 0;
+      const recGrind = computeRecommendedGrindToday(profile, days);
+      const snappedTemp = tempToNearestSageBar(profile.temp).temp;
+      document.getElementById('simGrind').value = recGrind;
+      document.getElementById('simDoseIn').value = profile.doseIn;
+      document.getElementById('simYieldOut').value = profile.yieldOut;
+      document.getElementById('simTemp').value = snappedTemp;
+      document.getElementById('simPressure').value = profile.pressure || 9.0;
+      renderSageTempBarButtons(snappedTemp);
+      updateSimulation();
+      showToast(`Simulator auf KI-Idealwert (${fmtNum(recGrind)}) für Tag ${days} gesetzt.`, 'amber');
+    }
+
+    function confirmGrinderPurged() {
+      const currentSimGrind = parseFloat(document.getElementById('simGrind').value);
+      appState.lastGrind = currentSimGrind;
+      saveDatabase();
+      updateSimulation();
+      showToast(`Mühlen-Totraum geleert. Aktueller Mühlen-Stand ist jetzt ${fmtNum(currentSimGrind)}.`, 'emerald');
+    }
+
+    function updateSimulation() {
+      const profile = getActiveProfile();
+      const grind = parseFloat(document.getElementById('simGrind').value);
+      const daysOpen = parseInt(document.getElementById('simDaysOpen').value, 10);
+      const doseIn = parseFloat(document.getElementById('simDoseIn').value);
+      const yieldOut = parseFloat(document.getElementById('simYieldOut').value);
+      const temp = parseFloat(document.getElementById('simTemp').value);
+      const pressure = parseFloat(document.getElementById('simPressure').value);
+
+      profile.daysOpen = daysOpen;
+
+      document.getElementById('headerLastGrind').textContent = fmtNum(appState.lastGrind);
+      document.getElementById('profileBlendLabel').textContent = `${profile.name} (${profile.blend})`;
+      document.getElementById('profileTargetWindowLabel').textContent = `Ziel: ${profile.timeMin}–${profile.timeMax} s • ${getSageBarHint(profile.temp)}`;
+      document.getElementById('profileNotesLabel').textContent = profile.notes;
+
+      const agingOffset = -(daysOpen / 7) * (profile.agingRatePerWeek || 0.40);
+      const recGrindToday = computeRecommendedGrindToday(profile, daysOpen);
+
+      updateActiveBeanHeroCard();
+      renderSageTempBarButtons(temp);
+
+      document.getElementById('valGrind').textContent = fmtNum(grind);
+      document.getElementById('grindScaleTargetMarker').textContent = `KI-Ziel heute: ${fmtNum(recGrindToday)}`;
+      document.getElementById('valDaysOpen').textContent = daysOpen === 1 ? '1 Tag' : `${daysOpen} Tage`;
+      document.getElementById('simAgingFactorBadge').textContent = `CO₂-Offset: ${agingOffset >= 0 ? '+' : ''}${fmtNum(agingOffset)}`;
+      document.getElementById('valDoseIn').textContent = `${fmtNum(doseIn)} g`;
+      document.getElementById('valYieldOut').textContent = `${fmtNum(yieldOut)} g`;
+      const ratio = yieldOut / doseIn;
+      document.getElementById('valBrewRatio').textContent = `Ratio 1:${fmtNum(ratio, 2)}`;
+      document.getElementById('valTemp').textContent = getSageBarHint(temp);
+      document.getElementById('valPressure').textContent = `${fmtNum(pressure)} bar`;
+
+      const grindDelta = grind - recGrindToday;
+      const deltaEl = document.getElementById('simGrindDeltaInfo');
+      if (Math.abs(grindDelta) < 0.08) {
+        deltaEl.textContent = '(Ideal auf KI-Ziel)';
+        deltaEl.className = 'text-[11px] font-bold text-emerald-700 mono';
+      } else if (grindDelta > 0) {
+        deltaEl.textContent = `(+${fmtNum(grindDelta)} gröber)`;
+        deltaEl.className = 'text-[11px] font-bold text-sky-700 mono';
+      } else {
+        deltaEl.textContent = `(${fmtNum(grindDelta)} feiner)`;
+        deltaEl.className = 'text-[11px] font-bold text-amber-800 mono';
+      }
+
+      // Physics model
+      const targetMidTime = (profile.timeMin + profile.timeMax) / 2;
+      const grindTimeShift = -grindDelta * 4.4 + (grindDelta < 0 ? Math.pow(Math.abs(grindDelta), 1.45) * 1.1 : 0);
+      const doseTimeShift = (doseIn - profile.doseIn) * 2.8;
+      const yieldTimeShift = (yieldOut - profile.yieldOut) * 0.48;
+      const pressureTimeShift = pressure <= 9.5 ? -(pressure - 9.0) * 0.9 : (pressure - 9.5) * 1.2;
+
+      let simTime = targetMidTime + grindTimeShift + doseTimeShift + yieldTimeShift + pressureTimeShift;
+      simTime = Math.max(9.0, Math.min(65.0, simTime));
+
+      const baseRatio = profile.yieldOut / profile.doseIn;
+      const ratioEyShift = (ratio - baseRatio) * 1.65;
+      const timeEyShift = (simTime - targetMidTime) * 0.22;
+      const tempEyShift = (temp - profile.temp) * 0.28;
+      let simEY = 20.0 + ratioEyShift + timeEyShift + tempEyShift;
+      simEY = Math.max(13.5, Math.min(25.5, simEY));
+
+      const simTDS = (simEY * doseIn) / yieldOut;
+      const flowRate = yieldOut / simTime;
+
+      document.getElementById('simTimeOut').textContent = `${fmtNum(simTime)} s`;
+      document.getElementById('simTimeTargetHint').textContent = `Ziel: ${profile.timeMin}–${profile.timeMax} s`;
+      document.getElementById('simRecommendedGrindToday').textContent = fmtNum(recGrindToday);
+      document.getElementById('simAgingOffsetText').textContent = `Alterung: ${agingOffset >= 0 ? '+' : ''}${fmtNum(agingOffset)}`;
+      document.getElementById('simExtractionYield').textContent = `${fmtNum(simEY)} %`;
+      document.getElementById('simTdsBadge').textContent = `TDS: ${fmtNum(simTDS)} %`;
+      document.getElementById('simFlowRate').textContent = `${fmtNum(flowRate, 2)} g/s`;
+
+      // Update Workflow Banner 1: Grinder Dead Space
+      const purgeDelta = Math.abs(grind - appState.lastGrind);
+      const deadSpaceBanner = document.getElementById('deadSpaceBanner');
+      const deadSpaceBadge = document.getElementById('deadSpaceBadge');
+      const deadSpaceText = document.getElementById('deadSpaceText');
+      const confirmPurgeBtn = document.getElementById('confirmPurgeBtn');
+
+      if (purgeDelta >= 0.1) {
+        deadSpaceBanner.classList.add('purge-alert-active', 'border-amber-500');
+        deadSpaceBadge.textContent = `Δ ${fmtNum(purgeDelta)} Stufen!`;
+        deadSpaceBadge.className = 'px-2.5 py-0.5 text-[10px] font-bold uppercase rounded-full bg-amber-500 text-white mono';
+        const purgeGrams = purgeDelta >= 1.5 ? '2–3 g' : '1–2 g';
+        deadSpaceText.innerHTML = `Mühle steht noch auf <strong class="text-amber-800 mono">${fmtNum(appState.lastGrind)}</strong> (Neu: <strong class="text-amber-800 mono">${fmtNum(grind)}</strong>). Bitte <strong>${purgeGrams} Bohnen freimahlen</strong>, bevor du deinen Shot dosierst!`;
+        confirmPurgeBtn.classList.remove('hidden');
+      } else {
+        deadSpaceBanner.classList.remove('purge-alert-active', 'border-amber-500');
+        deadSpaceBadge.textContent = 'Synchron ✓';
+        deadSpaceBadge.className = 'px-2.5 py-0.5 text-[10px] font-bold uppercase rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300 mono';
+        deadSpaceText.innerHTML = `Mühlen-Stand (<strong class="mono text-emerald-800">${fmtNum(appState.lastGrind)}</strong>) entspricht dem gewählten Mahlgrad. Kein Totraum-Purge nötig.`;
+        confirmPurgeBtn.classList.add('hidden');
+      }
+
+      // Update Collapsible Puck-Prep & Headspace Box
+      const headspaceStatusBadge = document.getElementById('headspaceStatusBadge');
+      const headspaceInnerDoseLabel = document.getElementById('headspaceInnerDoseLabel');
+      const headspaceText = document.getElementById('headspaceText');
+      headspaceStatusBadge.textContent = `Dosis: ${fmtNum(doseIn)} g`;
+      if (headspaceInnerDoseLabel) headspaceInnerDoseLabel.textContent = `Dosis: ${fmtNum(doseIn)} g`;
+
+      if (doseIn <= 17.5) {
+        headspaceStatusBadge.className = 'px-2 py-0.5 text-[10px] font-bold rounded-full bg-amber-100 text-amber-900 border border-amber-300 mono';
+        headspaceText.innerHTML = `Aktuelle Dosis <strong>${fmtNum(doseIn)} g (&le; 17,5 g)</strong>: Größerer Headspace zum Duschsieb. Ein <strong>feuchter Puck / Wasserfilm nach dem Bezug ist physikalisch völlig normal</strong>!`;
+      } else if (doseIn >= 19.5) {
+        headspaceStatusBadge.className = 'px-2 py-0.5 text-[10px] font-bold rounded-full bg-rose-100 text-rose-800 border border-rose-300 mono';
+        headspaceText.innerHTML = `Hohe Dosis (<strong>${fmtNum(doseIn)} g</strong>): Geringer Abstand zum Duschsieb. Prüfe vor dem Bezug, dass der trockene Puck nicht am Duschsieb anstößt.`;
+      } else {
+        headspaceStatusBadge.className = 'px-2 py-0.5 text-[10px] font-bold rounded-full bg-sky-100 text-sky-800 border border-sky-200 mono';
+        headspaceText.innerHTML = `Optimale Sieb-Füllung (<strong>${fmtNum(doseIn)} g</strong>). Trockener, kompakter Puck nach dem Ausklopfen zu erwarten.`;
+      }
+
+      const timeCard = document.getElementById('metricTimeCard');
+      const timeOutEl = document.getElementById('simTimeOut');
+      const statusPill = document.getElementById('simStatusPill');
+      const channelingEl = document.getElementById('simChannelingRisk');
+
+      const pointerPct = Math.max(4, Math.min(96, ((simEY - 15.0) / 10.0) * 100));
+      document.getElementById('extractionBalancePointer').style.left = `${pointerPct}%`;
+
+      const inTimeWindow = simTime >= profile.timeMin && simTime <= profile.timeMax;
+      const inEyWindow = simEY >= 18.6 && simEY <= 21.4;
+
+      if (inTimeWindow && inEyWindow) {
+        statusPill.textContent = 'Sweet Spot ✓';
+        statusPill.className = 'px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider mono bg-emerald-100 text-emerald-800 border border-emerald-300';
+        timeOutEl.className = 'mono text-2xl font-extrabold text-emerald-700';
+        timeCard.className = 'p-3.5 rounded-xl bg-white border-2 border-emerald-400 shadow-sm transition-all';
+        document.getElementById('sensoryProfileText').textContent = 'Balancierte Süße, samtiger Körper & klarer Nachgeschmack';
+      } else if (simTime < profile.timeMin || simEY < 18.6) {
+        statusPill.textContent = 'Unterextrahiert (Zu schnell)';
+        statusPill.className = 'px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider mono bg-sky-100 text-sky-800 border border-sky-300';
+        timeOutEl.className = 'mono text-2xl font-extrabold text-sky-700';
+        timeCard.className = 'p-3.5 rounded-xl bg-white border-2 border-sky-400 shadow-sm transition-all';
+        document.getElementById('sensoryProfileText').textContent = 'Dominante Säure, dünner Körper, kurzes Finish';
+      } else {
+        statusPill.textContent = simTime > 40 ? 'Choking / Blockiert!' : 'Überextrahiert (Zu langsam)';
+        statusPill.className = 'px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider mono bg-rose-100 text-rose-800 border border-rose-300';
+        timeOutEl.className = 'mono text-2xl font-extrabold text-rose-700';
+        timeCard.className = 'p-3.5 rounded-xl bg-white border-2 border-rose-400 shadow-sm transition-all';
+        document.getElementById('sensoryProfileText').textContent = 'Bitterkeit, holzige Adstringenz & trockenes Mundgefühl';
+      }
+
+      if (pressure >= 10.0 || simTime > 36) {
+        channelingEl.textContent = '⚠ Channeling-Risiko';
+        channelingEl.className = 'text-[10px] mono font-bold text-amber-700';
+      } else if (flowRate > 2.1) {
+        channelingEl.textContent = '⚡ Zu schneller Fluss';
+        channelingEl.className = 'text-[10px] mono font-bold text-sky-700';
+      } else {
+        channelingEl.textContent = '✓ Gleichmäßiger Fluss';
+        channelingEl.className = 'text-[10px] mono font-bold text-emerald-700';
+      }
+
+      // Dynamic SVG curve
+      const flowHeight = Math.max(12, Math.min(62, 70 - flowRate * 24));
+      const endFlowHeight = Math.max(10, flowHeight - 8);
+      const pressureY = Math.max(10, Math.min(55, 70 - (pressure / 11.0) * 52));
+      const flowPath = `M0,70 L38,66 L75,${flowHeight.toFixed(0)} L210,${(flowHeight - 3).toFixed(0)} L320,${endFlowHeight.toFixed(0)}`;
+      const flowArea = `${flowPath} L320,70 Z`;
+      const pressPath = `M0,70 L32,56 L65,${pressureY.toFixed(0)} L260,${(pressureY + 2).toFixed(0)} L320,${(pressureY + 8).toFixed(0)}`;
+
+      document.getElementById('svgFlowPath').setAttribute('d', flowPath);
+      document.getElementById('svgFlowArea').setAttribute('d', flowArea);
+      document.getElementById('svgPressurePath').setAttribute('d', pressPath);
+      document.getElementById('svgEndAxisLabel').textContent = `Ende: ${fmtNum(simTime)} s`;
+      const preInf = Math.max(3, Math.min(9, Math.round(simTime * 0.22)));
+      document.getElementById('curvePhaseInfo').textContent = `Erster Tropfen ~${preInf}s • Blonding ab ~${Math.round(simTime * 0.85)}s`;
+
+      // Build AI Barista Live Coaching Tips
+      const tips = [];
+      if (Math.abs(grind - recGrindToday) >= 0.3) {
+        const diff = recGrindToday - grind;
+        const dirWord = diff < 0 ? 'feiner' : 'gröber';
+        tips.push(`<strong>Mahlgrad-Korrektur:</strong> Stelle die Mühle um <strong>${fmtNum(Math.abs(diff))} Stufen ${dirWord}</strong> auf <span class="mono font-bold text-amber-900">${fmtNum(recGrindToday)}</span> ein, um die Bohnen-Alterung (${daysOpen} Tage) auszugleichen.`);
+      } else {
+        tips.push(`<strong>Mahlgrad optimal:</strong> Dein gewählter Mahlgrad (<span class="mono font-bold text-emerald-800">${fmtNum(grind)}</span>) trifft das tagesaktuelle KI-Optimum.`);
+      }
+
+      if ((profile.blend.includes('40%') || profile.roast === 'dark') && temp > 92.0) {
+        tips.push(`<strong>Sage Temperatur-Tipp (Robusta/Dark):</strong> Wähle an der Sage Barista Pro <strong>1 oder 2 Balken (90–92 °C)</strong>, um holzige Bitterstoffe zu vermeiden.`);
+      } else if (profile.roast === 'light' && temp < 94.0) {
+        tips.push(`<strong>Light-Roast Tipp:</strong> Helle Hochland-Arabicas brauchen mehr Wärme. Stelle die Sage auf <strong>4 Balken (~94 °C)</strong> für beste Süße.`);
+      }
+
+      document.getElementById('aiCoachingList').innerHTML = tips.map(t => `<li>${t}</li>`).join('');
+      saveDatabase();
+    }
+
+    function copySimTimeToActual() {
+      const simText = document.getElementById('simTimeOut').textContent.replace('s', '').replace(',', '.').trim();
+      const val = parseFloat(simText);
+      if (!isNaN(val)) {
+        document.getElementById('actualShotTime').value = val.toFixed(1);
+      }
+    }
+
+    function logRealShot() {
+      const profile = getActiveProfile();
+      const grindUsed = parseFloat(document.getElementById('simGrind').value);
+      const daysOpen = parseInt(document.getElementById('simDaysOpen').value, 10) || 0;
+      const doseIn = parseFloat(document.getElementById('simDoseIn').value);
+      const yieldOut = parseFloat(document.getElementById('simYieldOut').value);
+      const actualTime = parseFloat(document.getElementById('actualShotTime').value);
+      const taste = document.getElementById('actualShotTaste').value;
+
+      if (isNaN(actualTime) || actualTime < 5 || actualTime > 120) {
+        showToast('Bitte gib eine realistische Bezugszeit zwischen 5 und 120 Sekunden ein.', 'red');
+        return;
+      }
+
+      const targetMid = (profile.timeMin + profile.timeMax) / 2;
+      const timeError = actualTime - targetMid;
+      const agingOffset = -(daysOpen / 7) * (profile.agingRatePerWeek || 0.40);
+      let suggestedAdjustment = 0;
+
+      if (Math.abs(timeError) > 1.2) {
+        suggestedAdjustment += (timeError / 4.4) * 0.45;
+      }
+
+      if (taste === 'sour') suggestedAdjustment -= 0.4;
+      if (taste === 'slightly_sour') suggestedAdjustment -= 0.2;
+      if (taste === 'slightly_bitter') suggestedAdjustment += 0.2;
+      if (taste === 'bitter') suggestedAdjustment += 0.45;
+      if (taste === 'channeling') suggestedAdjustment += 0.15;
+
+      suggestedAdjustment = Math.max(-1.2, Math.min(1.2, suggestedAdjustment));
+
+      const impliedBaseGrind = (grindUsed - agingOffset) + suggestedAdjustment;
+      const newBaseGrind = Math.max(28.0, Math.min(42.0, Number((profile.baseGrind * 0.45 + impliedBaseGrind * 0.55).toFixed(1))));
+      const appliedDelta = Number((newBaseGrind - profile.baseGrind).toFixed(1));
+
+      profile.baseGrind = newBaseGrind;
+      profile.calibratedCount = (profile.calibratedCount || 1) + 1;
+      appState.lastGrind = grindUsed;
+
+      const now = new Date();
+      const timeStr = `Tag ${daysOpen} (${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')})`;
+
+      appState.shotLogs.unshift({
+        id: 'log-' + Date.now(),
+        timestamp: timeStr,
+        beanName: profile.name,
+        grindUsed,
+        doseIn,
+        yieldOut,
+        actualTime,
+        taste,
+        aiAdjustment: appliedDelta
+      });
+
+      const updatedRec = computeRecommendedGrindToday(profile, daysOpen);
+      document.getElementById('simGrind').value = updatedRec;
+
+      saveDatabase();
+      renderProfileCards();
+      renderDatabaseTable();
+      renderShotHistory();
+      updateSimulation();
+      renderLearningCurveChart();
+      renderEasyModeView();
+
+      const deltaText = appliedDelta === 0 ? 'unverändert bestätigt' : `um ${appliedDelta > 0 ? '+' : ''}${fmtNum(appliedDelta)} auf ${fmtNum(newBaseGrind)} adaptiert`;
+      showToast(`Bezug gespeichert! KI-Basis-Mahlgrad für "${profile.name}" wurde ${deltaText}.`, 'emerald');
+    }
+
+    function deleteSingleShotLog(logId) {
+      const target = appState.shotLogs.find(l => l.id === logId);
+      if (!target) return;
+      openConfirmModal(
+        'Einzelnen Bezug löschen',
+        `Möchtest du den Eintrag "${target.beanName}" (${target.timestamp} • Mahlgrad ${fmtNum(target.grindUsed)}) aus dem Logbuch löschen?`,
+        () => {
+          appState.shotLogs = appState.shotLogs.filter(l => l.id !== logId);
+          saveDatabase();
+          renderShotHistory();
+          renderLearningCurveChart();
+          showToast('Eintrag wurde aus dem Shot-Logbuch gelöscht.', 'amber');
+        }
+      );
+    }
+
+    function renderDatabaseTable() {
+      const tbody = document.getElementById('databaseTableBody');
+      tbody.innerHTML = '';
+
+      appState.profiles.forEach(p => {
+        const isCurrent = p.id === appState.activeProfileId;
+        const recToday = computeRecommendedGrindToday(p);
+        const tr = document.createElement('tr');
+        tr.className = `transition ${isCurrent ? 'bg-amber-100/60' : 'hover:bg-latte-100/50'}`;
+
+        tr.innerHTML = `
+          <td class="py-2.5 px-2">
+            <div class="font-extrabold text-latte-900 flex items-center gap-1.5">
+              ${isCurrent ? '<span class="w-2 h-2 rounded-full bg-amber-600"></span>' : ''}
+              <span>${p.name}</span>
+            </div>
+            <div class="text-[10px] text-latte-600">${p.blend}</div>
+          </td>
+          <td class="py-2.5 px-2 mono">
+            <span class="font-extrabold text-amber-800">${fmtNum(p.baseGrind)}</span>
+            <span class="block text-[10px] text-latte-600">Heute (T${p.daysOpen || 0}): ${fmtNum(recToday)}</span>
+          </td>
+          <td class="py-2.5 px-2 mono text-latte-800 font-semibold">
+            ${fmtNum(p.doseIn)}g ➔ ${fmtNum(p.yieldOut)}g
+          </td>
+          <td class="py-2.5 px-2 mono text-latte-800">
+            ${p.timeMin}–${p.timeMax}s • ${getSageBarHint(p.temp)}
+          </td>
+          <td class="py-2.5 px-2 text-right space-x-1 whitespace-nowrap">
+            <button onclick="selectProfile('${p.id}')" class="px-2.5 py-1 rounded-lg bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300 text-[10px] font-bold">Laden</button>
+            <button onclick="openEditProfileModal('${p.id}')" class="px-2 py-1 rounded-lg bg-white hover:bg-latte-100 text-latte-800 border border-latte-300 text-[10px] font-bold">✎</button>
+            ${appState.profiles.length > 1 ? `<button onclick="deleteProfile('${p.id}')" class="px-2 py-1 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-[10px] font-bold">✕</button>` : ''}
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function populateLogFilterDropdown() {
+      const sel = document.getElementById('logFilterBean');
+      if (!sel) return;
+      const currentVal = sel.value || 'ALL';
+      const uniqueNames = Array.from(new Set(appState.profiles.map(p => p.name)));
+      sel.innerHTML = `<option value="ALL">Alle Kaffeesorten (${appState.shotLogs.length})</option>` +
+        uniqueNames.map(n => `<option value="${n}">${n}</option>`).join('');
+      sel.value = uniqueNames.includes(currentVal) ? currentVal : 'ALL';
+    }
+
+    function renderShotHistory() {
+      populateLogFilterDropdown();
+      const container = document.getElementById('shotHistoryContainer');
+      const filterBean = document.getElementById('logFilterBean')?.value || 'ALL';
+      document.getElementById('logCountPill').textContent = `${appState.shotLogs.length} Bezüge`;
+
+      const logs = appState.shotLogs.filter(l => filterBean === 'ALL' || l.beanName === filterBean);
+
+      if (logs.length === 0) {
+        container.innerHTML = `<div class="col-span-full text-xs text-latte-500 italic py-6 text-center">Keine Bezüge für diesen Filter gefunden.</div>`;
+        return;
+      }
+
+      const tasteLabels = {
+        perfect: { text: '🍯 Sweet Spot', cls: 'text-emerald-800 bg-emerald-100 border-emerald-300' },
+        sour: { text: '🍋 Zu schnell / sauer', cls: 'text-sky-800 bg-sky-100 border-sky-300' },
+        slightly_sour: { text: '🍏 Frisch/Sauer', cls: 'text-sky-800 bg-sky-50 border-sky-200' },
+        slightly_bitter: { text: '🍫 Kräftig/Herb', cls: 'text-amber-900 bg-amber-100 border-amber-300' },
+        bitter: { text: '🪵 Zu langsam / bitter', cls: 'text-rose-800 bg-rose-100 border-rose-300' },
+        channeling: { text: '💦 Channeling', cls: 'text-amber-900 bg-amber-100 border-amber-300' }
+      };
+
+      container.innerHTML = logs.map(log => {
+        const tBadge = tasteLabels[log.taste] || tasteLabels.perfect;
+        const adjSign = log.aiAdjustment > 0 ? '+' : '';
+        const adjText = log.aiAdjustment === 0 ? '±0,0 (Bestätigt)' : `${adjSign}${fmtNum(log.aiAdjustment)} KI-Korrektur`;
+        return `
+          <div class="p-3 rounded-xl bg-white border border-latte-200 shadow-sm flex items-center justify-between gap-2 text-xs">
+            <div class="space-y-0.5 min-w-0">
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="font-extrabold text-latte-900 truncate">${log.beanName}</span>
+                <span class="text-[10px] text-latte-500 mono">${log.timestamp}</span>
+              </div>
+              <div class="text-[11px] text-latte-700 mono">
+                Mahlgrad <strong class="text-amber-800">${fmtNum(log.grindUsed)}</strong> • ${fmtNum(log.doseIn)}g ➔ ${fmtNum(log.yieldOut)}g in <strong class="text-latte-900">${fmtNum(log.actualTime)}s</strong>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+              <div class="text-right space-y-1">
+                <span class="inline-block px-2 py-0.5 rounded-full border text-[10px] font-bold ${tBadge.cls}">${tBadge.text}</span>
+                <div class="text-[10px] mono font-semibold text-amber-800">${adjText}</div>
+              </div>
+              <button type="button" onclick="deleteSingleShotLog('${log.id}')" title="Diesen Bezug löschen" class="p-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 transition">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function openNewProfileModal() {
+      document.getElementById('modalTitle').textContent = 'Neue Bohne anlegen';
+      document.getElementById('editProfileId').value = '';
+      document.getElementById('inpName').value = '';
+      document.getElementById('inpBlend').value = '100% Arabica';
+      document.getElementById('inpRoast').value = 'light';
+      document.getElementById('inpBaseGrind').value = '35.0';
+      document.getElementById('inpAgingRate').value = '0.40';
+      document.getElementById('inpDoseIn').value = '18.0';
+      document.getElementById('inpYieldOut').value = '43.0';
+      document.getElementById('inpTimeMin').value = '26';
+      document.getElementById('inpTimeMax').value = '29';
+      document.getElementById('inpTemp').value = '94.0';
+      document.getElementById('inpDaysOpen').value = '1';
+      document.getElementById('inpNotes').value = '';
+
+      const modal = document.getElementById('profileModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function openEditProfileModal(id) {
+      const p = appState.profiles.find(item => item.id === id);
+      if (!p) return;
+      document.getElementById('modalTitle').textContent = `Bohne bearbeiten: ${p.name}`;
+      document.getElementById('editProfileId').value = p.id;
+      document.getElementById('inpName').value = p.name;
+      document.getElementById('inpBlend').value = p.blend;
+      document.getElementById('inpRoast').value = p.roast || 'light';
+      document.getElementById('inpBaseGrind').value = p.baseGrind;
+      document.getElementById('inpAgingRate').value = p.agingRatePerWeek || 0.40;
+      document.getElementById('inpDoseIn').value = p.doseIn;
+      document.getElementById('inpYieldOut').value = p.yieldOut;
+      document.getElementById('inpTimeMin').value = p.timeMin;
+      document.getElementById('inpTimeMax').value = p.timeMax;
+      document.getElementById('inpTemp').value = tempToNearestSageBar(p.temp).temp.toFixed(1);
+      document.getElementById('inpDaysOpen').value = p.daysOpen || 1;
+      document.getElementById('inpNotes').value = p.notes || '';
+
+      const modal = document.getElementById('profileModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeNewProfileModal() {
+      const modal = document.getElementById('profileModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function saveNewProfile() {
+      const name = document.getElementById('inpName').value.trim();
+      if (!name) {
+        showToast('Bitte gib einen Namen für die Bohne ein.', 'red');
+        return;
+      }
+
+      const editId = document.getElementById('editProfileId').value;
+      const snappedTemp = tempToNearestSageBar(parseFloat(document.getElementById('inpTemp').value) || 93.0).temp;
+      const profileData = {
+        id: editId || ('bean-' + Date.now()),
+        name,
+        blend: document.getElementById('inpBlend').value.trim() || 'Espresso Blend',
+        roast: document.getElementById('inpRoast').value,
+        baseGrind: Math.max(28.0, Math.min(42.0, parseFloat(document.getElementById('inpBaseGrind').value) || 35.0)),
+        agingRatePerWeek: parseFloat(document.getElementById('inpAgingRate').value) || 0.40,
+        doseIn: parseFloat(document.getElementById('inpDoseIn').value) || 18.0,
+        yieldOut: parseFloat(document.getElementById('inpYieldOut').value) || 43.0,
+        timeMin: parseInt(document.getElementById('inpTimeMin').value, 10) || 26,
+        timeMax: parseInt(document.getElementById('inpTimeMax').value, 10) || 29,
+        temp: snappedTemp,
+        pressure: 9.0,
+        daysOpen: parseInt(document.getElementById('inpDaysOpen').value, 10) || 1,
+        calibratedCount: 1,
+        notes: document.getElementById('inpNotes').value.trim() || 'Individuelles Benutzer-Profil.'
+      };
+
+      if (editId) {
+        const idx = appState.profiles.findIndex(p => p.id === editId);
+        if (idx !== -1) {
+          profileData.calibratedCount = appState.profiles[idx].calibratedCount || 1;
+          appState.profiles[idx] = profileData;
+        }
+      } else {
+        appState.profiles.push(profileData);
+      }
+
+      closeNewProfileModal();
+      selectProfile(profileData.id);
+      showToast(`Profil "${profileData.name}" erfolgreich gespeichert.`, 'emerald');
+    }
+
+    function deleteProfile(id) {
+      const target = appState.profiles.find(p => p.id === id);
+      if (!target || appState.profiles.length <= 1) return;
+      openConfirmModal(
+        'Bohnen-Profil löschen',
+        `Möchtest du das Profil "${target.name}" wirklich aus der Datenbank entfernen?`,
+        () => {
+          appState.profiles = appState.profiles.filter(p => p.id !== id);
+          if (appState.activeProfileId === id) {
+            appState.activeProfileId = appState.profiles[0].id;
+          }
+          saveDatabase();
+          selectProfile(appState.activeProfileId);
+          showToast(`Profil "${target.name}" wurde gelöscht.`, 'amber');
+        }
+      );
+    }
+
+    function clearShotHistory() {
+      openConfirmModal(
+        'Gesamtes Shot-Logbuch leeren',
+        'Möchtest du wirklich alle Einträge im Shot-Logbuch löschen? (Einzelne Bezüge kannst du stattdessen über das Papierkorb-Symbol rechts neben dem jeweiligen Bezug löschen.)',
+        () => {
+          appState.shotLogs = [];
+          saveDatabase();
+          renderShotHistory();
+          renderLearningCurveChart();
+          showToast('Gesamtes Shot-Logbuch wurde geleert.', 'amber');
+        }
+      );
+    }
+
+    function exportDatabaseJSON() {
+      const dataStr = JSON.stringify(appState, null, 2);
+      const blob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `espresso-dialin-backup-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      showToast('Datenbank-Backup als JSON-Datei heruntergeladen.', 'emerald');
+    }
+
+    function triggerImportJSON() {
+      document.getElementById('importJsonInput').click();
+    }
+
+    function handleImportJSON(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        try {
+          const imported = JSON.parse(e.target.result);
+          if (imported && Array.isArray(imported.profiles) && imported.profiles.length > 0) {
+            appState = imported;
+            saveDatabase();
+            selectProfile(appState.activeProfileId);
+            renderShotHistory();
+            showToast('Backup erfolgreich importiert und wiederhergestellt!', 'emerald');
+          } else {
+            showToast('Ungültiges JSON-Format für das Espresso Dial-in Lab.', 'red');
+          }
+        } catch (err) {
+          showToast('Fehler beim Lesen der Backup-Datei.', 'red');
+        }
+      };
+      reader.readAsText(file);
+      event.target.value = '';
+    }
+
+    function resetDatabaseToDefaults() {
+      openConfirmModal(
+        'Auf Basisdaten zurücksetzen',
+        'Möchtest du alle 10 Bohnen-Profile (inkl. Röstbar, Frau Meyers & Speicherstadt) sowie deine 11 Stamm-Bezüge auf die Werkseinstellungen zurücksetzen?',
+        () => {
+          localStorage.removeItem(STORAGE_KEY_DB);
+          localStorage.removeItem('espresso_dialin_lab_db_v25');
+          loadDatabase();
+          document.getElementById('fineStepToggle').checked = appState.fineStep;
+          selectProfile(appState.activeProfileId);
+          renderShotHistory();
+          showToast('Datenbank wurde auf deine 10 Stamm-Profile zurückgesetzt.', 'amber');
+        }
+      );
+    }
+
+    // Initialize Application on Load
+    window.addEventListener('DOMContentLoaded', () => {
+      loadDatabase();
+      document.getElementById('fineStepToggle').checked = appState.fineStep;
+      document.getElementById('simGrind').step = appState.fineStep ? '0.1' : '0.5';
+      selectProfile(appState.activeProfileId);
+      renderShotHistory();
+      updateLockUI();
+      switchAppMode('barista');
+    });
+  </script>
+</body>
+</html>
