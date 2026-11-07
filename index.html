@@ -167,7 +167,7 @@
           <div class="flex flex-wrap items-center gap-2">
             <h1 class="text-lg sm:text-xl font-extrabold tracking-tight text-latte-900">Espresso Dial-in Lab</h1>
             <span class="px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider bg-amber-100 text-amber-800 border border-amber-300 rounded-full">Sage Barista Pro</span>
-            <span id="appVersionBadge" class="px-2.5 py-0.5 text-[11px] font-extrabold uppercase tracking-wider bg-emerald-100 text-emerald-900 border border-emerald-300 rounded-full mono shadow-sm">Version v2.7</span>
+            <span id="appVersionBadge" class="px-2.5 py-0.5 text-[11px] font-extrabold uppercase tracking-wider bg-emerald-100 text-emerald-900 border border-emerald-300 rounded-full mono shadow-sm">Version v2.7.1</span>
           </div>
           <p class="text-xs text-latte-600">Persönlicher Barista-Begleiter • Röstbar, Speicherstadt & illy Edition</p>
         </div>
@@ -1179,7 +1179,7 @@
   <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none"></div>
 
   <script>
-    const APP_VERSION = 'v2.7';
+    const APP_VERSION = 'v2.7.1';
     const STORAGE_KEY_DB = 'espresso_dialin_lab_db_v27';
 
     // Sage Barista Pro 5-Bar Temperature Mapping
@@ -2627,61 +2627,6 @@
         ? `als perfekter Anker (${fmtNum(updatedRec)}) bestätigt`
         : `um ${appliedDelta > 0 ? '+' : ''}${fmtNum(appliedDelta)} angepasst (Empfehlung heute: ${fmtNum(updatedRec)})`;
       showToast(`Bezug (${fmtNum(actualYieldOut)}g in ${fmtNum(actualTime)}s) gespeichert! Mahlgrad ${deltaText}.`, 'emerald');
-    }
-
-      const targetMid = (profile.timeMin + profile.timeMax) / 2;
-      const timeError = actualTime - targetMid;
-      const agingOffset = -(daysOpen / 7) * (profile.agingRatePerWeek || 0.40);
-      let suggestedAdjustment = 0;
-
-      if (Math.abs(timeError) > 1.2) {
-        suggestedAdjustment += (timeError / 4.4) * 0.45;
-      }
-
-      if (taste === 'sour') suggestedAdjustment -= 0.4;
-      if (taste === 'slightly_sour') suggestedAdjustment -= 0.2;
-      if (taste === 'slightly_bitter') suggestedAdjustment += 0.2;
-      if (taste === 'bitter') suggestedAdjustment += 0.45;
-      if (taste === 'channeling') suggestedAdjustment += 0.15;
-
-      suggestedAdjustment = Math.max(-1.2, Math.min(1.2, suggestedAdjustment));
-
-      const impliedBaseGrind = (grindUsed - agingOffset) + suggestedAdjustment;
-      const newBaseGrind = Math.max(28.0, Math.min(42.0, Number((profile.baseGrind * 0.45 + impliedBaseGrind * 0.55).toFixed(1))));
-      const appliedDelta = Number((newBaseGrind - profile.baseGrind).toFixed(1));
-
-      profile.baseGrind = newBaseGrind;
-      profile.calibratedCount = (profile.calibratedCount || 1) + 1;
-      appState.lastGrind = grindUsed;
-
-      const now = new Date();
-      const timeStr = `Tag ${daysOpen} (${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')})`;
-
-      appState.shotLogs.unshift({
-        id: 'log-' + Date.now(),
-        timestamp: timeStr,
-        beanName: profile.name,
-        grindUsed,
-        doseIn,
-        yieldOut,
-        actualTime,
-        taste,
-        aiAdjustment: appliedDelta
-      });
-
-      const updatedRec = computeRecommendedGrindToday(profile, daysOpen);
-      document.getElementById('simGrind').value = updatedRec;
-
-      saveDatabase();
-      renderProfileCards();
-      renderDatabaseTable();
-      renderShotHistory();
-      updateSimulation();
-      renderLearningCurveChart();
-      renderEasyModeView();
-
-      const deltaText = appliedDelta === 0 ? 'unverändert bestätigt' : `um ${appliedDelta > 0 ? '+' : ''}${fmtNum(appliedDelta)} auf ${fmtNum(newBaseGrind)} adaptiert`;
-      showToast(`Bezug gespeichert! KI-Basis-Mahlgrad für "${profile.name}" wurde ${deltaText}.`, 'emerald');
     }
 
     function deleteSingleShotLog(logId) {
