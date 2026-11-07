@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -165,11 +164,12 @@
           ☕
         </div>
         <div>
-          <div class="flex items-center gap-2">
+          <div class="flex flex-wrap items-center gap-2">
             <h1 class="text-lg sm:text-xl font-extrabold tracking-tight text-latte-900">Espresso Dial-in Lab</h1>
             <span class="px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider bg-amber-100 text-amber-800 border border-amber-300 rounded-full">Sage Barista Pro</span>
+            <span id="appVersionBadge" class="px-2.5 py-0.5 text-[11px] font-extrabold uppercase tracking-wider bg-emerald-100 text-emerald-900 border border-emerald-300 rounded-full mono shadow-sm">Version v2.7</span>
           </div>
-          <p class="text-xs text-latte-600">Persönlicher Barista-Begleiter • Röstbar & Speicherstadt Edition</p>
+          <p class="text-xs text-latte-600">Persönlicher Barista-Begleiter • Röstbar, Speicherstadt & illy Edition</p>
         </div>
       </div>
 
@@ -186,7 +186,7 @@
 
         <div class="px-3 py-1.5 rounded-xl bg-latte-100 border border-latte-300 flex items-center gap-2 text-xs">
           <span class="text-latte-700 font-medium">Mühlen-Stand:</span>
-          <span id="headerLastGrind" class="mono font-bold text-amber-700 text-sm">35,0</span>
+          <span id="headerLastGrind" class="mono font-bold text-amber-700 text-sm">37,0</span>
         </div>
 
         <button id="headerBtnNewBean" onclick="openNewProfileModal()" class="px-3 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold transition flex items-center gap-1.5 shadow-sm">
@@ -270,103 +270,40 @@
             <span class="text-[11px] font-semibold text-latte-600">Antippen zum Auswählen</span>
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3.5">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
             <!-- Cappuccino Tile -->
             <button type="button" onclick="selectEasyDrink('cappuccino')" id="easyDrinkBtn-cappuccino" class="p-4 rounded-2xl border-2 text-left transition-all flex flex-col justify-between gap-3">
               <div class="flex items-center justify-between">
-                <div class="w-11 h-11 rounded-xl bg-amber-100/80 border border-amber-200 flex items-center justify-center shrink-0">
-                  <!-- Custom Cappuccino Cup SVG -->
-                  <svg class="w-8 h-8" viewBox="0 0 48 48" fill="none">
-                    <path d="M10 20C10 15.5 16 13 23 13C30 13 36 15.5 36 20H10Z" fill="#FFFDF9" stroke="#8F6B49" stroke-width="2"/>
-                    <path d="M10 20H36V26C36 33.1797 30.1797 39 23 39C15.8203 39 10 33.1797 10 26V20Z" fill="#D97706" fill-opacity="0.2" stroke="#6E5036" stroke-width="2.2"/>
-                    <path d="M12 25H34C33.5 31.5 28.8 36.5 23 36.5C17.2 36.5 12.5 31.5 12 25Z" fill="#92400E"/>
-                    <path d="M36 22H39.5C41.433 22 43 23.567 43 25.5C43 27.433 41.433 29 39.5 29H35.5" stroke="#6E5036" stroke-width="2.2" stroke-linecap="round"/>
-                    <line x1="7" y1="39" x2="39" y2="39" stroke="#6E5036" stroke-width="2.5" stroke-linecap="round"/>
-                  </svg>
-                </div>
+                <span class="text-3xl">🥛</span>
                 <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-amber-100 text-amber-900">Klassiker</span>
               </div>
               <div>
                 <div class="font-extrabold text-base text-latte-900">Cappuccino</div>
-                <div class="text-xs text-latte-600 mt-0.5">Espresso + cremiger, feinporiger Milchschaum</div>
+                <div class="text-xs text-latte-600 mt-0.5">Kräftiger Espresso + cremiger, feinporiger Milchschaum</div>
               </div>
             </button>
 
             <!-- Latte Macchiato Tile -->
             <button type="button" onclick="selectEasyDrink('latte')" id="easyDrinkBtn-latte" class="p-4 rounded-2xl border-2 text-left transition-all flex flex-col justify-between gap-3">
               <div class="flex items-center justify-between">
-                <div class="w-11 h-11 rounded-xl bg-amber-100/80 border border-amber-200 flex items-center justify-center shrink-0">
-                  <!-- Custom Layered Latte Macchiato Glass SVG -->
-                  <svg class="w-8 h-8" viewBox="0 0 48 48" fill="none">
-                    <!-- Top Foam Layer -->
-                    <path d="M15 9C15 7.5 18.5 6.5 24 6.5C29.5 6.5 33 7.5 33 9L32.4 15H15.6L15 9Z" fill="#FFFDF9"/>
-                    <!-- Espresso Layer -->
-                    <path d="M15.6 15H32.4L31.7 22H16.3L15.6 15Z" fill="#92400E"/>
-                    <!-- Warm Milk Layer -->
-                    <path d="M16.3 22H31.7L30 40H18L16.3 22Z" fill="#FDE68A" fill-opacity="0.55"/>
-                    <!-- Tall Glass Outline -->
-                    <path d="M15 9H33L30 40H18L15 9Z" stroke="#6E5036" stroke-width="2.2" stroke-linejoin="round"/>
-                    <line x1="15.6" y1="15" x2="32.4" y2="15" stroke="#8F6B49" stroke-width="1.4" stroke-dasharray="2 1"/>
-                    <line x1="16.3" y1="22" x2="31.7" y2="22" stroke="#8F6B49" stroke-width="1.4" stroke-dasharray="2 1"/>
-                    <line x1="15" y1="42" x2="33" y2="42" stroke="#6E5036" stroke-width="2.4" stroke-linecap="round"/>
-                  </svg>
-                </div>
+                <span class="text-3xl">🧋</span>
                 <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-amber-100 text-amber-900">Sanft & Mild</span>
               </div>
               <div>
                 <div class="font-extrabold text-base text-latte-900">Latte Macchiato</div>
-                <div class="text-xs text-latte-600 mt-0.5">Hohes Glas mit 3 Schichten aus Milch, Espresso & Schaum</div>
-              </div>
-            </button>
-
-            <!-- Americano Tile -->
-            <button type="button" onclick="selectEasyDrink('americano')" id="easyDrinkBtn-americano" class="p-4 rounded-2xl border-2 text-left transition-all flex flex-col justify-between gap-3">
-              <div class="flex items-center justify-between">
-                <div class="w-11 h-11 rounded-xl bg-amber-100/80 border border-amber-200 flex items-center justify-center shrink-0">
-                  <!-- Custom Americano Mug with Water Drops & Crema SVG -->
-                  <svg class="w-8 h-8" viewBox="0 0 48 48" fill="none">
-                    <!-- Hot Water & Coffee Body -->
-                    <rect x="11" y="14" width="22" height="25" rx="4" fill="#FFFDF9" stroke="#6E5036" stroke-width="2.2"/>
-                    <path d="M13 21H31V35C31 36.1046 30.1046 37 29 37H15C13.8954 37 13 36.1046 13 35V21Z" fill="#78350F"/>
-                    <!-- Golden Crema Ring on Top -->
-                    <rect x="13" y="18" width="18" height="3.5" fill="#D97706"/>
-                    <!-- Mug Handle -->
-                    <path d="M33 18H36.5C38.433 18 40 19.567 40 21.5V27.5C40 29.433 38.433 31 36.5 31H33" stroke="#6E5036" stroke-width="2.2" stroke-linecap="round"/>
-                    <!-- Water Droplet Accent -->
-                    <path d="M22 7C22 7 25 10.5 25 12.2C25 13.85 23.65 15 22 15C20.35 15 19 13.85 19 12.2C19 10.5 22 7 22 7Z" fill="#0284C7"/>
-                  </svg>
-                </div>
-                <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-sky-100 text-sky-900">Lang & Schwarz</span>
-              </div>
-              <div>
-                <div class="font-extrabold text-base text-latte-900">Americano</div>
-                <div class="text-xs text-latte-600 mt-0.5">Aromatischer langer Kaffee mit heißem Wasser & Crema</div>
+                <div class="text-xs text-latte-600 mt-0.5">Viel warme Milch im hohen Glas + sanfter Espresso-Schicht</div>
               </div>
             </button>
 
             <!-- Espresso Tile -->
             <button type="button" onclick="selectEasyDrink('espresso')" id="easyDrinkBtn-espresso" class="p-4 rounded-2xl border-2 text-left transition-all flex flex-col justify-between gap-3">
               <div class="flex items-center justify-between">
-                <div class="w-11 h-11 rounded-xl bg-amber-100/80 border border-amber-200 flex items-center justify-center shrink-0">
-                  <!-- Custom Espresso Demitasse Cup SVG -->
-                  <svg class="w-8 h-8" viewBox="0 0 48 48" fill="none">
-                    <path d="M13 21H33L31 33C30.4 36.5 27.5 39 23 39C18.5 39 15.6 36.5 15 33L13 21Z" fill="#FFFDF9" stroke="#6E5036" stroke-width="2.2" stroke-linejoin="round"/>
-                    <!-- Rich Dark Espresso & Hazelnut Crema -->
-                    <path d="M14.8 26H31.2L30 32.5C29.5 35.2 27 37 23 37C19 37 16.5 35.2 16 32.5L14.8 26Z" fill="#451A03"/>
-                    <rect x="14.3" y="23" width="17.4" height="3.2" rx="1" fill="#D97706"/>
-                    <!-- Handle & Saucer -->
-                    <path d="M32.5 23.5H35.5C37.2 23.5 38.5 24.8 38.5 26.5C38.5 28.2 37.2 29.5 35.5 29.5H31.8" stroke="#6E5036" stroke-width="2.2" stroke-linecap="round"/>
-                    <line x1="10" y1="39.5" x2="36" y2="39.5" stroke="#6E5036" stroke-width="2.5" stroke-linecap="round"/>
-                    <!-- Warm Steam Waves -->
-                    <path d="M19 16C19 14 20.5 13 20.5 11" stroke="#D97706" stroke-width="1.8" stroke-linecap="round"/>
-                    <path d="M26 16C26 14 27.5 13 27.5 11" stroke="#D97706" stroke-width="1.8" stroke-linecap="round"/>
-                  </svg>
-                </div>
+                <span class="text-3xl">☕</span>
                 <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-amber-100 text-amber-900">Pur</span>
               </div>
               <div>
                 <div class="font-extrabold text-base text-latte-900">Doppel-Espresso</div>
-                <div class="text-xs text-latte-600 mt-0.5">Pur, intensiv & aromatisch mit dichter Haselnuss-Crema</div>
+                <div class="text-xs text-latte-600 mt-0.5">Pur & aromatisch mit dichter Haselnuss-Crema</div>
               </div>
             </button>
           </div>
@@ -955,17 +892,25 @@
               <h3 class="text-sm font-extrabold text-latte-900 flex items-center gap-2">
                 <span>🎯 Echten Bezug loggen & KI trainieren</span>
               </h3>
-              <p class="text-[11px] text-latte-600">Speichert deinen Bezug im Logbuch und kalibriert den Mahlgrad</p>
+              <p class="text-[11px] text-latte-600">Speichert Zeit, echte Menge (Out) & Geschmack und setzt deinen Sweet-Spot-Anker</p>
             </div>
-            <span class="px-2.5 py-0.5 text-[10px] font-bold bg-amber-100 text-amber-900 rounded-full border border-amber-300 mono">Auto-Learn</span>
+            <span class="px-2.5 py-0.5 text-[10px] font-bold bg-amber-100 text-amber-900 rounded-full border border-amber-300 mono">Auto-Learn v2.7</span>
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
-              <label for="actualShotTime" class="block text-[11px] font-bold uppercase text-latte-700 mb-1">Gemessene Zeit (Sek.)</label>
+              <label for="actualShotTime" class="block text-[11px] font-bold uppercase text-latte-700 mb-1">Gemessene Zeit (s)</label>
               <div class="flex items-center gap-1.5">
                 <input type="number" id="actualShotTime" step="0.5" min="8" max="90" value="28.0" class="w-full px-3 py-2 rounded-xl bg-white border border-latte-300 text-latte-900 mono font-bold text-sm focus:border-amber-600 outline-none" />
-                <button onclick="copySimTimeToActual()" title="Simulierte Zeit übernehmen" class="px-2.5 py-2 rounded-xl bg-latte-100 hover:bg-latte-200 text-xs font-bold text-amber-900 border border-latte-300 shrink-0">Sim ➔</button>
+                <button onclick="copySimTimeToActual()" title="Simulierte Zeit übernehmen" class="px-2 py-2 rounded-xl bg-latte-100 hover:bg-latte-200 text-[11px] font-bold text-amber-900 border border-latte-300 shrink-0">Sim</button>
+              </div>
+            </div>
+
+            <div>
+              <label for="actualShotYield" class="block text-[11px] font-bold uppercase text-latte-700 mb-1">Echte Menge Out (g)</label>
+              <div class="flex items-center gap-1.5">
+                <input type="number" id="actualShotYield" step="0.5" min="15" max="90" value="43.0" class="w-full px-3 py-2 rounded-xl bg-white border border-latte-300 text-latte-900 mono font-bold text-sm focus:border-amber-600 outline-none" />
+                <button onclick="copyTargetYieldToActual()" title="Zielmenge übernehmen" class="px-2 py-2 rounded-xl bg-latte-100 hover:bg-latte-200 text-[11px] font-bold text-amber-900 border border-latte-300 shrink-0">Ziel</button>
               </div>
             </div>
 
@@ -988,55 +933,40 @@
           </button>
         </div>
 
-        <!-- Collapsible Graphical Learning Curve (Default Collapsed, opens on click) -->
-        <div id="learningCurveCard" class="cafe-card rounded-2xl border border-latte-300 overflow-hidden transition-all">
-          <button type="button" onclick="toggleSectionAccordion('learningCurveAccordionBody', 'learningCurveChevron', 'learningCurveToggleLabel')" class="w-full p-4 sm:p-5 flex items-center justify-between gap-3 text-left hover:bg-latte-100/60 transition">
-            <div class="flex items-start gap-3">
-              <div class="w-10 h-10 rounded-xl bg-amber-100 border border-amber-300 flex items-center justify-center shrink-0 mt-0.5 text-base">
-                📈
-              </div>
-              <div>
-                <div class="flex flex-wrap items-center gap-2">
-                  <h3 class="text-sm font-extrabold text-latte-900">Grafische Lernkurve & Bezugs-Verlauf</h3>
-                  <span id="learningCurveHitRateBadge" class="px-2 py-0.5 text-[10px] font-bold bg-emerald-100 text-emerald-900 rounded-full border border-emerald-300 mono">
-                    Sweet Spot: --%
-                  </span>
-                </div>
-                <p id="learningCurveSubtitle" class="text-[11px] text-latte-600 mt-0.5">
-                  Tippen zum Anzeigen des Mahlgrad- & Zeit-Verlaufs dieser Bohne
-                </p>
-              </div>
+        <!-- Graphical Learning Curve (Statistik-Dashboard für die aktive Bohne) -->
+        <div id="learningCurveCard" class="cafe-card rounded-2xl p-5 space-y-3.5 border border-latte-300">
+          <div class="flex items-center justify-between gap-2">
+            <div>
+              <h3 class="text-sm font-extrabold text-latte-900 flex items-center gap-2">
+                <span>📈 Grafische Lernkurve & Bezugs-Verlauf</span>
+              </h3>
+              <p id="learningCurveSubtitle" class="text-[11px] text-latte-600">Reale Bezüge & Mahlgrad-Entwicklung der aktuellen Bohne</p>
             </div>
-            <div class="flex items-center gap-1.5 shrink-0">
-              <span id="learningCurveToggleLabel" class="text-[11px] font-bold text-amber-800 hidden sm:inline">Aufklappen</span>
-              <svg id="learningCurveChevron" class="w-4 h-4 text-amber-800 transition-transform duration-200" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-              </svg>
-            </div>
-          </button>
+            <span id="learningCurveHitRateBadge" class="px-2.5 py-0.5 text-[10px] font-bold bg-emerald-100 text-emerald-900 rounded-full border border-emerald-300 mono">
+              Sweet Spot: --%
+            </span>
+          </div>
 
-          <div id="learningCurveAccordionBody" class="hidden border-t border-latte-200 p-4 sm:p-5 space-y-3.5 bg-latte-50/60">
-            <!-- Interactive SVG Dual-Trend Chart -->
-            <div id="learningCurveChartBox" class="p-3 rounded-xl bg-white border border-latte-200 shadow-inner space-y-2">
-              <svg id="learningCurveSvg" viewBox="0 0 360 135" class="w-full h-32 overflow-visible">
-                <!-- Populated dynamically via renderLearningCurveChart() -->
-              </svg>
-              <div class="flex flex-wrap items-center justify-between gap-2 text-[10px] text-latte-600 mono border-t border-latte-100 pt-1.5">
-                <span class="flex items-center gap-1 font-semibold text-amber-800">
-                  <span class="w-2.5 h-1 rounded bg-amber-600 inline-block"></span> Mahlgrad-Verlauf
-                </span>
-                <span class="flex items-center gap-1 font-semibold text-emerald-800">
-                  <span class="w-2 h-2 rounded-full bg-emerald-600 inline-block"></span> Bezugszeit (s) im Ziel
-                </span>
-                <span class="flex items-center gap-1 text-latte-500">
-                  <span class="w-2.5 h-2 rounded-sm bg-emerald-100 border border-emerald-300 inline-block"></span> Zielkorridor
-                </span>
-              </div>
+          <!-- Interactive SVG Dual-Trend Chart -->
+          <div id="learningCurveChartBox" class="p-3 rounded-xl bg-white border border-latte-200 shadow-inner space-y-2">
+            <svg id="learningCurveSvg" viewBox="0 0 360 135" class="w-full h-32 overflow-visible">
+              <!-- Populated dynamically via renderLearningCurveChart() -->
+            </svg>
+            <div class="flex flex-wrap items-center justify-between gap-2 text-[10px] text-latte-600 mono border-t border-latte-100 pt-1.5">
+              <span class="flex items-center gap-1 font-semibold text-amber-800">
+                <span class="w-2.5 h-1 rounded bg-amber-600 inline-block"></span> Mahlgrad-Verlauf
+              </span>
+              <span class="flex items-center gap-1 font-semibold text-emerald-800">
+                <span class="w-2 h-2 rounded-full bg-emerald-600 inline-block"></span> Bezugszeit (s) im Ziel
+              </span>
+              <span class="flex items-center gap-1 text-latte-500">
+                <span class="w-2.5 h-2 rounded-sm bg-emerald-100 border border-emerald-300 inline-block"></span> Zielkorridor
+              </span>
             </div>
+          </div>
 
-            <div id="learningCurveSummaryText" class="text-[11px] text-latte-700 leading-relaxed bg-white px-3 py-2 rounded-xl border border-latte-200">
-              <!-- Dynamic insight text -->
-            </div>
+          <div id="learningCurveSummaryText" class="text-[11px] text-latte-700 leading-relaxed bg-latte-50 px-3 py-2 rounded-xl border border-latte-200">
+            <!-- Dynamic insight text -->
           </div>
         </div>
 
@@ -1249,7 +1179,8 @@
   <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none"></div>
 
   <script>
-    const STORAGE_KEY_DB = 'espresso_dialin_lab_db_v26';
+    const APP_VERSION = 'v2.7';
+    const STORAGE_KEY_DB = 'espresso_dialin_lab_db_v27';
 
     // Sage Barista Pro 5-Bar Temperature Mapping
     // According to Sage/Breville Barista Pro specs: 5 discrete LCD bar levels around 93°C default (~90°C to ~96°C)
@@ -1278,24 +1209,35 @@
       return tempToNearestSageBar(tempC).shortLabel;
     }
 
-    // Alle 10 persönlichen Profile (6 Stamm-Profile + 4 Speicherstadt-Sorten)
+    // Damped CO2 Aging Offset:
+    // Beans degas most in days 1–12; after day 12 aging slows down significantly so the calculator doesn't suggest overly fine grinds.
+    function computeAgingOffset(profile, daysOpenOverride) {
+      const days = typeof daysOpenOverride === 'number' ? daysOpenOverride : (profile.daysOpen || 0);
+      const agingRate = profile.agingRatePerWeek || 0.35;
+      const effectiveDays = days <= 12 ? days : 12 + (days - 12) * 0.25;
+      // Reduced multiplier (0.65) prevents overly aggressive fine-grinding recommendations
+      return -(effectiveDays / 7) * (agingRate * 0.65);
+    }
+
+    // Alle 12 persönlichen Profile aus deinem aktuellen Backup (inkl. Speicherstadt & illy)
+    // baseGrind ist so kalibriert, dass bei deinem aktuellen Standtag exakt dein realer Sweet-Spot-Mahlgrad empfohlen wird!
     const DEFAULT_PROFILES = [
       {
         id: 'speicherstadt_bio_guatemala',
         name: 'Speicherstadt Bio Guatemala (18g)',
         blend: '100% Bio Highland Arabica (Washed)',
         roast: 'light',
-        baseGrind: 35.0,
+        baseGrind: 37.5,
         doseIn: 18.0,
         yieldOut: 43.0,
         timeMin: 26,
         timeMax: 29,
         temp: 94.0,
         pressure: 9.0,
-        daysOpen: 1,
+        daysOpen: 17,
         agingRatePerWeek: 0.40,
-        calibratedCount: 3,
-        notes: 'Helle bis mittlere Röstung: Butterkeks & Haselnuss treffen auf Cranberry & Sanddorn. Bei 4/5 Balken (~94 °C) und 43g Out optimal balanciert (Sweet Spot bei 35,0–35,5).'
+        calibratedCount: 5,
+        notes: 'Helle bis mittlere Röstung: Butterkeks & Haselnuss treffen auf Cranberry & Sanddorn. Bei 4/5 Balken (~94 °C) und 43g Out optimal balanciert (Sweet Spot an Tag 17 exakt bei 37,0!).'
       },
       {
         id: 'frau_meyers_17g',
@@ -1312,7 +1254,7 @@
         daysOpen: 12,
         agingRatePerWeek: 0.60,
         calibratedCount: 3,
-        notes: 'Längeres Café-Rezept (17g auf 45g). Frisch bei 37,0–37,5 optimal (28s), nach 1–2 Wochen Standzeit auf 36,5 perfektioniert (27s).'
+        notes: 'Längeres Café-Rezept (17g auf 45g). Frisch bei 37,0–37,5 optimal (28s), nach 1–2 Wochen Standzeit auf 36,5–37,0 perfektioniert (27s).'
       },
       {
         id: 'frau_meyers_18g',
@@ -1370,17 +1312,17 @@
         name: 'Drago Mocambo Brasilia',
         blend: 'Traditioneller Blend (60/40)',
         roast: 'dark',
-        baseGrind: 34.5,
+        baseGrind: 34.7,
         doseIn: 18.0,
         yieldOut: 43.0,
         timeMin: 26,
         timeMax: 28,
         temp: 92.0,
         pressure: 9.0,
-        daysOpen: 18,
-        agingRatePerWeek: 1.00,
-        calibratedCount: 4,
-        notes: 'Braucht deutlich feineren Mahlgrad und baut offen schnell Widerstand ab. Bei Tag 10 auf 33,5 perfekt (26s), bei Tag 18 auf 31,5–32,0 stellen.'
+        daysOpen: 30,
+        agingRatePerWeek: 0.80,
+        calibratedCount: 5,
+        notes: 'Braucht deutlich feineren Mahlgrad und baut offen schnell Widerstand ab. Bei Tag 10 auf 33,5 perfekt (26s), später Richtung 31,5–33,0.'
       },
       {
         id: 'decaf_huila',
@@ -1404,7 +1346,7 @@
         name: 'Speicherstadt Orang-Utan (18g)',
         blend: '100% Sumatra Arabica (Giling Basah)',
         roast: 'medium-dark',
-        baseGrind: 35.5,
+        baseGrind: 36.5,
         doseIn: 18.0,
         yieldOut: 40.0,
         timeMin: 25,
@@ -1412,7 +1354,7 @@
         temp: 92.0,
         pressure: 9.0,
         daysOpen: 1,
-        agingRatePerWeek: 0.50,
+        agingRatePerWeek: 0.45,
         calibratedCount: 1,
         notes: 'Top-Empfehlung als Doppel-Espresso! Kakaonibs, Milchschokolade, Walnuss & Schattenmorelle bei üppigem Körper (2/5 Balken • ~92 °C).'
       },
@@ -1421,38 +1363,171 @@
         name: 'Speicherstadt Forte (18g)',
         blend: '60% Arabica / 40% Monsooned Robusta',
         roast: 'medium-dark',
-        baseGrind: 37.0,
+        baseGrind: 39.3,
         doseIn: 18.0,
         yieldOut: 38.0,
         timeMin: 25,
         timeMax: 28,
         temp: 90.0,
         pressure: 9.0,
-        daysOpen: 1,
-        agingRatePerWeek: 0.70,
-        calibratedCount: 1,
-        notes: 'Monsooned Robusta (extrem säurearm 1/4, riesige Crema). Kühl auf 1–2 Balken (~90–92 °C) brühen für Haselnuss, Bitterschokolade & Süßholz.'
+        daysOpen: 14,
+        agingRatePerWeek: 0.65,
+        calibratedCount: 4,
+        notes: 'Monsooned Robusta (extrem säurearm 1/4, riesige Crema). Kühl auf 1–2 Balken (~90–92 °C) brühen. An Tag 14 auf Stufe 38,5 perfekter Sweet Spot (28s)!'
       },
       {
         id: 'speicherstadt_kenia_magena',
         name: 'Speicherstadt Kenia Magena (18g)',
         blend: '100% Arabica Microlot (Natural)',
         roast: 'light',
-        baseGrind: 34.0,
+        baseGrind: 37.0,
         doseIn: 18.0,
         yieldOut: 45.0,
         timeMin: 26,
         timeMax: 30,
         temp: 94.0,
         pressure: 9.0,
-        daysOpen: 1,
+        daysOpen: 14,
         agingRatePerWeek: 0.40,
+        calibratedCount: 4,
+        notes: 'Exklusives Frucht-Microlot (Portwein, Papaya, Pflaume, Blaubeere). Heiß brühen (4/5 Balken • ~94 °C) & 1:2,5 Ratio (45g out). Nicht zu fein mahlen (ca. 36,0–36,5)!'
+      },
+      {
+        id: 'bean-1793544603521',
+        name: 'illy Classico (18g)',
+        blend: '100% Arabica',
+        roast: 'medium',
+        baseGrind: 36.5,
+        agingRatePerWeek: 0.55,
+        doseIn: 18.0,
+        yieldOut: 42.0,
+        timeMin: 25,
+        timeMax: 29,
+        temp: 93.0,
+        pressure: 9.0,
+        daysOpen: 1,
         calibratedCount: 1,
-        notes: 'Exklusives Frucht-Microlot (Portwein, Papaya, Pflaume, Blaubeere). Heiß brühen (4/5 Balken • ~94 °C) & 1:2,5 Ratio (45g out). Deutlich feiner mahlen!'
+        notes: 'Klassische mittlere Röstung (Karamell, Orangenblüte). Sehr fehlerverzeihend. Nach dem Öffnen der Dose altert er schnell, Mühle bei Bedarf leicht feiner stellen!'
+      },
+      {
+        id: 'bean-1793544716578',
+        name: 'illy Intenso (18g)',
+        blend: '100% Arabica',
+        roast: 'dark',
+        baseGrind: 37.0,
+        agingRatePerWeek: 0.55,
+        doseIn: 18.0,
+        yieldOut: 38.0,
+        timeMin: 25,
+        timeMax: 28,
+        temp: 92.0,
+        pressure: 9.0,
+        daysOpen: 1,
+        calibratedCount: 1,
+        notes: 'Dunklere Röstung (Kakao, Röstaromen, Trockenfrucht). Unbedingt kühler brühen (2 Balken) und etwas kürzer beziehen, damit er nicht bitter wird.'
       }
     ];
 
     const DEFAULT_SHOT_LOGS = [
+      {
+        id: 'log-1794036227701',
+        timestamp: 'Tag 17 (08:23)',
+        beanName: 'Speicherstadt Bio Guatemala (18g)',
+        grindUsed: 37.0,
+        doseIn: 18.0,
+        yieldOut: 43.0,
+        actualTime: 28.0,
+        taste: 'perfect',
+        aiAdjustment: 1.0
+      },
+      {
+        id: 'log-1793625078798',
+        timestamp: 'Tag 14 (14:11)',
+        beanName: 'Speicherstadt Forte (18g)',
+        grindUsed: 38.5,
+        doseIn: 18.0,
+        yieldOut: 38.0,
+        actualTime: 28.0,
+        taste: 'perfect',
+        aiAdjustment: 0.7
+      },
+      {
+        id: 'log-1793624781953',
+        timestamp: 'Tag 14 (14:06)',
+        beanName: 'Speicherstadt Forte (18g)',
+        grindUsed: 37.0,
+        doseIn: 18.0,
+        yieldOut: 38.0,
+        actualTime: 38.0,
+        taste: 'bitter',
+        aiAdjustment: 1.1
+      },
+      {
+        id: 'log-1793616028666',
+        timestamp: 'Tag 30 (11:40)',
+        beanName: 'Drago Mocambo Brasilia',
+        grindUsed: 30.0,
+        doseIn: 18.0,
+        yieldOut: 43.0,
+        actualTime: 31.0,
+        taste: 'slightly_bitter',
+        aiAdjustment: 0.2
+      },
+      {
+        id: 'log-1793605454868',
+        timestamp: 'Tag 14 (08:44)',
+        beanName: 'Speicherstadt Kenia Magena (18g)',
+        grindUsed: 35.5,
+        doseIn: 18.0,
+        yieldOut: 45.0,
+        actualTime: 32.0,
+        taste: 'bitter',
+        aiAdjustment: 0.8
+      },
+      {
+        id: 'log-1793540431184',
+        timestamp: 'Tag 14 (14:40)',
+        beanName: 'Speicherstadt Kenia Magena (18g)',
+        grindUsed: 34.5,
+        doseIn: 18.0,
+        yieldOut: 45.0,
+        actualTime: 36.0,
+        taste: 'bitter',
+        aiAdjustment: 0.9
+      },
+      {
+        id: 'log-1793540123314',
+        timestamp: 'Tag 14 (14:35)',
+        beanName: 'Speicherstadt Kenia Magena (18g)',
+        grindUsed: 33.5,
+        doseIn: 18.0,
+        yieldOut: 45.0,
+        actualTime: 38.0,
+        taste: 'bitter',
+        aiAdjustment: 0.8
+      },
+      {
+        id: 'log-1793523051664',
+        timestamp: 'Tag 14 (09:50)',
+        beanName: 'Speicherstadt Bio Guatemala (18g)',
+        grindUsed: 35.0,
+        doseIn: 18.0,
+        yieldOut: 43.0,
+        actualTime: 42.0,
+        taste: 'bitter',
+        aiAdjustment: 1.1
+      },
+      {
+        id: 'log-1793520713644',
+        timestamp: 'Tag 14 (09:11)',
+        beanName: 'Speicherstadt Forte (18g)',
+        grindUsed: 35.5,
+        doseIn: 18.0,
+        yieldOut: 38.0,
+        actualTime: 42.0,
+        taste: 'bitter',
+        aiAdjustment: 0.6
+      },
       {
         id: 'log-11',
         timestamp: 'Tag 1 (10:37)',
@@ -1578,7 +1653,7 @@
 
     let appState = {
       activeProfileId: 'speicherstadt_bio_guatemala',
-      lastGrind: 35.0,
+      lastGrind: 37.0,
       fineStep: false,
       appMode: 'barista',
       easyDrink: 'cappuccino',
@@ -1749,13 +1824,13 @@
 
     function loadDatabase() {
       try {
-        const raw = localStorage.getItem(STORAGE_KEY_DB) || localStorage.getItem('espresso_dialin_lab_db_v25');
+        const raw = localStorage.getItem(STORAGE_KEY_DB);
         if (raw) {
           const parsed = JSON.parse(raw);
           if (parsed && Array.isArray(parsed.profiles) && parsed.profiles.length > 0) {
             appState = {
               activeProfileId: parsed.activeProfileId || parsed.profiles[0].id,
-              lastGrind: typeof parsed.lastGrind === 'number' ? parsed.lastGrind : 35.0,
+              lastGrind: typeof parsed.lastGrind === 'number' ? parsed.lastGrind : 37.0,
               fineStep: !!parsed.fineStep,
               appMode: 'barista', // Standardmäßig immer im Barista Mode starten
               easyDrink: parsed.easyDrink || 'cappuccino',
@@ -1767,7 +1842,6 @@
                 appState.profiles.push(JSON.parse(JSON.stringify(defP)));
               }
             });
-            // Normalize profile temperatures to the 5 discrete Sage Barista Pro steps
             appState.profiles.forEach(p => {
               p.temp = tempToNearestSageBar(p.temp).temp;
             });
@@ -1781,7 +1855,7 @@
       appState.profiles = JSON.parse(JSON.stringify(DEFAULT_PROFILES));
       appState.shotLogs = JSON.parse(JSON.stringify(DEFAULT_SHOT_LOGS));
       appState.activeProfileId = 'speicherstadt_bio_guatemala';
-      appState.lastGrind = 35.0;
+      appState.lastGrind = 37.0;
       saveDatabase();
     }
 
@@ -1798,9 +1872,7 @@
     }
 
     function computeRecommendedGrindToday(profile, daysOpenOverride) {
-      const days = typeof daysOpenOverride === 'number' ? daysOpenOverride : (profile.daysOpen || 0);
-      const agingRate = profile.agingRatePerWeek || 0.40;
-      const rawOffset = -(days / 7) * agingRate;
+      const rawOffset = computeAgingOffset(profile, daysOpenOverride);
       const step = appState.fineStep ? 0.1 : 0.5;
       const recommended = Math.max(28.0, Math.min(42.0, profile.baseGrind + rawOffset));
       return Math.round(recommended / step) * step;
@@ -1910,6 +1982,11 @@
       document.getElementById('simTemp').value = snappedTemp;
       document.getElementById('simPressure').value = found.pressure || 9.0;
 
+      const actualYieldInput = document.getElementById('actualShotYield');
+      if (actualYieldInput) {
+        actualYieldInput.value = Number(found.yieldOut).toFixed(1);
+      }
+
       // Re-lock controls when switching bean to prevent accidental scroll edits
       unlockedControls.clear();
       updateLockUI();
@@ -1996,7 +2073,7 @@
       }
 
       // Highlight selected drink button
-      const drinks = ['cappuccino', 'latte', 'americano', 'espresso'];
+      const drinks = ['cappuccino', 'latte', 'espresso'];
       drinks.forEach(d => {
         const btn = document.getElementById(`easyDrinkBtn-${d}`);
         if (!btn) return;
@@ -2013,7 +2090,6 @@
       const step4Badge = document.getElementById('easyStep4Badge');
       const step4Icon = document.getElementById('easyStep4Icon');
       const step4Content = document.getElementById('easyStep4Content');
-      const step4Footer = document.getElementById('easyStep4Footer');
 
       if (appState.easyDrink === 'espresso') {
         step3Badge.textContent = 'Schritt 3 • Espresso beziehen';
@@ -2029,55 +2105,27 @@
         step4Icon.textContent = '☕';
         step4Content.innerHTML = `
           <p class="font-bold text-emerald-900">Dein Doppel-Espresso ist fertig!</p>
-          <p>Kurz mit einem kleinen Löffel umrühren (damit sich die süßen und kräftigen Schichten optimal verbinden) und direkt warm genießen.</p>
+          <p>Kurz mit einem kleinen Löffel umrühren (damit sich die süßen und kräftigen Schichten verbinden) und direkt warm genießen.</p>
         `;
-        if (step4Footer) {
-          step4Footer.innerHTML = '✨ Tipp: Wärmst du die kleine Tasse vorher kurz mit heißem Wasser vor, bleibt die Crema noch länger dicht!';
-        }
-      } else if (appState.easyDrink === 'americano') {
-        step3Badge.textContent = 'Schritt 3 • Zuerst heißes Wasser in die Tasse';
-        step3Content.innerHTML = `
-          <p class="font-bold text-latte-900">Der Barista-Trick für eine wunderschöne Crema (Long Black Style):</p>
-          <ol class="list-decimal list-inside space-y-1.5">
-            <li>Stelle deine große Kaffeetasse unter den <strong>Heißwasserauslauf</strong> der Sage Barista Pro.</li>
-            <li>Drehe den Regler an der Seite auf <strong>„HOT WATER“</strong> und fülle die Tasse zu ca. <strong>zwei Dritteln (ca. 120–150 ml)</strong> mit heißem Wasser.</li>
-            <li>Drehe den Regler wieder zurück in die Mitte.</li>
-          </ol>
-        `;
-        step4Badge.textContent = 'Schritt 4 • Espresso auf das Wasser beziehen';
-        step4Icon.textContent = '💧';
-        step4Content.innerHTML = `
-          <ol class="list-decimal list-inside space-y-1.5 font-medium">
-            <li>Spanne jetzt den vorbereiteten Siebträger fest ein und stelle deine Tasse mit dem heißen Wasser unter den Auslauf.</li>
-            <li>Drücke einmal auf die <strong>1-Tassen-Taste</strong> (~42 g Auto-Stopp).</li>
-            <li><strong>Vorteil:</strong> Weil der Espresso <em>auf</em> das heiße Wasser läuft, bleibt die komplette <strong>goldbraune Haselnuss-Crema</strong> oben erhalten!</li>
-          </ol>
-        `;
-        if (step4Footer) {
-          step4Footer.innerHTML = '✨ Natürlich auch perfekt mit einem Schuss kalter oder warmer Milch kombinierbar.';
-        }
       } else if (appState.easyDrink === 'latte') {
         step3Badge.textContent = 'Schritt 3 • Zuerst Milch, dann Espresso';
         step3Content.innerHTML = `
-          <p class="font-bold text-latte-900">Für die schönen 3 Schichten im hohen Glas:</p>
+          <p class="font-bold text-latte-900">Für die schönen Schichten im hohen Glas:</p>
           <ol class="list-decimal list-inside space-y-1.5">
-            <li>Schäume zuerst die Milch (siehe Schritt 4) und gieße sie in dein hohes Latte-Macchiato-Glas.</li>
-            <li>Warte kurz <strong>20–30 Sekunden</strong>, bis sich warme Milch und Schaumkrone sauber trennen.</li>
+            <li>Schäume zuerst die Milch (siehe Schritt 4) und gieße sie in dein hohes Latte-Glas.</li>
+            <li>Warte kurz <strong>20–30 Sekunden</strong>, bis sich Milch und Schaum leicht absetzen.</li>
             <li>Stelle das Glas unter den Auslauf und drücke die <strong>1-Tassen-Taste</strong> (~42 g Auto-Stopp).</li>
           </ol>
         `;
         step4Badge.textContent = 'Schritt 4 • Milchschaum für Latte Macchiato';
-        step4Icon.textContent = '🥛';
+        step4Icon.textContent = '🧋';
         step4Content.innerHTML = `
           <ol class="list-decimal list-inside space-y-1.5 font-medium">
             <li>Kaltes Milchkännchen bis knapp <strong>unter die Ausguss-Tülle</strong> mit kalter Milch füllen.</li>
-            <li>Dampflanze eintauchen & Dampf starten. Kännchen anfangs leicht senken, sodass es <strong>4–5 Sekunden leise zischt</strong> (für eine lockere Schaumkrone).</li>
+            <li>Dampflanze eintauchen & Dampf starten. Kännchen anfangs leicht senken, sodass es <strong>4–5 Sekunden leise zischt</strong> (für eine schöne Schaumkrone).</li>
             <li>Danach Lanze etwas tiefer halten (Milch wirbelt), bis das Kännchen <strong>gut handwarm (~60–65 °C)</strong> ist.</li>
           </ol>
         `;
-        if (step4Footer) {
-          step4Footer.innerHTML = '✨ Nach dem Schäumen die Dampflanze kurz mit einem feuchten Tuch abwischen und 1 Sekunde Dampf ablassen.';
-        }
       } else {
         // Default: Cappuccino
         step3Badge.textContent = 'Schritt 3 • Espresso in die Tasse';
@@ -2098,9 +2146,6 @@
             <li>Lanze leicht eintauchen und die Milch rollen lassen, bis das Kännchen <strong>gut handwarm (~60–65 °C)</strong> ist, dann zügig über den Espresso gießen.</li>
           </ol>
         `;
-        if (step4Footer) {
-          step4Footer.innerHTML = '✨ Nach dem Schäumen die Dampflanze kurz mit einem feuchten Tuch abwischen und 1 Sekunde Dampf ablassen.';
-        }
       }
     }
 
@@ -2296,7 +2341,7 @@
       document.getElementById('profileTargetWindowLabel').textContent = `Ziel: ${profile.timeMin}–${profile.timeMax} s • ${getSageBarHint(profile.temp)}`;
       document.getElementById('profileNotesLabel').textContent = profile.notes;
 
-      const agingOffset = -(daysOpen / 7) * (profile.agingRatePerWeek || 0.40);
+      const agingOffset = computeAgingOffset(profile, daysOpen);
       const recGrindToday = computeRecommendedGrindToday(profile, daysOpen);
 
       updateActiveBeanHeroCard();
@@ -2326,11 +2371,11 @@
         deltaEl.className = 'text-[11px] font-bold text-amber-800 mono';
       }
 
-      // Physics model
+      // Physics model (gentle sensitivity: ~3.8s per 1.0 grind step)
       const targetMidTime = (profile.timeMin + profile.timeMax) / 2;
-      const grindTimeShift = -grindDelta * 4.4 + (grindDelta < 0 ? Math.pow(Math.abs(grindDelta), 1.45) * 1.1 : 0);
-      const doseTimeShift = (doseIn - profile.doseIn) * 2.8;
-      const yieldTimeShift = (yieldOut - profile.yieldOut) * 0.48;
+      const grindTimeShift = -grindDelta * 3.8 + (grindDelta < 0 ? Math.pow(Math.abs(grindDelta), 1.35) * 0.8 : 0);
+      const doseTimeShift = (doseIn - profile.doseIn) * 2.6;
+      const yieldTimeShift = (yieldOut - profile.yieldOut) * 0.45;
       const pressureTimeShift = pressure <= 9.5 ? -(pressure - 9.0) * 0.9 : (pressure - 9.5) * 1.2;
 
       let simTime = targetMidTime + grindTimeShift + doseTimeShift + yieldTimeShift + pressureTimeShift;
@@ -2479,12 +2524,21 @@
       }
     }
 
+    function copyTargetYieldToActual() {
+      const simYield = parseFloat(document.getElementById('simYieldOut').value);
+      if (!isNaN(simYield)) {
+        document.getElementById('actualShotYield').value = simYield.toFixed(1);
+      }
+    }
+
     function logRealShot() {
       const profile = getActiveProfile();
       const grindUsed = parseFloat(document.getElementById('simGrind').value);
       const daysOpen = parseInt(document.getElementById('simDaysOpen').value, 10) || 0;
       const doseIn = parseFloat(document.getElementById('simDoseIn').value);
-      const yieldOut = parseFloat(document.getElementById('simYieldOut').value);
+      const targetYieldOut = parseFloat(document.getElementById('simYieldOut').value);
+      const actualYieldInput = parseFloat(document.getElementById('actualShotYield')?.value);
+      const actualYieldOut = !isNaN(actualYieldInput) ? actualYieldInput : targetYieldOut;
       const actualTime = parseFloat(document.getElementById('actualShotTime').value);
       const taste = document.getElementById('actualShotTaste').value;
 
@@ -2492,6 +2546,88 @@
         showToast('Bitte gib eine realistische Bezugszeit zwischen 5 und 120 Sekunden ein.', 'red');
         return;
       }
+
+      if (isNaN(actualYieldOut) || actualYieldOut < 10 || actualYieldOut > 120) {
+        showToast('Bitte gib eine realistische Getränkemenge (Out) zwischen 10 und 120 g ein.', 'red');
+        return;
+      }
+
+      // Normalize actualTime to targetYieldOut:
+      // If you stopped the shot a few grams early or late, each 1g difference accounts for ~0.45s of flow time.
+      const yieldDiff = actualYieldOut - profile.yieldOut;
+      const normalizedTimeAtTargetYield = actualTime - (yieldDiff * 0.45);
+
+      const targetMid = (profile.timeMin + profile.timeMax) / 2;
+      const timeError = normalizedTimeAtTargetYield - targetMid; // >0 means shot ran slow (too fine), <0 means shot ran fast (too coarse)
+      const agingOffset = computeAgingOffset(profile, daysOpen);
+
+      let suggestedAdjustment = 0;
+
+      if (taste === 'perfect') {
+        // Sweet Spot Anchor: If taste is perfect and time is near target window, lock in grindUsed 100%!
+        if (Math.abs(timeError) > 2.5) {
+          suggestedAdjustment = (timeError / 3.8) * 0.35;
+        } else {
+          suggestedAdjustment = 0;
+        }
+      } else {
+        // Asymmetric learning: Faster to suggest coarser when shot is too slow/bitter (+), gentler when suggesting finer (-)
+        if (timeError > 1.0) {
+          suggestedAdjustment += (timeError / 3.6) * 0.65;
+        } else if (timeError < -1.2) {
+          suggestedAdjustment += (timeError / 4.6) * 0.35;
+        }
+
+        if (taste === 'sour') suggestedAdjustment -= 0.30;
+        if (taste === 'slightly_sour') suggestedAdjustment -= 0.15;
+        if (taste === 'slightly_bitter') suggestedAdjustment += 0.25;
+        if (taste === 'bitter') suggestedAdjustment += 0.55;
+        if (taste === 'channeling') suggestedAdjustment += 0.20;
+      }
+
+      suggestedAdjustment = Math.max(-1.0, Math.min(1.5, suggestedAdjustment));
+
+      const impliedBaseGrind = (grindUsed - agingOffset) + suggestedAdjustment;
+      // Direct anchor weight: When you log a real shot, trust your current real-world result (100% on Sweet Spot, 80% on corrections)
+      const trustWeight = taste === 'perfect' ? 1.0 : 0.80;
+      const newBaseGrind = Math.max(28.0, Math.min(42.0, Number((profile.baseGrind * (1 - trustWeight) + impliedBaseGrind * trustWeight).toFixed(1))));
+      const appliedDelta = Number((newBaseGrind - profile.baseGrind).toFixed(1));
+
+      profile.baseGrind = newBaseGrind;
+      profile.calibratedCount = (profile.calibratedCount || 1) + 1;
+      appState.lastGrind = grindUsed;
+
+      const now = new Date();
+      const timeStr = `Tag ${daysOpen} (${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')})`;
+
+      appState.shotLogs.unshift({
+        id: 'log-' + Date.now(),
+        timestamp: timeStr,
+        beanName: profile.name,
+        grindUsed,
+        doseIn,
+        yieldOut: actualYieldOut,
+        actualTime,
+        taste,
+        aiAdjustment: appliedDelta
+      });
+
+      const updatedRec = computeRecommendedGrindToday(profile, daysOpen);
+      document.getElementById('simGrind').value = updatedRec;
+
+      saveDatabase();
+      renderProfileCards();
+      renderDatabaseTable();
+      renderShotHistory();
+      updateSimulation();
+      renderLearningCurveChart();
+      renderEasyModeView();
+
+      const deltaText = appliedDelta === 0
+        ? `als perfekter Anker (${fmtNum(updatedRec)}) bestätigt`
+        : `um ${appliedDelta > 0 ? '+' : ''}${fmtNum(appliedDelta)} angepasst (Empfehlung heute: ${fmtNum(updatedRec)})`;
+      showToast(`Bezug (${fmtNum(actualYieldOut)}g in ${fmtNum(actualTime)}s) gespeichert! Mahlgrad ${deltaText}.`, 'emerald');
+    }
 
       const targetMid = (profile.timeMin + profile.timeMax) / 2;
       const timeError = actualTime - targetMid;
@@ -2833,16 +2969,17 @@
 
     function resetDatabaseToDefaults() {
       openConfirmModal(
-        'Auf Basisdaten zurücksetzen',
-        'Möchtest du alle 10 Bohnen-Profile (inkl. Röstbar, Frau Meyers & Speicherstadt) sowie deine 11 Stamm-Bezüge auf die Werkseinstellungen zurücksetzen?',
+        'Auf Basisdaten (v2.7) zurücksetzen',
+        'Möchtest du alle 12 Bohnen-Profile (inkl. Röstbar, Frau Meyers, Speicherstadt & illy) sowie deine 20 geloggten Bezüge auf den Stand von Version v2.7 zurücksetzen?',
         () => {
           localStorage.removeItem(STORAGE_KEY_DB);
+          localStorage.removeItem('espresso_dialin_lab_db_v26');
           localStorage.removeItem('espresso_dialin_lab_db_v25');
           loadDatabase();
           document.getElementById('fineStepToggle').checked = appState.fineStep;
           selectProfile(appState.activeProfileId);
           renderShotHistory();
-          showToast('Datenbank wurde auf deine 10 Stamm-Profile zurückgesetzt.', 'amber');
+          showToast('Datenbank wurde auf Version v2.7 (12 Profile & 20 Bezüge) zurückgesetzt.', 'amber');
         }
       );
     }
@@ -2860,4 +2997,3 @@
   </script>
 </body>
 </html>
-```
