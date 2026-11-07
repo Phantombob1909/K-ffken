@@ -167,7 +167,7 @@
           <div class="flex flex-wrap items-center gap-2">
             <h1 class="text-lg sm:text-xl font-extrabold tracking-tight text-latte-900">Espresso Dial-in Lab</h1>
             <span class="px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider bg-amber-100 text-amber-800 border border-amber-300 rounded-full">Sage Barista Pro</span>
-            <span id="appVersionBadge" class="px-2.5 py-0.5 text-[11px] font-extrabold uppercase tracking-wider bg-emerald-100 text-emerald-900 border border-emerald-300 rounded-full mono shadow-sm">Version v2.7.1</span>
+            <span id="appVersionBadge" class="px-2.5 py-0.5 text-[11px] font-extrabold uppercase tracking-wider bg-emerald-100 text-emerald-900 border border-emerald-300 rounded-full mono shadow-sm">Version v2.8</span>
           </div>
           <p class="text-xs text-latte-600">Persönlicher Barista-Begleiter • Röstbar, Speicherstadt & illy Edition</p>
         </div>
@@ -270,11 +270,19 @@
             <span class="text-[11px] font-semibold text-latte-600">Antippen zum Auswählen</span>
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+          <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3.5">
             <!-- Cappuccino Tile -->
             <button type="button" onclick="selectEasyDrink('cappuccino')" id="easyDrinkBtn-cappuccino" class="p-4 rounded-2xl border-2 text-left transition-all flex flex-col justify-between gap-3">
               <div class="flex items-center justify-between">
-                <span class="text-3xl">🥛</span>
+                <div class="w-11 h-11 rounded-xl bg-amber-100/80 border border-amber-200 flex items-center justify-center">
+                  <!-- Custom Cappuccino Cup SVG -->
+                  <svg class="w-7 h-7" viewBox="0 0 32 32" fill="none">
+                    <path d="M5 13C5 9.5 9.5 8 15 8C20.5 8 25 9.5 25 13H5Z" fill="#fffdf9" stroke="#8f6b49" stroke-width="1.8"/>
+                    <path d="M5 13H25V19C25 23.4183 21.4183 27 17 27H13C8.58172 27 5 23.4183 5 19V13Z" fill="#d97706" stroke="#6e5036" stroke-width="1.8"/>
+                    <path d="M25 15H27.5C28.8807 15 30 16.1193 30 17.5V18.5C30 19.8807 28.8807 21 27.5 21H25" stroke="#6e5036" stroke-width="1.8" stroke-linecap="round"/>
+                    <line x1="3" y1="27.5" x2="27" y2="27.5" stroke="#6e5036" stroke-width="2" stroke-linecap="round"/>
+                  </svg>
+                </div>
                 <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-amber-100 text-amber-900">Klassiker</span>
               </div>
               <div>
@@ -286,24 +294,71 @@
             <!-- Latte Macchiato Tile -->
             <button type="button" onclick="selectEasyDrink('latte')" id="easyDrinkBtn-latte" class="p-4 rounded-2xl border-2 text-left transition-all flex flex-col justify-between gap-3">
               <div class="flex items-center justify-between">
-                <span class="text-3xl">🧋</span>
+                <div class="w-11 h-11 rounded-xl bg-amber-100/80 border border-amber-200 flex items-center justify-center">
+                  <!-- Custom Tall Layered Latte Macchiato Glass SVG (No Bubble Tea!) -->
+                  <svg class="w-7 h-7" viewBox="0 0 32 32" fill="none">
+                    <!-- Top Foam Layer -->
+                    <path d="M9 5H23L22.5 10H9.5L9 5Z" fill="#fffdf9"/>
+                    <!-- Middle Espresso Layer -->
+                    <path d="M9.5 10H22.5L22 15.5H10L9.5 10Z" fill="#b45309"/>
+                    <!-- Bottom Warm Milk Layer -->
+                    <path d="M10 15.5H22L20.8 27H11.2L10 15.5Z" fill="#f7f1e8"/>
+                    <!-- Glass Outline & Layer Dividers -->
+                    <path d="M9 5H23L20.8 27H11.2L9 5Z" stroke="#6e5036" stroke-width="1.8" stroke-linejoin="round"/>
+                    <line x1="9.5" y1="10" x2="22.5" y2="10" stroke="#8f6b49" stroke-width="1.3" stroke-dasharray="2 1"/>
+                    <line x1="10" y1="15.5" x2="22" y2="15.5" stroke="#8f6b49" stroke-width="1.3"/>
+                    <line x1="8" y1="27.5" x2="24" y2="27.5" stroke="#6e5036" stroke-width="2" stroke-linecap="round"/>
+                  </svg>
+                </div>
                 <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-amber-100 text-amber-900">Sanft & Mild</span>
               </div>
               <div>
                 <div class="font-extrabold text-base text-latte-900">Latte Macchiato</div>
-                <div class="text-xs text-latte-600 mt-0.5">Viel warme Milch im hohen Glas + sanfter Espresso-Schicht</div>
+                <div class="text-xs text-latte-600 mt-0.5">Hohes Glas mit heißer Milch, Espresso-Schicht & Schaumkrone</div>
+              </div>
+            </button>
+
+            <!-- Americano / Long Black Tile -->
+            <button type="button" onclick="selectEasyDrink('americano')" id="easyDrinkBtn-americano" class="p-4 rounded-2xl border-2 text-left transition-all flex flex-col justify-between gap-3">
+              <div class="flex items-center justify-between">
+                <div class="w-11 h-11 rounded-xl bg-amber-100/80 border border-amber-200 flex items-center justify-center">
+                  <!-- Custom Americano Mug (Hot Water + Double Shot on top) SVG -->
+                  <svg class="w-7 h-7" viewBox="0 0 32 32" fill="none">
+                    <!-- Hot Water Base -->
+                    <path d="M6 14H23V22C23 24.7614 20.7614 27 18 27H11C8.23858 27 6 24.7614 6 22V14Z" fill="#bae6fd"/>
+                    <!-- Espresso & Crema Floating on Top -->
+                    <path d="M6 9H23V15H6V9Z" fill="#92400e"/>
+                    <path d="M6 9H23V11.5H6V9Z" fill="#f59e0b"/>
+                    <!-- Mug Outline & Handle -->
+                    <path d="M6 9H23V22C23 24.7614 20.7614 27 18 27H11C8.23858 27 6 24.7614 6 22V9Z" stroke="#6e5036" stroke-width="1.8" stroke-linejoin="round"/>
+                    <path d="M23 12H25.5C27.1569 12 28.5 13.3431 28.5 15V18C28.5 19.6569 27.1569 21 25.5 21H23" stroke="#6e5036" stroke-width="1.8" stroke-linecap="round"/>
+                  </svg>
+                </div>
+                <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-sky-100 text-sky-900 border border-sky-200">Verlängert</span>
+              </div>
+              <div>
+                <div class="font-extrabold text-base text-latte-900">Americano</div>
+                <div class="text-xs text-latte-600 mt-0.5">1/2–2/3 heißes Wasser + doppelter Espresso-Shot obendrauf</div>
               </div>
             </button>
 
             <!-- Espresso Tile -->
             <button type="button" onclick="selectEasyDrink('espresso')" id="easyDrinkBtn-espresso" class="p-4 rounded-2xl border-2 text-left transition-all flex flex-col justify-between gap-3">
               <div class="flex items-center justify-between">
-                <span class="text-3xl">☕</span>
+                <div class="w-11 h-11 rounded-xl bg-amber-100/80 border border-amber-200 flex items-center justify-center">
+                  <!-- Custom Demitasse Espresso Cup with Golden Crema SVG -->
+                  <svg class="w-7 h-7" viewBox="0 0 32 32" fill="none">
+                    <path d="M7 14H23V19C23 22.866 19.866 26 16 26H14C10.134 26 7 22.866 7 19V14Z" fill="#78350f" stroke="#6e5036" stroke-width="1.8"/>
+                    <path d="M7 14H23V17H7V14Z" fill="#f59e0b" stroke="#6e5036" stroke-width="1.5"/>
+                    <path d="M23 15.5H25C26.3807 15.5 27.5 16.6193 27.5 18C27.5 19.3807 26.3807 20.5 25 20.5H23" stroke="#6e5036" stroke-width="1.8" stroke-linecap="round"/>
+                    <line x1="5" y1="26.5" x2="25" y2="26.5" stroke="#6e5036" stroke-width="2" stroke-linecap="round"/>
+                  </svg>
+                </div>
                 <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-amber-100 text-amber-900">Pur</span>
               </div>
               <div>
                 <div class="font-extrabold text-base text-latte-900">Doppel-Espresso</div>
-                <div class="text-xs text-latte-600 mt-0.5">Pur & aromatisch mit dichter Haselnuss-Crema</div>
+                <div class="text-xs text-latte-600 mt-0.5">Pur & intensiv mit dichter Haselnuss-Crema</div>
               </div>
             </button>
           </div>
@@ -894,7 +949,7 @@
               </h3>
               <p class="text-[11px] text-latte-600">Speichert Zeit, echte Menge (Out) & Geschmack und setzt deinen Sweet-Spot-Anker</p>
             </div>
-            <span class="px-2.5 py-0.5 text-[10px] font-bold bg-amber-100 text-amber-900 rounded-full border border-amber-300 mono">Auto-Learn v2.7</span>
+            <span class="px-2.5 py-0.5 text-[10px] font-bold bg-amber-100 text-amber-900 rounded-full border border-amber-300 mono">Auto-Learn v2.8</span>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -1179,7 +1234,7 @@
   <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none"></div>
 
   <script>
-    const APP_VERSION = 'v2.7.1';
+    const APP_VERSION = 'v2.8';
     const STORAGE_KEY_DB = 'espresso_dialin_lab_db_v27';
 
     // Sage Barista Pro 5-Bar Temperature Mapping
@@ -2073,7 +2128,7 @@
       }
 
       // Highlight selected drink button
-      const drinks = ['cappuccino', 'latte', 'espresso'];
+      const drinks = ['cappuccino', 'latte', 'americano', 'espresso'];
       drinks.forEach(d => {
         const btn = document.getElementById(`easyDrinkBtn-${d}`);
         if (!btn) return;
@@ -2090,6 +2145,7 @@
       const step4Badge = document.getElementById('easyStep4Badge');
       const step4Icon = document.getElementById('easyStep4Icon');
       const step4Content = document.getElementById('easyStep4Content');
+      const step4Footer = document.getElementById('easyStep4Footer');
 
       if (appState.easyDrink === 'espresso') {
         step3Badge.textContent = 'Schritt 3 • Espresso beziehen';
@@ -2107,6 +2163,32 @@
           <p class="font-bold text-emerald-900">Dein Doppel-Espresso ist fertig!</p>
           <p>Kurz mit einem kleinen Löffel umrühren (damit sich die süßen und kräftigen Schichten verbinden) und direkt warm genießen.</p>
         `;
+        if (step4Footer) {
+          step4Footer.innerHTML = '✨ Tipp: Ein kleiner Schluck Wasser vorab neutralisiert den Gaumen für das volle Aroma.';
+        }
+      } else if (appState.easyDrink === 'americano') {
+        step3Badge.textContent = 'Schritt 3 • Zuerst Heißwasser in die Tasse';
+        step3Content.innerHTML = `
+          <p class="font-bold text-latte-900">Heißwasser vorlegen (für perfekte Crema):</p>
+          <ol class="list-decimal list-inside space-y-1.5">
+            <li>Stelle deine Kaffeetasse rechts unter den <strong>Heißwasser-Auslass</strong> der Maschine.</li>
+            <li>Drehe den Regler an der rechten Seite auf <strong>Hot Water (Heißwasser)</strong> und fülle die Tasse zu <strong>1/2 bis 2/3 mit heißem Wasser</strong>.</li>
+            <li>Drehe den Regler wieder zurück in die Mitte (Stopp).</li>
+          </ol>
+        `;
+        step4Badge.textContent = 'Schritt 4 • Doppelter Espresso obendrauf';
+        step4Icon.textContent = '💧';
+        step4Content.innerHTML = `
+          <p class="font-bold text-latte-900">Jetzt den doppelten Espresso obendrauf beziehen:</p>
+          <ol class="list-decimal list-inside space-y-1.5 font-medium">
+            <li>Spanne den vorbereiteten Siebträger (mit dem großen 2-Cup-Sieb) fest ein.</li>
+            <li>Stelle die Tasse mit dem heißen Wasser direkt unter den Siebträger-Auslauf.</li>
+            <li>Drücke einmal auf die <strong>1-Tassen-Taste</strong> (~42 g Auto-Stopp) – so läuft der doppelte Espresso-Shot sanft auf das Wasser und die schöne Crema bleibt komplett erhalten!</li>
+          </ol>
+        `;
+        if (step4Footer) {
+          step4Footer.innerHTML = '✨ Warum zuerst Wasser? Wenn der Espresso auf das heiße Wasser fließt (Long-Black-Methode), bleibt die goldbraune Crema-Schicht oben geschlossen.';
+        }
       } else if (appState.easyDrink === 'latte') {
         step3Badge.textContent = 'Schritt 3 • Zuerst Milch, dann Espresso';
         step3Content.innerHTML = `
@@ -2118,7 +2200,7 @@
           </ol>
         `;
         step4Badge.textContent = 'Schritt 4 • Milchschaum für Latte Macchiato';
-        step4Icon.textContent = '🧋';
+        step4Icon.textContent = '🥛';
         step4Content.innerHTML = `
           <ol class="list-decimal list-inside space-y-1.5 font-medium">
             <li>Kaltes Milchkännchen bis knapp <strong>unter die Ausguss-Tülle</strong> mit kalter Milch füllen.</li>
@@ -2126,6 +2208,9 @@
             <li>Danach Lanze etwas tiefer halten (Milch wirbelt), bis das Kännchen <strong>gut handwarm (~60–65 °C)</strong> ist.</li>
           </ol>
         `;
+        if (step4Footer) {
+          step4Footer.innerHTML = '✨ Nach dem Schäumen die Dampflanze kurz mit einem feuchten Tuch abwischen und 1 Sekunde Dampf ablassen.';
+        }
       } else {
         // Default: Cappuccino
         step3Badge.textContent = 'Schritt 3 • Espresso in die Tasse';
@@ -2146,6 +2231,9 @@
             <li>Lanze leicht eintauchen und die Milch rollen lassen, bis das Kännchen <strong>gut handwarm (~60–65 °C)</strong> ist, dann zügig über den Espresso gießen.</li>
           </ol>
         `;
+        if (step4Footer) {
+          step4Footer.innerHTML = '✨ Nach dem Schäumen die Dampflanze kurz mit einem feuchten Tuch abwischen und 1 Sekunde Dampf ablassen.';
+        }
       }
     }
 
@@ -2914,8 +3002,8 @@
 
     function resetDatabaseToDefaults() {
       openConfirmModal(
-        'Auf Basisdaten (v2.7) zurücksetzen',
-        'Möchtest du alle 12 Bohnen-Profile (inkl. Röstbar, Frau Meyers, Speicherstadt & illy) sowie deine 20 geloggten Bezüge auf den Stand von Version v2.7 zurücksetzen?',
+        'Auf Basisdaten (v2.8) zurücksetzen',
+        'Möchtest du alle 12 Bohnen-Profile (inkl. Röstbar, Frau Meyers, Speicherstadt & illy) sowie deine 20 geloggten Bezüge auf den Stand von Version v2.8 zurücksetzen?',
         () => {
           localStorage.removeItem(STORAGE_KEY_DB);
           localStorage.removeItem('espresso_dialin_lab_db_v26');
@@ -2924,7 +3012,7 @@
           document.getElementById('fineStepToggle').checked = appState.fineStep;
           selectProfile(appState.activeProfileId);
           renderShotHistory();
-          showToast('Datenbank wurde auf Version v2.7 (12 Profile & 20 Bezüge) zurückgesetzt.', 'amber');
+          showToast('Datenbank wurde auf Version v2.8 (12 Profile & 20 Bezüge) zurückgesetzt.', 'amber');
         }
       );
     }
